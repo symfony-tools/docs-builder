@@ -19,5 +19,9 @@
             "type": "vcs",
             "url": "git@github.com:weaverryan/rst-parser.git"
         }
-    ]
+    ],
+    "require-dev": {
+        "gajus/dindent": "^2.0",
+        "symfony/finder": "^4.1"
+    }
 }
