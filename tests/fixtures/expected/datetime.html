@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+  <div class="section" id="datetimetype-field">
+<span id="index-0"></span><h1>DateTimeType Field<a class="headerlink" href="#datetimetype-field" title="Permalink to this headline">¶</a></h1>
+<p>This field type allows the user to modify data that represents a specific
+date and time (e.g. <code class="docutils literal notranslate">1984-06-05 12:15:30</code>).</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Underlying Data Type</td>
+<td>can be <code class="docutils literal notranslate">DateTime</code>, string, timestamp, or array (see the <code class="docutils literal notranslate">input</code> option)</td>
+</tr>
+<tr class="row-even"><td>Rendered as</td>
+<td>single text box or three select fields</td>
+</tr>
+<tr class="row-odd"><td>Options</td>
+<td><ul class="first last simple">
+<li><a class="reference internal" href="#the-date-format-option">The date_format Option</a></li>
+<li><a class="reference internal" href="#date-widget">date_widget</a></li>
+<li><a class="reference internal" href="#placeholder">placeholder</a></li>
+<li><a class="reference internal" href="#format">format</a></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td>Overridden options</td>
+<td><ul class="first last simple">
+<li><a class="reference internal" href="#by-reference">by_reference</a></li>
+<li><a class="reference internal" href="#error-bubbling">error_bubbling</a></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td>Parent type</td>
+<td><a class="reference internal" href="form/form_type.html"><em>FormType</em></a></td>
+</tr>
+<tr class="row-even"><td>Class</td>
+<td><code class="docutils literal notranslate"><a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Form/Extension/Core/Type/DateTimeType.html" title="Symfony\Component\Form\Extension\Core\Type\DateTimeType">DateTimeType</a></code></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="field-options">
+<h2>Field Options<a class="headerlink" href="#field-options" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="the-date-format-option">
+<h3>The date_format Option<a class="headerlink" href="#the-date-format-option" title="Permalink to this headline">¶</a></h3>
+<p><strong>type</strong>: <code class="docutils literal notranslate">integer</code> or <code class="docutils literal notranslate">string</code> <strong>default</strong>: <code class="docutils literal notranslate">IntlDateFormatter::MEDIUM</code></p>
+<p>Defines the <code class="docutils literal notranslate">format</code> option that will be passed down to the date field.
+for more details.</p>
+<div class="admonition-wrapper">
+<div class="admonition tip"><p class="first admonition-title">Tip</p>
+<p class="last">This is a little tip about something! We an also talk about specific
+methods: <code class="docutils literal notranslate"><a class="reference external" href="http://api.symfony.com/master/Symfony/Component/BrowserKit/Client.html#method_doRequest" title="Symfony\Component\BrowserKit\Client::doRequest()">doRequest()</a></code>.
+Or a namespace: <code class="docutils literal notranslate"><a class="reference external" href="http://api.symfony.com/master/Symfony/Component/Validator/Constraints.html" title="Symfony\Component\Validator\Constraints">Constraints</a></code>.
+Or a PHP function: <code class="docutils literal notranslate"><a class="reference external" href="http://php.net/manual/en/function.parse-ini-file.php" title="parse_ini_file">parse_ini_file</a></code>.
+Or a PHP method! <code class="docutils literal notranslate"><a class="reference external" href="http://php.net/manual/en/locale.getdefault.php" title="Locale">Locale::getDefault()</a></code>.</p>
+</div></div>
+</div>
+<div class="section" id="date-widget">
+<h3>date_widget<a class="headerlink" href="#date-widget" title="Permalink to this headline">¶</a></h3>
+<p>Date widget!</p>
+<div class="admonition-wrapper">
+<div class="admonition note"><p class="first admonition-title">Note</p>
+<p class="last">Sometimes we add notes. But not too often because they interrupt
+the flow.</p>
+</div></div>
+</div>
+<div class="section" id="placeholder">
+<h3>placeholder<a class="headerlink" href="#placeholder" title="Permalink to this headline">¶</a></h3>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.6: </span>The <code class="docutils literal notranslate">placeholder</code> option was introduced in Symfony 2.6 and replaces
+<code class="docutils literal notranslate">empty_value</code>, which is available prior to 2.6.</p>
+</div>
+<p><strong>type</strong>: <code class="docutils literal notranslate">string</code> | <code class="docutils literal notranslate">array</code></p>
+<p>If your widget option is set to <code class="docutils literal notranslate">choice</code>, then this field will be represented
+as a series of <code class="docutils literal notranslate">select</code> boxes. When the placeholder value is a string,
+it will be used as the <strong>blank value</strong> of all select boxes:</p>
+<div class="literal-block"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">use</span> <span class="nx">Symfony\Component\Form\Extension\Core\Type\DateTimeType</span><span class="p">;</span>
+
+<span class="nv">$builder</span><span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">&#39;startDateTime&#39;</span><span class="p">,</span> <span class="nx">DateTimeType</span><span class="o">::</span><span class="na">class</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;placeholder&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Select a value&#39;</span><span class="p">,</span>
+<span class="p">));</span>
+</pre></div>
+</td></tr></table></div></div>
+<p>Custom classes for links are also cool:</p>
+<ul class="list-config-options simple">
+<li><code class="docutils literal notranslate">excluded_ajax_paths</code></li>
+<li><code class="docutils literal notranslate">intercept_redirects</code></li>
+<li><code class="docutils literal notranslate">position</code></li>
+<li><code class="docutils literal notranslate">toolbar</code></li>
+<li><code class="docutils literal notranslate">verbose</code></li>
+</ul>
+</div>
+<div class="section" id="format">
+<h3>format<a class="headerlink" href="#format" title="Permalink to this headline">¶</a></h3>
+<p><strong>type</strong>: <code class="docutils literal notranslate">string</code> <strong>default</strong>: <code class="docutils literal notranslate">Symfony\Component\Form\Extension\Core\Type\DateTimeType::HTML5_FORMAT</code></p>
+<p>If the <code class="docutils literal notranslate">widget</code> option is set to <code class="docutils literal notranslate">single_text</code>, this option specifies
+the format of the input, i.e. how Symfony will interpret the given input
+as a datetime string. See <a class="reference external" href="http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Time-Format-Syntax">Date/Time Format Syntax</a>.</p>
+<div class="admonition-wrapper">
+<div class="admonition admonition-sidebar"><p class="first sidebar-title">Everyone loves sidebars</p>
+<p class="last">But do they really? They also get in the way!</p>
+</div></div>
+<div class="admonition-wrapper">
+<div class="admonition caution"><p class="first admonition-title">Caution</p>
+<p class="last">Using too many sidebars or caution directives can be distracting!</p>
+</div></div>
+</div>
+<div class="section" id="time-widget">
+<h3>time_widget<a class="headerlink" href="#time-widget" title="Permalink to this headline">¶</a></h3>
+<p><strong>type</strong>: <code class="docutils literal notranslate">string</code> <strong>default</strong>: <code class="docutils literal notranslate">choice</code></p>
+<p>Defines the <code class="docutils literal notranslate">widget</code> option for the <code class="docutils literal notranslate">TimeType</code>.</p>
+</div>
+<div class="section" id="widget">
+<h3>widget<a class="headerlink" href="#widget" title="Permalink to this headline">¶</a></h3>
+<p><strong>type</strong>: <code class="docutils literal notranslate">string</code> <strong>default</strong>: <code class="docutils literal notranslate">null</code></p>
+<p>Defines the <code class="docutils literal notranslate">widget</code> option for both the <code class="docutils literal notranslate">DateType</code>.
+and <code class="docutils literal notranslate">TimeType</code>. This can be overridden
+with the <a class="reference internal" href="#date-widget">date_widget</a> and <a class="reference internal" href="#time-widget">time_widget</a> options.</p>
+</div>
+</div>
+<div class="section" id="overridden-options">
+<h2>Overridden Options<a class="headerlink" href="#overridden-options" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="by-reference">
+<h3>by_reference<a class="headerlink" href="#by-reference" title="Permalink to this headline">¶</a></h3>
+<p><strong>default</strong>: <code class="docutils literal notranslate">false</code></p>
+<p>The <code class="docutils literal notranslate">DateTime</code> classes are treated as immutable objects.</p>
+</div>
+<div class="section" id="error-bubbling">
+<h3>error_bubbling<a class="headerlink" href="#error-bubbling" title="Permalink to this headline">¶</a></h3>
+<p><strong>default</strong>: <code class="docutils literal notranslate">false</code></p>
+<p>We also support code blocks!</p>
+<div class="literal-block"><div class="highlight-yaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># app/config/parameters.yml</span>
+<span class="l l-Scalar l-Scalar-Plain">parameters</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">database_driver</span><span class="p p-Indicator">:</span>   <span class="l l-Scalar l-Scalar-Plain">pdo_mysql</span>
+</pre></div>
+</td></tr></table></div></div>
+<p>And configuration blocks:</p>
+<div class="configuration-block">
+<ul class="simple">
+<li><em>YAML</em><div class="literal-block"><div class="highlight-yaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># app/config/config.yml</span>
+<span class="l l-Scalar l-Scalar-Plain">framework</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">secret</span><span class="p p-Indicator">:</span>          <span class="s">&#39;%secret%&#39;</span>
+    <span class="l l-Scalar l-Scalar-Plain">router</span><span class="p p-Indicator">:</span>          <span class="p p-Indicator">{</span> <span class="nv">resource</span><span class="p p-Indicator">:</span> <span class="s">&#39;%kernel.root_dir%/config/routing.yml&#39;</span> <span class="p p-Indicator">}</span>
+    <span class="c1"># ...</span>
+
+<span class="c1"># ...</span>
+</pre></div>
+</td></tr></table></div></div>
+</li>
+<li><em>XML</em><div class="literal-block"><div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c">&lt;!-- app/config/config.xml --&gt;</span>
+<span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span>
+<span class="nt">&lt;container</span> <span class="na">xmlns=</span><span class="s">&quot;http://symfony.com/schema/dic/services&quot;</span>
+    <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+    <span class="na">xmlns:framework=</span><span class="s">&quot;http://symfony.com/schema/dic/symfony&quot;</span>
+    <span class="na">xmlns:twig=</span><span class="s">&quot;http://symfony.com/schema/dic/twig&quot;</span>
+    <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://symfony.com/schema/dic/services</span>
+<span class="s">        http://symfony.com/schema/dic/services/services-1.0.xsd</span>
+<span class="s">        http://symfony.com/schema/dic/symfony</span>
+<span class="s">        http://symfony.com/schema/dic/symfony/symfony-1.0.xsd</span>
+<span class="s">        http://symfony.com/schema/dic/twig</span>
+<span class="s">        http://symfony.com/schema/dic/twig/twig-1.0.xsd&quot;</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;framework:config</span> <span class="na">secret=</span><span class="s">&quot;%secret%&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;framework:router</span> <span class="na">resource=</span><span class="s">&quot;%kernel.root_dir%/config/routing.xml&quot;</span> <span class="nt">/&gt;</span>
+        <span class="c">&lt;!-- ... --&gt;</span>
+    <span class="nt">&lt;/framework:config&gt;</span>
+
+    <span class="c">&lt;!-- ... --&gt;</span>
+<span class="nt">&lt;/container&gt;</span>
+</pre></div>
+</td></tr></table></div></div>
+</li>
+<li><em>PHP</em><div class="literal-block"><div class="highlight-php"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// app/config/config.php</span>
+<span class="nv">$container</span><span class="o">-&gt;</span><span class="na">loadFromExtension</span><span class="p">(</span><span class="s1">&#39;framework&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;secret&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;%secret%&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;router&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;resource&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;%kernel.root_dir%/config/routing.php&#39;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="c1">// ...</span>
+<span class="p">));</span>
+
+<span class="c1">// ...</span>
+</pre></div>
+</td></tr></table></div></div>
+</li>
+</ul>
+</div>
+<p>This is the end of the document.</p>
+</div>
+</div>
+</div>
+
+
+</body>
+</html>

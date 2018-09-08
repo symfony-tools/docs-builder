@@ -1,0 +1,23 @@
+{
+    "name": "symfony/symfony-docs",
+    "description": "The build system for Symfony's documentation",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "SymfonyDocs\\": "src"
+        }
+    },
+    "require": {
+        "doctrine/rst-parser": "dev-sf-docs-tweaks",
+        "scrivo/highlight.php": "v9.12.0.5",
+        "symfony/phpunit-bridge": "^4.1",
+        "symfony/filesystem": "^4.1"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:weaverryan/rst-parser.git"
+        }
+    ]
+}
