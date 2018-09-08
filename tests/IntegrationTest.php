@@ -21,5 +21,9 @@ class IntegrationTest extends TestCase
             __DIR__.'/_output',
             true // verbose
         );
+
+        $expectedSource = file_get_contents(__DIR__.'/fixtures/expected/datetime.html');
+        $actualSource = file_get_contents(__DIR__.'/_output/datetime.html');
+        $this->assertSame($expectedSource, $actualSource);
     }
 }
