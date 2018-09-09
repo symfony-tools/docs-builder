@@ -193,7 +193,17 @@ And configuration blocks:
 
         // ...
 
-This is the end of the document.
+Field Variables
+---------------
+
++----------+------------+---------------------------------------+
+| Variable | Type       | Usage                                 |
++==========+============+=======================================+
+| widget   | ``mixed``  | The value of the ``widget`` option    |
++----------+------------+---------------------------------------+
+| type     | ``string`` | Multiple lines of text here, to show  |
+|          |            | that off                              |
++----------+------------+---------------------------------------+
 
 .. _`RFC 3339`: https://tools.ietf.org/html/rfc3339
 .. _`Date/Time Format Syntax`: http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Time-Format-Syntax
