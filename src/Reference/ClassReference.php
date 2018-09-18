@@ -4,6 +4,8 @@ namespace SymfonyDocs\Reference;
 
 use Doctrine\RST\Environment;
 use Doctrine\RST\Reference;
+use Doctrine\RST\References\Resolver;
+use Doctrine\RST\References\ResolvedReference;
 
 class ClassReference extends Reference
 {
@@ -12,14 +14,9 @@ class ClassReference extends Reference
         return 'class';
     }
 
-    public function resolve(Environment $environment, string $data): ?array
+    public function resolve(Environment $environment, string $data): ResolvedReference
     {
-        return ['url' => 'foo'];
+        $resolver = new Resolver();
+        return $resolver->resolve($environment, $data);
     }
-
-    public function resolveByText(Environment $environment, string $text): ?array
-    {
-        return [];
-    }
-
 }

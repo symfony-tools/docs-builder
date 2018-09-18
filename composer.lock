@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
     "content-hash": "0a74f3b0a505602356a4d7ac3ac95580",
@@ -12,16 +12,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/weaverryan/rst-parser.git",
-                "reference": "45662c3167d0f44cb1227588be57df63ff39aff8"
+                "reference": "bce069bf02fb913e4d3053e52633c6cfd2e07363"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/weaverryan/rst-parser/zipball/45662c3167d0f44cb1227588be57df63ff39aff8",
-                "reference": "45662c3167d0f44cb1227588be57df63ff39aff8",
+                "url": "https://api.github.com/repos/weaverryan/rst-parser/zipball/bce069bf02fb913e4d3053e52633c6cfd2e07363",
+                "reference": "bce069bf02fb913e4d3053e52633c6cfd2e07363",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1"
+                "php": "^7.1",
+                "symfony/filesystem": "^4.1"
             },
             "require-dev": {
                 "doctrine/coding-standard": "^4.0",
@@ -57,17 +58,20 @@
                     "homepage": "https://jwage.com"
                 }
             ],
-            "description": "PHP library to parse reStructuredText documents",
+            "description": "PHP library to parse reStructuredText documents and generate HTML or LaTeX documents.",
             "homepage": "https://github.com/doctrine/rst-parser",
             "keywords": [
+                "html",
+                "latex",
                 "markup",
                 "parser",
+                "restructuredtext",
                 "rst"
             ],
             "support": {
                 "source": "https://github.com/weaverryan/rst-parser/tree/sf-docs-tweaks"
             },
-            "time": "2018-09-07T19:19:46+00:00"
+            "time": "2018-09-18T18:01:50+00:00"
         },
         {
             "name": "scrivo/highlight.php",

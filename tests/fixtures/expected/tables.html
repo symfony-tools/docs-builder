@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+</head>
+<body>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Route path</th>
+        <th>If the requested URL is /foo</th>
+        <th>If the requested URL is /foo/</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>/foo</td>
+        <td>It matches (200 status response)</td>
+        <td>It doesn't match (404 status response)</td>
+    </tr>
+    <tr>
+        <td>/foo/</td>
+        <td>It makes a 301 redirect to /foo/</td>
+        <td>It matches (200 status response)</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

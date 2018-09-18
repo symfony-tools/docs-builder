@@ -4,6 +4,7 @@ Some Test Docs!
 .. toctree::
 
     datetime
+    tables
     form/form_type
 
 .. _reference-forms-type-date-format:
