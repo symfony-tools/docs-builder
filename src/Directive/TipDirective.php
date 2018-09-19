@@ -25,6 +25,6 @@ class TipDirective extends SubDirective
         string $data,
         array $options
     ) : ?Node {
-        return new WrapperNode($document, '<div class="admonition-wrapper"><div class="tip"></div><div class="admonition admonition-tip"><p class="first admonition-title">Tip</p>', '</div></div>');
+        return new WrapperNode($document, '<div class="admonition-wrapper"><div class="tip"></div><div class="admonition admonition-tip"><p class="admonition-title">Tip</p>', '</div></div>');
     }
 }
