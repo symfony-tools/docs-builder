@@ -77,5 +77,10 @@ class IntegrationTest extends TestCase
         yield 'caution' => [
             'documentName' => 'caution'
         ];
+
+        // problem : <p class="last">
+        yield 'note' => [
+            'documentName' => 'note'
+        ];
     }
 }

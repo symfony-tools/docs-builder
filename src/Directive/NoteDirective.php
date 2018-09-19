@@ -24,6 +24,6 @@ class NoteDirective extends SubDirective
         string $data,
         array $options
     ) : ?Node {
-        return new WrapperNode($document, '<div class="alert note bg-light-yellow text-dark border"><i class="fas fa-sticky-note text-primary mr-2"></i>', '</div>');
+        return new WrapperNode($document, '<div class="admonition-wrapper"><div class="note"></div><div class="admonition admonition-note"><p class="first admonition-title">Note</p>', '</div></div>');
     }
 }
