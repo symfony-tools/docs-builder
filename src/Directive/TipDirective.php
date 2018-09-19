@@ -3,6 +3,7 @@
 namespace SymfonyDocs\Directive;
 
 use Doctrine\RST\Nodes\Node;
+use Doctrine\RST\Nodes\RawNode;
 use Doctrine\RST\Nodes\WrapperNode;
 use Doctrine\RST\Parser;
 use Doctrine\RST\SubDirective;
@@ -24,6 +25,6 @@ class TipDirective extends SubDirective
         string $data,
         array $options
     ) : ?Node {
-        return new WrapperNode($document, '<div class="alert tip bg-success text-light"><i class="fas fa-question-circle mr-2"></i>', '</div>');
+        return new WrapperNode($document, '<div class="admonition-wrapper"><div class="tip"></div><div class="admonition admonition-tip"><p class="first admonition-title">Tip</p>', '</div></div>');
     }
 }

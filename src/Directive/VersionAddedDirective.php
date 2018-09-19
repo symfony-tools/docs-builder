@@ -24,6 +24,6 @@ class VersionAddedDirective extends SubDirective
         string $data,
         array $options
     ) : ?Node {
-        return new WrapperNode($document, '<div class="version-added">', '</div>');
+        return new WrapperNode($document, '<div class="versionadded">', '</div>');
     }
 }

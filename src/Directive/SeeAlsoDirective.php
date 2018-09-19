@@ -24,8 +24,6 @@ class SeeAlsoDirective extends SubDirective
         string $data,
         array $options
     ) : ?Node {
-
-        // TODO - this is currently "tip"
-        return new WrapperNode($document, '<div class="alert tip bg-success text-light"><i class="fas fa-question-circle mr-2"></i>', '</div>');
+        return new WrapperNode($document, '<div class="admonition-wrapper"><div class="seealso"></div><div class="admonition admonition-seealso">', '</div></div>');
     }
 }
