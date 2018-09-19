@@ -24,6 +24,6 @@ class CautionDirective extends SubDirective
         string $data,
         array $options
     ) : ?Node {
-        return new WrapperNode($document, '<div class="alert caution bg-light-yellow text-dark border"><i class="fas fa-exclamation-triangle text-danger mr-2"></i>', '</div>');
+        return new WrapperNode($document, '<div class="admonition-wrapper"><div class="caution"></div><div class="admonition admonition-caution"><p class="first admonition-title">Caution</p>', '</div></div>');
     }
 }

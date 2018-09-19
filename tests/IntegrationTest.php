@@ -47,30 +47,35 @@ class IntegrationTest extends TestCase
     }
 
     /**
-     * @dataProvider parserProvider
+     * @dataProvider parserUnitBlockProvider
      */
-    public function testParser(string $blockName)
+    public function testParseUnitBlock(string $blockName)
     {
         $kernel = new HtmlKernel();
         $parser = new Parser(null, $kernel);
 
-        $sourceFile = sprintf('%s/fixtures/source/%s.rst', __DIR__, $blockName);
+        $sourceFile = sprintf('%s/fixtures/source/blocks/%s.rst', __DIR__, $blockName);
 
         $document = $parser->parseFile($sourceFile)->renderDocument();
 
         $indenter = new Indenter();
 
-        $expectedFile = sprintf('%s/fixtures/expected/%s.html', __DIR__, $blockName);
+        $expectedFile = sprintf('%s/fixtures/expected/blocks/%s.html', __DIR__, $blockName);
         $this->assertSame(
             $indenter->indent(file_get_contents($expectedFile)),
             $indenter->indent($document)
         );
     }
 
-    public function parserProvider()
+    public function parserUnitBlockProvider()
     {
         yield 'tables' => [
             'documentName' => 'tables'
+        ];
+
+        // problem : <p class="last">
+        yield 'caution' => [
+            'documentName' => 'caution'
         ];
     }
 }
