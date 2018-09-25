@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use SymfonyDocs\HtmlKernel;
+use Symfony\Component\DomCrawler\Crawler;
 
 class IntegrationTest extends TestCase
 {
@@ -95,6 +96,14 @@ class IntegrationTest extends TestCase
 
         yield 'class' => [
             'documentName' => 'class'
+        ];
+
+        yield 'configuration-block' => [
+            'documentName' => 'configuration-block'
+        ];
+
+        yield 'code-block' => [
+            'documentName' => 'code-block'
         ];
     }
 }

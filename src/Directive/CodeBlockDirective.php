@@ -5,8 +5,8 @@ namespace SymfonyDocs\Directive;
 use Doctrine\RST\Directive;
 use Doctrine\RST\Nodes\CodeNode;
 use Doctrine\RST\Nodes\Node;
+use Doctrine\RST\Nodes\RawNode;
 use Doctrine\RST\Parser;
-use SymfonyDocs\CodeBlock\CodeBlockLanguageDetector;
 use SymfonyDocs\CodeBlock\CodeBlockRenderer;
 use function array_reverse;
 use function assert;
@@ -26,21 +26,26 @@ use function trim;
  */
 class CodeBlockDirective extends Directive
 {
-    /** @var CodeBlockRenderer */
-    private $codeBlockRenderer;
+    private const CODE_BLOCK_TEMPLATE = '<div class="literal-block notranslate">
+    <div class="highlight-%s">
+        <table class="highlighttable">
+            <tr>
+                <td class="linenos">
+                    <div class="linenodiv">
+                        <pre>%s</pre>
+                    </div>
+                </td>
+                <td class="code">
+                    <div class="highlight">
+                        <pre>%s</pre>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>';
 
-    /** @var CodeBlockLanguageDetector */
-    private $codeBlockLanguageDetector;
-
-    public function __construct(
-        CodeBlockRenderer $codeBlockRenderer,
-        CodeBlockLanguageDetector $codeBlockLanguageDetector
-    ) {
-        $this->codeBlockRenderer         = $codeBlockRenderer;
-        $this->codeBlockLanguageDetector = $codeBlockLanguageDetector;
-    }
-
-    public function getName() : string
+    public function getName(): string
     {
         return 'code-block';
     }
@@ -54,26 +59,35 @@ class CodeBlockDirective extends Directive
         string $variable,
         string $data,
         array $options
-    ) : void {
-        if (! $node instanceof CodeNode) {
+    ): void {
+        if (!$node instanceof CodeNode) {
             return;
         }
 
-        $kernel = $parser->getKernel();
-
         $nodeValue = $node->getValue();
         assert(is_string($nodeValue));
-
         $lines = $this->getLines($nodeValue);
+        $node->setLanguage($data);
 
-        $language = $this->codeBlockLanguageDetector->detectLanguage($data, $lines);
+        $lineNumbers = "";
+        for ($i = 1; $i <= \count($lines); $i++) {
+            $iAsString = (string) $i;
+            if (strlen($iAsString) == 1) {
+                $iAsString = " ".$iAsString;
+            }
+            $lineNumbers .= $iAsString ."\n";
+        }
 
-        $node->setLanguage($language);
+        $nodeValue = sprintf(
+            self::CODE_BLOCK_TEMPLATE,
+            $data,
+            Rtrim($lineNumbers),
+            implode("\n", $lines)
+        );
 
-        $codeBlock = $this->codeBlockRenderer->render($lines, $language);
+        $node->setValue($nodeValue);
 
         $node->setRaw(true);
-        $node->setValue($codeBlock);
 
         if ($variable !== '') {
             $environment = $parser->getEnvironment();
@@ -87,7 +101,7 @@ class CodeBlockDirective extends Directive
     /**
      * @return string[]
      */
-    private function getLines(string $code) : array
+    private function getLines(string $code): array
     {
         $lines = preg_split('/\r\n|\r|\n/', $code);
         assert(is_array($lines));
@@ -106,7 +120,7 @@ class CodeBlockDirective extends Directive
         return array_reverse($reversedLines);
     }
 
-    public function wantCode() : bool
+    public function wantCode(): bool
     {
         return true;
     }

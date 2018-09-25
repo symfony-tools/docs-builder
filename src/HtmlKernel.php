@@ -2,6 +2,8 @@
 
 namespace SymfonyDocs;
 
+use Doctrine\RST\Directive;
+use Doctrine\RST\Factory;
 use Doctrine\RST\HTML\Kernel;
 use Highlight\Highlighter;
 use SymfonyDocs\CodeBlock\CodeBlockConsoleRenderer;
@@ -28,9 +30,27 @@ use SymfonyDocs\Reference\PhpMethodReference;
 
 class HtmlKernel extends Kernel
 {
+    /** @var NodeFactory */
+    private $symfonyDocsFactory;
+
     public function getName(): string
     {
         return parent::getName();
+    }
+
+    /**
+     * @param Directive[] $directives
+     */
+    public function __construct(array $directives = [])
+    {
+        parent::__construct($directives);
+
+        $this->symfonyDocsFactory = new NodeFactory($this->getName());
+    }
+
+    public function getFactory() :Factory
+    {
+        return $this->symfonyDocsFactory;
     }
 
     public function getDirectives(): array
@@ -40,15 +60,7 @@ class HtmlKernel extends Kernel
         return array_merge($directives, [
             new CautionDirective(),
             new ClassDirective(),
-            new CodeBlockDirective(
-                new CodeBlockRenderer(
-                    new CodeBlockConsoleRenderer(),
-                    new CodeBlockWithLineNumbersRenderer(
-                        new Highlighter()
-                    )
-                ),
-                new CodeBlockLanguageDetector()
-            ),
+            new CodeBlockDirective(),
             new ConfigurationBlockDirective(),
             new IndexDirective(),
             new NoteDirective(),

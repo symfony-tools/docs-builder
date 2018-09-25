@@ -12,7 +12,7 @@ use function strtoupper;
 
 class ConfigurationBlockDirective extends SubDirective
 {
-    public function getName() : string
+    public function getName(): string
     {
         return 'configuration-block';
     }
@@ -26,23 +26,23 @@ class ConfigurationBlockDirective extends SubDirective
         string $variable,
         string $data,
         array $options
-    ) : ?Node {
-        if (! $document instanceof Document) {
+    ): ?Node {
+        if (!$document instanceof Document) {
             return null;
         }
 
-        $html = '<div class="configuration-block jsactive clearfix"><ul class="simple">';
+        $html = '<div class="configuration-block"><ul class="simple">';
 
         foreach ($document->getNodes() as $node) {
-            if (! $node instanceof CodeNode) {
+            if (!$node instanceof CodeNode) {
                 continue;
             }
 
             $language = $node->getLanguage() ?? 'Unknown';
 
             $html .= '<li>';
-            $html .= '<em>' . strtoupper($language) . '</em>';
-            $html .= '<div class="highlight-' . $language . '">' . $node->render() . '</div>';
+            $html .= sprintf('<em>%s</em>', strtoupper($language));
+            $html .= trim($node->render());
             $html .= '</li>';
         }
 
