@@ -73,29 +73,28 @@ class IntegrationTest extends TestCase
             'documentName' => 'tables'
         ];
 
-        // problem : <p class="last">
         yield 'caution' => [
             'documentName' => 'caution'
         ];
 
-        // problem : <p class="last">
         yield 'note' => [
             'documentName' => 'note'
         ];
 
-        // problem : wrong directive called
         yield 'seealso' => [
             'documentName' => 'seealso'
         ];
 
-        // problem : <p class="last">
         yield 'tip' => [
             'documentName' => 'tip'
         ];
 
-        // problem : needs to modify content of the document
         yield 'versionadded' => [
             'documentName' => 'versionadded'
+        ];
+
+        yield 'class' => [
+            'documentName' => 'class'
         ];
     }
 }
