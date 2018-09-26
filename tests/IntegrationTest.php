@@ -105,5 +105,9 @@ class IntegrationTest extends TestCase
         yield 'code-block' => [
             'documentName' => 'code-block'
         ];
+
+        yield 'nested-note-code-block' => [
+            'documentName' => 'nested-note-code-block'
+        ];
     }
 }
