@@ -9,7 +9,7 @@ use Doctrine\RST\SubDirective;
 
 class SidebarDirective extends SubDirective
 {
-    public function getName() : string
+    public function getName(): string
     {
         return 'sidebar';
     }
@@ -23,7 +23,11 @@ class SidebarDirective extends SubDirective
         string $variable,
         string $data,
         array $options
-    ) : ?Node {
-        return new WrapperNode($document, '<div class="alert tip bg-success text-light"><i class="fas fa-question-circle mr-2"></i>', '</div>');
+    ): ?Node {
+        return new WrapperNode(
+            $document,
+            sprintf('<div class="admonition-wrapper"><div class="sidebar"></div><div class="admonition admonition-sidebar"><p class="sidebar-title">%s</p>', $data),
+            '</div></div>'
+        );
     }
 }
