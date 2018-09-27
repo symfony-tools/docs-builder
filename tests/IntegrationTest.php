@@ -117,5 +117,9 @@ class IntegrationTest extends TestCase
         yield 'sidebar-code-block-nested' => [
             'documentName' => 'sidebar-code-block-nested'
         ];
+
+        yield 'literal' => [
+            'documentName' => 'literal'
+        ];
     }
 }

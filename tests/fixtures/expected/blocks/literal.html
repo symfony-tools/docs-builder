@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+</head>
+<body>
+<p>here is some php code from literal:</p>
+<div class="literal-block notranslate">
+    <div class="highlight-php">
+        <table class="highlighttable">
+            <tr>
+                <td class="linenos">
+                    <div class="linenodiv">
+                        <pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7</pre>
+                    </div>
+                </td>
+                <td class="code">
+                    <div class="highlight">
+                        <pre>// config/routes.php
+namespace Symfony\Component\Routing\Loader\Configurator;
+
+return function (RoutingConfigurator $routes) {
+    $routes->add('about_us', ['nl' => '/over-ons', 'en' => '/about-us'])
+        ->controller('App\Controller\CompanyController::about');
+};</pre>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>
