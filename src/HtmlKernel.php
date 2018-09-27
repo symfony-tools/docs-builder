@@ -20,7 +20,6 @@ use SymfonyDocs\Directive\RoleDirective;
 use SymfonyDocs\Directive\SeeAlsoDirective;
 use SymfonyDocs\Directive\SidebarDirective;
 use SymfonyDocs\Directive\TipDirective;
-use SymfonyDocs\Directive\ToctreeDirective;
 use SymfonyDocs\Directive\VersionAddedDirective;
 use SymfonyDocs\Reference\ClassReference;
 use SymfonyDocs\Reference\MethodReference;
@@ -68,7 +67,6 @@ class HtmlKernel extends Kernel
             new SeeAlsoDirective(),
             new SidebarDirective(),
             new TipDirective(),
-            new ToctreeDirective(),
             new VersionAddedDirective(),
         ]);
     }

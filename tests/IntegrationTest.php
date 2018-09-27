@@ -122,4 +122,27 @@ class IntegrationTest extends TestCase
             'documentName' => 'literal'
         ];
     }
+
+    public function testTocTree()
+    {
+        $kernel  = new HtmlKernel();
+        $builder = new Builder($kernel);
+        $fs      = new Filesystem();
+        $fs->remove(__DIR__.'/_output/toctree');
+
+        $builder->build(
+            __DIR__.'/fixtures/source/toctree',
+            __DIR__.'/_output/toctree',
+            true // verbose
+        );
+
+        $indenter = new Indenter();
+
+        $expectedFile = sprintf('%s/fixtures/expected/toctree/index.html', __DIR__);
+        $outputFile = sprintf('%s/_output/toctree/index.html', __DIR__);
+        $this->assertSame(
+            $indenter->indent(file_get_contents($expectedFile)),
+            $indenter->indent(file_get_contents($outputFile))
+        );
+    }
 }
