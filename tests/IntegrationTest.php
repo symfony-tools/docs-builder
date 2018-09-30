@@ -17,12 +17,7 @@ class IntegrationTest extends TestCase
      */
     public function testIntegration(string $folder)
     {
-        $kernel  = new HtmlKernel();
-        $builder = new Builder($kernel);
-        $fs      = new Filesystem();
-        $fs->remove(__DIR__.'/_output');
-
-        $builder->build(
+        $this->createBuilder()->build(
             sprintf('%s/fixtures/source/%s', __DIR__, $folder),
             __DIR__.'/_output',
             true // verbose
@@ -35,7 +30,7 @@ class IntegrationTest extends TestCase
 
         $indenter = new Indenter();
         foreach ($finder as $expectedFile) {
-            $relativePath = $expectedFile->getRelativePathname();
+            $relativePath   = $expectedFile->getRelativePathname();
             $actualFilename = __DIR__.'/_output/'.$relativePath;
             $this->assertFileExists($actualFilename);
 
@@ -47,16 +42,20 @@ class IntegrationTest extends TestCase
 
     public function integrationProvider()
     {
-//        yield 'main' => [
-//            'folder' => 'main'
-//        ];
+        //        yield 'main' => [
+        //            'folder' => 'main'
+        //        ];
 
         yield 'toctree' => [
-            'folder' => 'toctree'
+            'folder' => 'toctree',
         ];
 
         yield 'refReference' => [
-            'folder' => 'refReference'
+            'folder' => 'refReference',
+        ];
+
+        yield 'refReferenceError' => [
+            'folder' => 'refReferenceError',
         ];
     }
 
@@ -134,5 +133,26 @@ class IntegrationTest extends TestCase
         yield 'literal' => [
             'documentName' => 'literal',
         ];
+    }
+
+    public function testRefReferenceError()
+    {
+        $this->expectException(\RuntimeException::class);
+
+        $this->createBuilder()->build(
+            sprintf('%s/fixtures/source/refReferenceError', __DIR__),
+            __DIR__.'/_output',
+            true // verbose
+        );
+    }
+
+    private function createBuilder(): Builder
+    {
+        $kernel  = new HtmlKernel();
+        $builder = new Builder($kernel);
+        $fs      = new Filesystem();
+        $fs->remove(__DIR__.'/_output');
+
+        return $builder;
     }
 }
