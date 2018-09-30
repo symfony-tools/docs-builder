@@ -2,14 +2,10 @@
 
 namespace SymfonyDocs;
 
+use Doctrine\RST\References\Doc;
 use Doctrine\RST\Directive;
 use Doctrine\RST\Factory;
 use Doctrine\RST\HTML\Kernel;
-use Highlight\Highlighter;
-use SymfonyDocs\CodeBlock\CodeBlockConsoleRenderer;
-use SymfonyDocs\CodeBlock\CodeBlockLanguageDetector;
-use SymfonyDocs\CodeBlock\CodeBlockRenderer;
-use SymfonyDocs\CodeBlock\CodeBlockWithLineNumbersRenderer;
 use SymfonyDocs\Directive\CautionDirective;
 use SymfonyDocs\Directive\ClassDirective;
 use SymfonyDocs\Directive\CodeBlockDirective;
@@ -26,6 +22,7 @@ use SymfonyDocs\Reference\MethodReference;
 use SymfonyDocs\Reference\NamespaceReference;
 use SymfonyDocs\Reference\PhpFunctionReference;
 use SymfonyDocs\Reference\PhpMethodReference;
+use SymfonyDocs\Reference\RefReference;
 
 class HtmlKernel extends Kernel
 {
@@ -47,7 +44,7 @@ class HtmlKernel extends Kernel
         $this->symfonyDocsFactory = new NodeFactory($this->getName());
     }
 
-    public function getFactory() :Factory
+    public function getFactory(): Factory
     {
         return $this->symfonyDocsFactory;
     }
@@ -56,31 +53,35 @@ class HtmlKernel extends Kernel
     {
         $directives = parent::getDirectives();
 
-        return array_merge($directives, [
-            new CautionDirective(),
-            new ClassDirective(),
-            new CodeBlockDirective(),
-            new ConfigurationBlockDirective(),
-            new IndexDirective(),
-            new NoteDirective(),
-            new RoleDirective(),
-            new SeeAlsoDirective(),
-            new SidebarDirective(),
-            new TipDirective(),
-            new VersionAddedDirective(),
-        ]);
+        return array_merge(
+            $directives,
+            [
+                new CautionDirective(),
+                new ClassDirective(),
+                new CodeBlockDirective(),
+                new ConfigurationBlockDirective(),
+                new IndexDirective(),
+                new NoteDirective(),
+                new RoleDirective(),
+                new SeeAlsoDirective(),
+                new SidebarDirective(),
+                new TipDirective(),
+                new VersionAddedDirective(),
+            ]
+        );
     }
 
     public function getReferences(): array
     {
-        $references = parent::getReferences();
-
-        return array_merge($references, [
+        return [
+            new Doc(),
+//            new Doc('ref'),
+            new RefReference(),
             new ClassReference(),
             new MethodReference(),
             new NamespaceReference(),
             new PhpFunctionReference(),
             new PhpMethodReference(),
-        ]);
+        ];
     }
 }

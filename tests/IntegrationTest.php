@@ -9,11 +9,13 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use SymfonyDocs\HtmlKernel;
-use Symfony\Component\DomCrawler\Crawler;
 
 class IntegrationTest extends TestCase
 {
-    public function testIntegration()
+    /**
+     * @dataProvider integrationProvider
+     */
+    public function testIntegration(string $folder)
     {
         $kernel  = new HtmlKernel();
         $builder = new Builder($kernel);
@@ -21,23 +23,19 @@ class IntegrationTest extends TestCase
         $fs->remove(__DIR__.'/_output');
 
         $builder->build(
-            __DIR__.'/fixtures/source',
+            sprintf('%s/fixtures/source/%s', __DIR__, $folder),
             __DIR__.'/_output',
             true // verbose
         );
 
         $finder = new Finder();
-        $finder->in(__DIR__.'/fixtures/expected/')
+        $finder->in(sprintf('%s/fixtures/expected/%s', __DIR__, $folder))
             ->files()
             ->depth('>=0');
 
         $indenter = new Indenter();
         foreach ($finder as $expectedFile) {
             $relativePath = $expectedFile->getRelativePathname();
-            if ($relativePath !== 'tables.html') {
-                continue;
-            }
-
             $actualFilename = __DIR__.'/_output/'.$relativePath;
             $this->assertFileExists($actualFilename);
 
@@ -45,6 +43,21 @@ class IntegrationTest extends TestCase
             $actualSource   = $indenter->indent(file_get_contents($actualFilename));
             $this->assertSame($expectedSource, $actualSource, sprintf('File %s is not equal', $relativePath));
         }
+    }
+
+    public function integrationProvider()
+    {
+//        yield 'main' => [
+//            'folder' => 'main'
+//        ];
+
+        yield 'toctree' => [
+            'folder' => 'toctree'
+        ];
+
+        yield 'refReference' => [
+            'folder' => 'refReference'
+        ];
     }
 
     /**
@@ -71,78 +84,55 @@ class IntegrationTest extends TestCase
     public function parserUnitBlockProvider()
     {
         yield 'tables' => [
-            'documentName' => 'tables'
+            'documentName' => 'tables',
         ];
 
         yield 'caution' => [
-            'documentName' => 'caution'
+            'documentName' => 'caution',
         ];
 
         yield 'note' => [
-            'documentName' => 'note'
+            'documentName' => 'note',
         ];
 
         yield 'seealso' => [
-            'documentName' => 'seealso'
+            'documentName' => 'seealso',
         ];
 
         yield 'tip' => [
-            'documentName' => 'tip'
+            'documentName' => 'tip',
         ];
 
         yield 'versionadded' => [
-            'documentName' => 'versionadded'
+            'documentName' => 'versionadded',
         ];
 
         yield 'class' => [
-            'documentName' => 'class'
+            'documentName' => 'class',
         ];
 
         yield 'configuration-block' => [
-            'documentName' => 'configuration-block'
+            'documentName' => 'configuration-block',
         ];
 
         yield 'code-block' => [
-            'documentName' => 'code-block'
+            'documentName' => 'code-block',
         ];
 
         yield 'sidebar' => [
-            'documentName' => 'sidebar'
+            'documentName' => 'sidebar',
         ];
 
         yield 'note-code-block-nested' => [
-            'documentName' => 'note-code-block-nested'
+            'documentName' => 'note-code-block-nested',
         ];
 
         yield 'sidebar-code-block-nested' => [
-            'documentName' => 'sidebar-code-block-nested'
+            'documentName' => 'sidebar-code-block-nested',
         ];
 
         yield 'literal' => [
-            'documentName' => 'literal'
+            'documentName' => 'literal',
         ];
-    }
-
-    public function testTocTree()
-    {
-        $kernel  = new HtmlKernel();
-        $builder = new Builder($kernel);
-        $fs      = new Filesystem();
-        $fs->remove(__DIR__.'/_output/toctree');
-
-        $builder->build(
-            __DIR__.'/fixtures/source/toctree',
-            __DIR__.'/_output/toctree',
-            true // verbose
-        );
-
-        $indenter = new Indenter();
-
-        $expectedFile = sprintf('%s/fixtures/expected/toctree/index.html', __DIR__);
-        $outputFile = sprintf('%s/_output/toctree/index.html', __DIR__);
-        $this->assertSame(
-            $indenter->indent(file_get_contents($expectedFile)),
-            $indenter->indent(file_get_contents($outputFile))
-        );
     }
 }
