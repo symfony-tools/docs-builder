@@ -17,12 +17,17 @@ class PhpMethodReference extends Reference
 
     public function resolve(Environment $environment, string $data): ResolvedReference
     {
-        $class = explode('::', $data)[0];
+        $class  = explode('::', $data)[0];
         $method = explode('::', $data)[1];
 
         return new ResolvedReference(
             $data.'()',
-            sprintf(self::BASE__URL, strtolower($class), strtolower($method))
+            sprintf(self::BASE__URL, strtolower($class), strtolower($method)),
+            [],
+            [
+                'class' => 'reference external',
+                'title' => $class
+            ]
         );
     }
 }

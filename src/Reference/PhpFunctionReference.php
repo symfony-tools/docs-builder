@@ -19,7 +19,12 @@ class PhpFunctionReference extends Reference
     {
         return new ResolvedReference(
             $data,
-            sprintf(self::BASE__URL, str_replace('_', '-', strtolower($data)))
+            sprintf(self::BASE__URL, str_replace('_', '-', strtolower($data))),
+            [],
+            [
+                'class' => 'reference external',
+                'title' => $data,
+            ]
         );
     }
 }

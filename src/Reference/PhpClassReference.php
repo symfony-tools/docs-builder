@@ -19,7 +19,12 @@ class PhpClassReference extends Reference
     {
         return new ResolvedReference(
             $data,
-            sprintf(self::BASE__URL, strtolower($data))
+            sprintf(self::BASE__URL, strtolower($data)),
+            [],
+            [
+                'class' => 'reference external',
+                'title' => $data,
+            ]
         );
     }
 }

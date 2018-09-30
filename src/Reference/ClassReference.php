@@ -21,7 +21,12 @@ class ClassReference extends Reference
 
         return new ResolvedReference(
             $className,
-            sprintf('%s/%s/%s.html', self::BASE__URL, '4.1', str_replace('\\', '/', $className))
+            sprintf('%s/%s/%s.html', self::BASE__URL, '4.1', str_replace('\\', '/', $className)),
+            [],
+            [
+                'class' => 'reference external',
+                'title' => $className,
+            ]
         );
     }
 }

@@ -20,8 +20,13 @@ class NamespaceReference extends Reference
         $className = str_replace('\\\\', '\\', $data);
 
         return new ResolvedReference(
-            $className,
-            sprintf('%s/%s/%s.html', self::BASE__URL, '4.1', str_replace('\\', '/', $className))
+            substr(strrchr($className, '\\'), 1),
+            sprintf('%s/%s/%s.html', self::BASE__URL, '4.1', str_replace('\\', '/', $className)),
+            [],
+            [
+                'class' => 'reference external',
+                'title' => $className
+            ]
         );
     }
 }
