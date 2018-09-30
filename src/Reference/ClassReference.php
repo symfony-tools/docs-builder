@@ -4,11 +4,12 @@ namespace SymfonyDocs\Reference;
 
 use Doctrine\RST\Environment;
 use Doctrine\RST\Reference;
-use Doctrine\RST\References\Resolver;
 use Doctrine\RST\References\ResolvedReference;
 
 class ClassReference extends Reference
 {
+    private const BASE__URL = 'https://api.symfony.com';
+
     public function getName(): string
     {
         return 'class';
@@ -16,7 +17,11 @@ class ClassReference extends Reference
 
     public function resolve(Environment $environment, string $data): ResolvedReference
     {
-        $resolver = new Resolver();
-        return $resolver->resolve($environment, $data);
+        $className = str_replace('\\\\', '\\', $data);
+
+        return new ResolvedReference(
+            $className,
+            sprintf('%s/%s/%s.html', self::BASE__URL, '4.1', str_replace('\\', '/', $className))
+        );
     }
 }

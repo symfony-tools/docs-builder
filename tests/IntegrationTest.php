@@ -50,12 +50,8 @@ class IntegrationTest extends TestCase
             'folder' => 'toctree',
         ];
 
-        yield 'refReference' => [
-            'folder' => 'refReference',
-        ];
-
-        yield 'refReferenceError' => [
-            'folder' => 'refReferenceError',
+        yield 'ref-reference' => [
+            'folder' => 'ref-reference',
         ];
     }
 
@@ -133,6 +129,18 @@ class IntegrationTest extends TestCase
         yield 'literal' => [
             'documentName' => 'literal',
         ];
+
+        yield 'class-reference' => [
+            'documentName' => 'class-reference',
+        ];
+
+        yield 'namespace-reference' => [
+            'documentName' => 'namespace-reference',
+        ];
+
+        yield 'method-reference' => [
+            'documentName' => 'method-reference',
+        ];
     }
 
     public function testRefReferenceError()
@@ -140,7 +148,7 @@ class IntegrationTest extends TestCase
         $this->expectException(\RuntimeException::class);
 
         $this->createBuilder()->build(
-            sprintf('%s/fixtures/source/refReferenceError', __DIR__),
+            sprintf('%s/fixtures/source/ref-reference-error', __DIR__),
             __DIR__.'/_output',
             true // verbose
         );
