@@ -141,6 +141,18 @@ class IntegrationTest extends TestCase
         yield 'method-reference' => [
             'documentName' => 'method-reference',
         ];
+
+        yield 'php-class-reference' => [
+            'documentName' => 'php-class-reference',
+        ];
+
+        yield 'php-function-reference' => [
+            'documentName' => 'php-function-reference',
+        ];
+
+        yield 'php-method-reference' => [
+            'documentName' => 'php-method-reference',
+        ];
     }
 
     public function testRefReferenceError()

@@ -4,11 +4,12 @@ namespace SymfonyDocs\Reference;
 
 use Doctrine\RST\Environment;
 use Doctrine\RST\Reference;
-use Doctrine\RST\References\Resolver;
 use Doctrine\RST\References\ResolvedReference;
 
 class PhpMethodReference extends Reference
 {
+    private const BASE__URL = 'https://secure.php.net/manual/en/%s.%s.php';
+
     public function getName(): string
     {
         return 'phpmethod';
@@ -16,7 +17,12 @@ class PhpMethodReference extends Reference
 
     public function resolve(Environment $environment, string $data): ResolvedReference
     {
-        $resolver = new Resolver();
-        return $resolver->resolve($environment, $data);
+        $class = explode('::', $data)[0];
+        $method = explode('::', $data)[1];
+
+        return new ResolvedReference(
+            $data.'()',
+            sprintf(self::BASE__URL, strtolower($class), strtolower($method))
+        );
     }
 }

@@ -11,3 +11,5 @@ Notes
 
 - warning about exceptions thrown and abortOnError conf
 - add some format check on references
+- test other notation for api reference
+- conf file, at least for sf version

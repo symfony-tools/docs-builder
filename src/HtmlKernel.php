@@ -20,6 +20,7 @@ use SymfonyDocs\Directive\VersionAddedDirective;
 use SymfonyDocs\Reference\ClassReference;
 use SymfonyDocs\Reference\MethodReference;
 use SymfonyDocs\Reference\NamespaceReference;
+use SymfonyDocs\Reference\PhpClassReference;
 use SymfonyDocs\Reference\PhpFunctionReference;
 use SymfonyDocs\Reference\PhpMethodReference;
 use SymfonyDocs\Reference\RefReference;
@@ -75,13 +76,13 @@ class HtmlKernel extends Kernel
     {
         return [
             new Doc(),
-//            new Doc('ref'),
             new RefReference(),
             new ClassReference(),
             new MethodReference(),
             new NamespaceReference(),
             new PhpFunctionReference(),
             new PhpMethodReference(),
+            new PhpClassReference(),
         ];
     }
 }

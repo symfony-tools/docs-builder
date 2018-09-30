@@ -4,11 +4,12 @@ namespace SymfonyDocs\Reference;
 
 use Doctrine\RST\Environment;
 use Doctrine\RST\Reference;
-use Doctrine\RST\References\Resolver;
 use Doctrine\RST\References\ResolvedReference;
 
 class PhpFunctionReference extends Reference
 {
+    private const BASE__URL = 'https://secure.php.net/manual/en/function.%s.php';
+
     public function getName(): string
     {
         return 'phpfunction';
@@ -16,8 +17,9 @@ class PhpFunctionReference extends Reference
 
     public function resolve(Environment $environment, string $data): ResolvedReference
     {
-        $resolver = new Resolver();
-        return $resolver->resolve($environment, $data);
+        return new ResolvedReference(
+            $data,
+            sprintf(self::BASE__URL, str_replace('_', '-', strtolower($data)))
+        );
     }
-
 }
