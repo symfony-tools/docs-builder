@@ -3,7 +3,7 @@
 namespace SymfonyDocs\Nodes;
 
 use Doctrine\RST\Nodes\CodeNode as Base;
-use function htmlspecialchars;
+use Highlight\Highlighter;
 
 class CodeNode extends Base
 {
@@ -18,7 +18,7 @@ class CodeNode extends Base
                 </td>
                 <td class="code">
                     <div class="highlight">
-                        <pre>%s</pre>
+                        <pre class="hljs">%s</pre>
                     </div>
                 </td>
             </tr>
@@ -26,7 +26,7 @@ class CodeNode extends Base
     </div>
 </div>';
 
-    public function render() : string
+    public function render(): string
     {
         $nodeValue = $this->getValue();
         assert(is_string($nodeValue));
@@ -41,11 +41,16 @@ class CodeNode extends Base
             $lineNumbers .= $iAsString."\n";
         }
 
+        $language = $this->getLanguage() ?? 'php';
+
+        $highLighter     = new Highlighter();
+        $highlightedCode = $highLighter->highlight($language, implode("\n", $lines));
+
         return sprintf(
             self::CODE_BLOCK_TEMPLATE,
-            $this->getLanguage() ?? 'php',
+            $language,
             rtrim($lineNumbers),
-            implode("\n", $lines)
+            $highlightedCode->value
         );
     }
 

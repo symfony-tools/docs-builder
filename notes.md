@@ -9,6 +9,5 @@ Changes needed in symfony.com
 Notes
 =====
 
-- warning about exceptions thrown and abortOnError conf
 - add some format check on references
-- conf file, at least for sf version
+- toc tree bugs whith :glob:

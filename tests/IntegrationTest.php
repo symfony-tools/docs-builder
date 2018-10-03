@@ -42,9 +42,9 @@ class IntegrationTest extends TestCase
 
     public function integrationProvider()
     {
-        //        yield 'main' => [
-        //            'folder' => 'main'
-        //        ];
+//        yield 'main' => [
+//            'folder' => 'main',
+//        ];
 
         yield 'toctree' => [
             'folder' => 'toctree',
