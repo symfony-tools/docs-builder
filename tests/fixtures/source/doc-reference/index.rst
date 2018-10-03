@@ -1,5 +1,5 @@
 
-:ref:`A ref test <ref-test>`
+:doc:`A doc test </file>`
 
 .. toctree::
     :hidden:

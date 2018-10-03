@@ -4,58 +4,89 @@
     <meta charset="utf-8" />
 </head>
 <body>
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        <th>Route path</th>
-        <th>If the requested URL is /foo</th>
-        <th>If the requested URL is /foo/</th>
+<table class="docutils" border="1">
+    <thead valign="bottom">
+    <tr class="row-odd">
+        <th class="head">Route path</th>
+        <th class="head">If the requested URL is /foo</th>
+        <th class="head">If the requested URL is /foo/</th>
     </tr>
     </thead>
-    <tbody>
-    <tr>
+    <tbody valign="top">
+    <tr class="row-even">
         <td>/foo</td>
         <td>It matches (200 status response)</td>
         <td>It doesn't match (404 status response)</td>
     </tr>
-    <tr>
+    <tr class="row-odd">
         <td>/foo/</td>
         <td>It makes a 301 redirect to /foo/</td>
         <td>It matches (200 status response)</td>
     </tr>
     </tbody>
 </table>
-<table class="table table-bordered">
-    <tbody>
-    <tr>
+<table class="docutils" border="1">
+    <tbody valign="top">
+    <tr class="row-odd">
         <td>Cell 1</td>
         <td>Cell 2</td>
     </tr>
-    <tr>
+    <tr class="row-even">
         <td>Cell 3</td>
         <td>Cell 4</td>
     </tr>
-    <tr>
-        <td>Cell 5 </td>
-        <td>Cell 6 extra line</td>
+    <tr class="row-odd">
+        <td>Cell 5</td>
+        <td>Cell 6
+extra line</td>
     </tr>
     </tbody>
 </table>
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        <th>Cell 1</th>
-        <th>Cell 2</th>
+<table class="docutils" border="1">
+    <thead valign="bottom">
+    <tr class="row-odd">
+        <th class="head">Cell 1</th>
+        <th class="head">Cell 2</th>
     </tr>
     </thead>
-    <tbody>
-    <tr>
+    <tbody valign="top">
+    <tr class="row-even">
         <td>Cell 3</td>
         <td>Cell 4</td>
     </tr>
-    <tr>
-        <td>Cell 5 </td>
-        <td>Cell 6 extra line</td>
+    <tr class="row-odd">
+        <td>Cell 5</td>
+        <td>Cell 6
+extra line</td>
+    </tr>
+    </tbody>
+</table>
+<table class="docutils" border="1">
+    <thead valign="bottom">
+    <tr class="row-odd">
+        <th class="head">Cell 1</th>
+        <th class="head">Cell 2</th>
+    </tr>
+    </thead>
+    <tbody valign="top">
+    <tr class="row-even">
+        <td>Cell 3</td>
+        <td>Cell 4</td>
+    </tr>
+    <tr class="row-odd">
+        <td>Cell 5</td>
+        <td>
+            <ul class="simple">
+                <li>List item 1</li>
+                <li>List item 2</li>
+                <li>List item 3</li>
+                <li>List item 4</li>
+            </ul>
+        </td>
+    </tr>
+    <tr class="row-even">
+        <td>Cell 7</td>
+        <td>Cell 8</td>
     </tr>
     </tbody>
 </table>

@@ -24,6 +24,6 @@ class VersionAddedDirective extends SubDirective
         string $data,
         array $options
     ): ?Node {
-        return new RawNode(sprintf('<div class="versionadded"><p><span class="versionmodified">New in version %s: </span>%s</p></div>', $data, trim(strip_tags((string) $document))));
+        return new RawNode(sprintf('<div class="versionadded"><p><span class="versionmodified">New in version %s: </span>%s</p></div>', $data, trim(strip_tags((string) $document, '<a><code>'))));
     }
 }

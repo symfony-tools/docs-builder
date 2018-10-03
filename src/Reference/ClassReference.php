@@ -21,7 +21,7 @@ class ClassReference extends Reference
         $className = str_replace('\\\\', '\\', $data);
 
         return new ResolvedReference(
-            $className,
+            substr(strrchr($className, '\\'), 1),
             sprintf('%s/%s/%s.html', self::BASE__URL, HtmlKernel::getVersion(), str_replace('\\', '/', $className)),
             [],
             [

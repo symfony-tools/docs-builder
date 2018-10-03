@@ -4,6 +4,11 @@
     file
 
 .. toctree::
+    :maxdepth: 1
+
+    file
+
+.. toctree::
 
     directory/another_file
 

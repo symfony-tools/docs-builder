@@ -17,10 +17,12 @@ class IntegrationTest extends TestCase
      */
     public function testIntegration(string $folder)
     {
-        $this->createBuilder()->build(
+        $builder = $this->createBuilder();
+
+        $builder->build(
             sprintf('%s/fixtures/source/%s', __DIR__, $folder),
             __DIR__.'/_output',
-            true // verbose
+            false // verbose
         );
 
         $finder = new Finder();
@@ -34,17 +36,20 @@ class IntegrationTest extends TestCase
             $actualFilename = __DIR__.'/_output/'.$relativePath;
             $this->assertFileExists($actualFilename);
 
-            $expectedSource = $indenter->indent($expectedFile->getContents());
-            $actualSource   = $indenter->indent(file_get_contents($actualFilename));
-            $this->assertSame($expectedSource, $actualSource, sprintf('File %s is not equal', $relativePath));
+            $this->assertSame(
+                // removes odd trailing space the indenter is adding
+                str_replace(" \n", "\n", $indenter->indent($expectedFile->getContents())),
+                str_replace(" \n", "\n", $indenter->indent(file_get_contents($actualFilename))),
+                sprintf('File %s is not equal', $relativePath)
+            );
         }
     }
 
     public function integrationProvider()
     {
-//        yield 'main' => [
-//            'folder' => 'main',
-//        ];
+        yield 'main' => [
+            'folder' => 'main',
+        ];
 
         yield 'toctree' => [
             'folder' => 'toctree',
@@ -52,6 +57,10 @@ class IntegrationTest extends TestCase
 
         yield 'ref-reference' => [
             'folder' => 'ref-reference',
+        ];
+
+        yield 'doc-reference' => [
+            'folder' => 'doc-reference',
         ];
     }
 
@@ -198,6 +207,10 @@ class IntegrationTest extends TestCase
         yield 'code-block-terminal' => [
             'blockName' => 'code-blocks/terminal',
         ];
+
+        yield 'list' => [
+            'blockName' => 'list',
+        ];
     }
 
     public function testRefReferenceError()
@@ -207,7 +220,7 @@ class IntegrationTest extends TestCase
         $this->createBuilder()->build(
             sprintf('%s/fixtures/source/ref-reference-error', __DIR__),
             __DIR__.'/_output',
-            true // verbose
+            false // verbose
         );
     }
 

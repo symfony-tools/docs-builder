@@ -2,7 +2,6 @@
 
 namespace SymfonyDocs;
 
-use Doctrine\RST\References\Doc;
 use Doctrine\RST\Directive;
 use Doctrine\RST\Factory;
 use Doctrine\RST\HTML\Kernel;
@@ -18,6 +17,7 @@ use SymfonyDocs\Directive\SidebarDirective;
 use SymfonyDocs\Directive\TipDirective;
 use SymfonyDocs\Directive\VersionAddedDirective;
 use SymfonyDocs\Reference\ClassReference;
+use SymfonyDocs\Reference\DocReference;
 use SymfonyDocs\Reference\MethodReference;
 use SymfonyDocs\Reference\NamespaceReference;
 use SymfonyDocs\Reference\PhpClassReference;
@@ -96,7 +96,7 @@ class HtmlKernel extends Kernel
     public function getReferences(): array
     {
         return [
-            new Doc(),
+            new DocReference(),
             new RefReference(),
             new ClassReference(),
             new MethodReference(),

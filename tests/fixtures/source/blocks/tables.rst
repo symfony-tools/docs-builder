@@ -23,3 +23,16 @@ Route path  If the requested URL is /foo              If the requested URL is /f
 | Cell 5 | Cell 6     |
 |        | extra line |
 +--------+------------+
+
++--------+---------------+
+| Cell 1 | Cell 2        |
++========+===============+
+| Cell 3 | Cell 4        |
++--------+---------------+
+| Cell 5 | - List item 1 |
+|        | - List item 2 |
+|        | - List item 3 |
+|        | - List item 4 |
++--------+---------------+
+| Cell 7 | Cell 8        |
++--------+---------------+

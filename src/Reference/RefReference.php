@@ -17,7 +17,7 @@ class RefReference extends Reference
     public function resolve(Environment $environment, string $data): ResolvedReference
     {
         $resolver = new Resolver();
-        $resolvedReference = $resolver->resolve($environment, $data, ['class' => 'reference internal']);
+        $resolvedReference = $resolver->resolve($environment, $data, ['class' => 'reference internal', 'is-ref' => true]);
         if ($resolvedReference->getTitle() === '(unresolved)') {
             throw  new \RuntimeException(sprintf('Reference "%s" could not be resolved', $data));
         }

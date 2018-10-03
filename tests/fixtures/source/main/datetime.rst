@@ -24,6 +24,9 @@ date and time (e.g. ``1984-06-05 12:15:30``).
 +----------------------+-----------------------------------------------------------------------------+
 | Class                | :class:`Symfony\\Component\\Form\\Extension\\Core\\Type\\DateTimeType`      |
 +----------------------+-----------------------------------------------------------------------------+
+| Ref                  | :ref:`reference-forms-type-date-format`                                     |
+|                      | :ref:`Test reference <internal-reference>`                                  |
++----------------------+-----------------------------------------------------------------------------+
 
 Field Options
 -------------
@@ -53,6 +56,7 @@ Date widget!
 
     Sometimes we add notes. But not too often because they interrupt
     the flow.
+    :ref:`internal-reference`
 
 placeholder
 ~~~~~~~~~~~
@@ -60,6 +64,7 @@ placeholder
 .. versionadded:: 2.6
     The ``placeholder`` option was introduced in Symfony 2.6 and replaces
     ``empty_value``, which is available prior to 2.6.
+    :ref:`internal-reference`
 
 **type**: ``string`` | ``array``
 
@@ -73,9 +78,10 @@ it will be used as the **blank value** of all select boxes::
         'placeholder' => 'Select a value',
     ));
 
-.. seealso:
+.. seealso::
 
     Also check out the homepage - :doc:`/index`.
+    :ref:`internal-reference`
 
 Custom classes for links are also cool:
 

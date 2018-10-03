@@ -11,7 +11,7 @@ class TocNode extends Base
     /** @var int */
     private $depth;
 
-    public function render() : string
+    public function render(): string
     {
         if (isset($this->options['hidden'])) {
             return '';
@@ -43,8 +43,7 @@ class TocNode extends Base
         array $titles,
         int $level = 1,
         array $path = []
-    ) : string {
-
+    ): string {
         if (-1 !== $this->depth && $level > $this->depth) {
             return '';
         }
@@ -53,25 +52,38 @@ class TocNode extends Base
         foreach ($titles as $k => $entry) {
             $path[$level - 1] = (int) $k + 1;
 
-            list($title, $childs) = $entry;
+            [$title, $children] = $entry;
+
+            $slug = $title;
 
             if (is_array($title)) {
-                list($title, $target) = $title;
+                $slug = $title[1];
+            }
+
+            $anchor = Environment::slugify($slug);
+            $target = $url;
+            if (1 !== $level) {
+                $target = $url . '#' . $anchor;
+            }
+
+            if (is_array($title)) {
+                [$title, $target] = $title;
 
                 $info = $this->environment->resolve('doc', $target);
 
-                $url = $this->environment->relativeUrl($info->getUrl());
+                $target = $this->environment->relativeUrl($info->getUrl());
             }
 
-            $html .= sprintf('<li class="toctree-l%s"><a class="reference internal" href="%s">%s</a></li>', $level, $url, $title);
+            $html .= sprintf('<li class="toctree-l%s"><a class="reference internal" href="%s">%s</a>', $level, $target, $title);
 
-            if (! $childs) {
-                continue;
+            if ($children && ($level < $this->depth || -1 === $this->depth)) {
+                $html .= '<ul>';
+                $html .= $this->renderLevel($url, $children, $level + 1, $path);
+                $html .= '</ul>';
             }
 
-            $html .= '<ul>';
-            $html .= $this->renderLevel($url, $childs, $level + 1, $path);
-            $html .= '</ul>';
+            $html .= '</li>';
+
         }
 
         return $html;
