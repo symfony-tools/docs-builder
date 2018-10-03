@@ -71,87 +71,132 @@ class IntegrationTest extends TestCase
 
         $expectedFile = sprintf('%s/fixtures/expected/blocks/%s.html', __DIR__, $blockName);
         $this->assertSame(
-            $indenter->indent(file_get_contents($expectedFile)),
-            $indenter->indent($document)
+            // removes odd trailing space the indenter is adding
+            str_replace(" \n", "\n", $indenter->indent(file_get_contents($expectedFile))),
+            str_replace(" \n", "\n", $indenter->indent($document))
         );
     }
 
     public function parserUnitBlockProvider()
     {
         yield 'tables' => [
-            'documentName' => 'tables',
+            'blockName' => 'tables',
         ];
 
         yield 'caution' => [
-            'documentName' => 'caution',
+            'blockName' => 'caution',
         ];
 
         yield 'note' => [
-            'documentName' => 'note',
+            'blockName' => 'note',
         ];
 
         yield 'seealso' => [
-            'documentName' => 'seealso',
+            'blockName' => 'seealso',
         ];
 
         yield 'tip' => [
-            'documentName' => 'tip',
+            'blockName' => 'tip',
         ];
 
         yield 'versionadded' => [
-            'documentName' => 'versionadded',
+            'blockName' => 'versionadded',
         ];
 
         yield 'class' => [
-            'documentName' => 'class',
+            'blockName' => 'class',
         ];
 
         yield 'configuration-block' => [
-            'documentName' => 'configuration-block',
-        ];
-
-        yield 'code-block' => [
-            'documentName' => 'code-block',
+            'blockName' => 'configuration-block',
         ];
 
         yield 'sidebar' => [
-            'documentName' => 'sidebar',
+            'blockName' => 'sidebar',
         ];
 
         yield 'note-code-block-nested' => [
-            'documentName' => 'note-code-block-nested',
+            'blockName' => 'note-code-block-nested',
         ];
 
         yield 'sidebar-code-block-nested' => [
-            'documentName' => 'sidebar-code-block-nested',
+            'blockName' => 'sidebar-code-block-nested',
         ];
 
         yield 'literal' => [
-            'documentName' => 'literal',
+            'blockName' => 'literal',
         ];
 
         yield 'class-reference' => [
-            'documentName' => 'class-reference',
+            'blockName' => 'references/class',
         ];
 
         yield 'namespace-reference' => [
-            'documentName' => 'namespace-reference',
+            'blockName' => 'references/namespace',
         ];
 
         yield 'method-reference' => [
-            'documentName' => 'method-reference',
+            'blockName' => 'references/method',
         ];
 
         yield 'php-class-reference' => [
-            'documentName' => 'php-class-reference',
+            'blockName' => 'references/php-class',
         ];
 
         yield 'php-function-reference' => [
-            'documentName' => 'php-function-reference',
+            'blockName' => 'references/php-function',
         ];
 
         yield 'php-method-reference' => [
-            'documentName' => 'php-method-reference',
+            'blockName' => 'references/php-method',
+        ];
+
+        yield 'code-block-php' => [
+            'blockName' => 'code-blocks/php',
+        ];
+
+        yield 'code-block-html' => [
+            'blockName' => 'code-blocks/html',
+        ];
+
+        yield 'code-block-twig' => [
+            'blockName' => 'code-blocks/twig',
+        ];
+
+        yield 'code-block-html-twig' => [
+            'blockName' => 'code-blocks/html-twig',
+        ];
+
+        yield 'code-block-xml' => [
+            'blockName' => 'code-blocks/xml',
+        ];
+
+        yield 'code-block-yaml' => [
+            'blockName' => 'code-blocks/yaml',
+        ];
+
+        yield 'code-block-ini' => [
+            'blockName' => 'code-blocks/ini',
+        ];
+
+        yield 'code-block-bash' => [
+            'blockName' => 'code-blocks/bash',
+        ];
+
+        yield 'code-block-html-php' => [
+            'blockName' => 'code-blocks/html-php',
+        ];
+
+        yield 'code-block-php-annotations' => [
+            'blockName' => 'code-blocks/php-annotations',
+        ];
+
+        yield 'code-block-text' => [
+            'blockName' => 'code-blocks/text',
+        ];
+
+        yield 'code-block-terminal' => [
+            'blockName' => 'code-blocks/terminal',
         ];
     }
 

@@ -10,4 +10,4 @@ Notes
 =====
 
 - add some format check on references
-- toc tree bugs whith :glob:
+- toc tree bugs whith :glob: (issue opened)

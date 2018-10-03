@@ -7,6 +7,21 @@ use Highlight\Highlighter;
 
 class CodeNode extends Base
 {
+    private const LANGUAGES_MAPPING = [
+        'php'             => 'php',
+        'html'            => 'html',
+        'xml'             => 'xml',
+        'yaml'            => 'yaml',
+        'twig'            => 'twig',
+        'ini'             => 'ini',
+        'bash'            => 'bash',
+        'html+twig'       => 'twig',
+        'html+php'        => 'html',
+        'php-annotations' => 'php',
+        'text'            => 'text',
+        'terminal'        => 'bash',
+    ];
+
     private const CODE_BLOCK_TEMPLATE = '<div class="literal-block notranslate">
     <div class="highlight-%s">
         <table class="highlighttable">
@@ -18,7 +33,7 @@ class CodeNode extends Base
                 </td>
                 <td class="code">
                     <div class="highlight">
-                        <pre class="hljs">%s</pre>
+                        <pre class="hljs %s">%s</pre>
                     </div>
                 </td>
             </tr>
@@ -31,6 +46,7 @@ class CodeNode extends Base
         $nodeValue = $this->getValue();
         assert(is_string($nodeValue));
         $lines = $this->getLines($nodeValue);
+        $code  = implode("\n", $lines);
 
         $lineNumbers = "";
         for ($i = 1; $i <= \count($lines); $i++) {
@@ -43,14 +59,21 @@ class CodeNode extends Base
 
         $language = $this->getLanguage() ?? 'php';
 
-        $highLighter     = new Highlighter();
-        $highlightedCode = $highLighter->highlight($language, implode("\n", $lines));
+        if (!isset(self::LANGUAGES_MAPPING[$language])) {
+            throw new \RuntimeException(sprintf('Language "%s" is unknown', $language));
+        }
+
+        if ('text' !== $language) {
+            $highLighter = new Highlighter();
+            $code        = $highLighter->highlight(self::LANGUAGES_MAPPING[$language], $code)->value;
+        }
 
         return sprintf(
             self::CODE_BLOCK_TEMPLATE,
             $language,
             rtrim($lineNumbers),
-            $highlightedCode->value
+            self::LANGUAGES_MAPPING[$language],
+            $code
         );
     }
 

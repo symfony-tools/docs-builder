@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+</head>
+<body>
+<div class="literal-block notranslate">
+    <div class="highlight-php-annotations">
+        <table class="highlighttable">
+            <tr>
+                <td class="linenos">
+                    <div class="linenodiv">
+                        <pre> 1 2 3 4 5 6 7 8 9
+10
+11
+12
+13
+14</pre>
+                    </div>
+                </td>
+                <td class="code">
+                    <div class="highlight">
+                                                        <pre class="hljs php">
+                                    <span class="hljs-comment">// src/AppBundle/Entity/Transaction.php</span>
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">AppBundle</span>\<span class="hljs-title">Entity</span>; <span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">Validator</span>\<span class="hljs-title">Constraints</span> <span class="hljs-title">as</span> <span class="hljs-title">Assert</span>;
+                                    <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Transaction</span>
+</span>
+                                    {
+                                    <span class="hljs-comment">/** * <span class="hljs-doctag">@Assert</span>\Iban( * message="This is not a valid International Bank Account Number (IBAN)." * ) */</span>
+                                    <span class="hljs-keyword">protected</span> $bankAccountNumber;
+}
+                                </pre>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>

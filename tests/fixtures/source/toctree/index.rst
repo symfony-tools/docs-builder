@@ -13,6 +13,12 @@
     *
 
 .. toctree::
+    :glob:
+
+    file
+    *
+
+.. toctree::
     :hidden:
 
     file
