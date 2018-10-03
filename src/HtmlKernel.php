@@ -30,6 +30,27 @@ class HtmlKernel extends Kernel
     /** @var NodeFactory */
     private $symfonyDocsFactory;
 
+    /** @var array */
+    private static $configuration;
+
+    public static function getConfiguration(): array
+    {
+        if (null === self::$configuration) {
+            self::$configuration = json_decode(file_get_contents(__DIR__.'/../conf.json'), true);
+        }
+
+        return self::$configuration;
+    }
+
+    public static function getVersion(): string
+    {
+        if (!isset(self::getConfiguration()['version'])) {
+            throw new \RuntimeException('The version must be defined in "/_build/conf.json"');
+        }
+
+        return self::getConfiguration()['version'];
+    }
+
     public function getName(): string
     {
         return parent::getName();

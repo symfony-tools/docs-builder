@@ -5,6 +5,7 @@ namespace SymfonyDocs\Reference;
 use Doctrine\RST\Environment;
 use Doctrine\RST\Reference;
 use Doctrine\RST\References\ResolvedReference;
+use SymfonyDocs\HtmlKernel;
 
 class NamespaceReference extends Reference
 {
@@ -21,7 +22,7 @@ class NamespaceReference extends Reference
 
         return new ResolvedReference(
             substr(strrchr($className, '\\'), 1),
-            sprintf('%s/%s/%s.html', self::BASE__URL, '4.1', str_replace('\\', '/', $className)),
+            sprintf('%s/%s/%s.html', self::BASE__URL, HtmlKernel::getVersion(), str_replace('\\', '/', $className)),
             [],
             [
                 'class' => 'reference external',
