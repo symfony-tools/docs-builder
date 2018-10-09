@@ -9,10 +9,13 @@
         }
     },
     "require": {
+        "ext-json": "*",
         "doctrine/rst-parser": "dev-sf-docs-tweaks",
         "scrivo/highlight.php": "v9.12.0.5",
         "symfony/phpunit-bridge": "^4.1",
-        "symfony/filesystem": "^4.1"
+        "symfony/filesystem": "^4.1",
+        "symfony/dom-crawler": "^4.1",
+        "symfony/css-selector": "^4.1"
     },
     "repositories": [
         {

@@ -6,9 +6,11 @@ use Doctrine\RST\Builder;
 use Doctrine\RST\Parser;
 use Gajus\Dindent\Indenter;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use SymfonyDocs\HtmlKernel;
+use SymfonyDocs\JsonGenerator;
 
 class IntegrationTest extends TestCase
 {
@@ -37,11 +39,29 @@ class IntegrationTest extends TestCase
             $this->assertFileExists($actualFilename);
 
             $this->assertSame(
-                // removes odd trailing space the indenter is adding
+            // removes odd trailing space the indenter is adding
                 str_replace(" \n", "\n", $indenter->indent($expectedFile->getContents())),
                 str_replace(" \n", "\n", $indenter->indent(file_get_contents($actualFilename))),
                 sprintf('File %s is not equal', $relativePath)
             );
+        }
+
+        $jsonGenerator = new JsonGenerator($builder->getDocuments());
+        $jsonGenerator->generateJson(__DIR__.'/_output', __DIR__.'/_outputJson');
+
+        foreach ($finder as $htmlFile) {
+            $relativePath   = $htmlFile->getRelativePathname();
+            $actualFilename = __DIR__.'/_outputJson/'.str_replace('.html', '.json', $relativePath);
+            $this->assertFileExists($actualFilename);
+
+            $jsonData = json_decode(file_get_contents($actualFilename), true);
+            $crawler  = new Crawler($htmlFile->getContents());
+
+            $this->assertSame(
+                str_replace(" \n", "\n", $indenter->indent($crawler->filter('body')->html())),
+                str_replace(" \n", "\n", $indenter->indent($jsonData['body']))
+            );
+            $this->assertSame($crawler->filter('h1')->first()->text(), $jsonData['title'].'¶');
         }
     }
 
@@ -80,7 +100,6 @@ class IntegrationTest extends TestCase
 
         $expectedFile = sprintf('%s/fixtures/expected/blocks/%s.html', __DIR__, $blockName);
         $this->assertSame(
-            // removes odd trailing space the indenter is adding
             str_replace(" \n", "\n", $indenter->indent(file_get_contents($expectedFile))),
             str_replace(" \n", "\n", $indenter->indent($document))
         );
