@@ -6,6 +6,7 @@ Changes needed in symfony.com
 - idem for `sidebar` (the `.first` css class is not even used in css)
 - `div.section` are now removed, so the `margin-top` needd to go on `<hX>`
 - `<p>` added to `.. seealso::` directive 
+- `versionadded` dom changed 
 
 Notes
 =====

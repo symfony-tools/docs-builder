@@ -90,8 +90,12 @@ class JsonGenerator
         return $allMetas[$parserFilename];
     }
 
-    private function generateToc(MetaEntry $metaEntry, array $titles): array
+    private function generateToc(MetaEntry $metaEntry, ?array $titles): array
     {
+        if (null === $titles) {
+            return [];
+        }
+
         $tocTree = [];
 
         foreach ($titles as $title) {
