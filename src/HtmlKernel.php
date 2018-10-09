@@ -5,6 +5,7 @@ namespace SymfonyDocs;
 use Doctrine\RST\Directive;
 use Doctrine\RST\Factory;
 use Doctrine\RST\HTML\Kernel;
+use SymfonyDocs\Directive\BestPracticeDirective;
 use SymfonyDocs\Directive\CautionDirective;
 use SymfonyDocs\Directive\ClassDirective;
 use SymfonyDocs\Directive\CodeBlockDirective;
@@ -89,6 +90,7 @@ class HtmlKernel extends Kernel
                 new SidebarDirective(),
                 new TipDirective(),
                 new VersionAddedDirective(),
+                new BestPracticeDirective(),
             ]
         );
     }

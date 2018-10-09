@@ -6,6 +6,9 @@ use Doctrine\RST\Nodes\ListNode as Base;
 
 class ListNode extends Base
 {
+    /** @var string */
+    private $class = '';
+
     protected function createElement(string $text, string $prefix): string
     {
         return sprintf('<li>%s</li>', $text);
@@ -19,8 +22,28 @@ class ListNode extends Base
         $keyword = $ordered ? 'ol' : 'ul';
 
         return [
-            sprintf('<%s class="simple">', $keyword),
+            sprintf('<%s class="%s">', $keyword, trim('simple '.$this->class)),
             sprintf('</%s>', $keyword),
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getClass(): ?string
+    {
+        return $this->class;
+    }
+
+    /**
+     * @param string $class
+     *
+     * @return $this
+     */
+    public function setClass(?string $class)
+    {
+        $this->class = $class;
+
+        return $this;
     }
 }

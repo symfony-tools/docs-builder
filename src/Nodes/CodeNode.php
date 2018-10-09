@@ -20,6 +20,12 @@ class CodeNode extends Base
         'php-annotations' => 'php',
         'text'            => 'text',
         'terminal'        => 'bash',
+        'markdown'        => 'markdown',
+        'rst'             => 'markdown',
+        'php-standalone'  => 'php',
+        'php-symfony'  => 'php',
+        'varnish4'  => 'c',
+        'varnish3'  => 'c',
     ];
 
     private const CODE_BLOCK_TEMPLATE = '<div class="literal-block notranslate">

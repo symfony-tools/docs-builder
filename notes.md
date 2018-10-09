@@ -21,3 +21,5 @@ Notes
 - add `&nbsp` instead of simple space to lines in code blocks
 - test if there is only one <h1> in each page
 - we're assuming there is only one toctree per page...
+- `rst` does not exist in highlight php
+- `varnish` = C ? (highlight php)

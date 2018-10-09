@@ -127,6 +127,10 @@ class IntegrationTest extends TestCase
             'blockName' => 'tip',
         ];
 
+        yield 'best-practice' => [
+            'blockName' => 'best-practice',
+        ];
+
         yield 'versionadded' => [
             'blockName' => 'versionadded',
         ];

@@ -58,6 +58,8 @@ Date widget!
     the flow.
     :ref:`internal-reference`
 
+.. include:: /_includes/date_widget.rst.inc
+
 placeholder
 ~~~~~~~~~~~
 
@@ -92,6 +94,7 @@ Custom classes for links are also cool:
 * ``position``
 * ``toolbar``
 * ``verbose``
+* :ref:`internal-reference`
 
 format
 ~~~~~~
@@ -109,6 +112,10 @@ as a datetime string. See `Date/Time Format Syntax`_.
 .. caution::
 
     Using too many sidebars or caution directives can be distracting!
+
+.. best-practice::
+
+    Use the bcrypt encoder for hashing your users' passwords.
 
 time_widget
 ~~~~~~~~~~~
