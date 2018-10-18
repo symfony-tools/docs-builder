@@ -58,11 +58,7 @@ TEMPLATE;
 
         $lineNumbers = "";
         for ($i = 1; $i <= \count($lines); $i++) {
-            $iAsString = (string) $i;
-            if (strlen($iAsString) == 1) {
-                $iAsString = " ".$iAsString;
-            }
-            $lineNumbers .= $iAsString."\n";
+            $lineNumbers .= str_pad((string) $i, 2, ' ', STR_PAD_LEFT)."\n";
         }
 
         $language = $this->getLanguage() ?? 'php';
@@ -85,14 +81,9 @@ TEMPLATE;
         );
     }
 
-    /**
-     * @return string[]
-     */
     private function getLines(string $code): array
     {
-        $lines = preg_split('/\r\n|\r|\n/', $code);
-        assert(is_array($lines));
-
+        $lines         = preg_split('/\r\n|\r|\n/', $code);
         $reversedLines = array_reverse($lines);
 
         // trim empty lines at the end of the code

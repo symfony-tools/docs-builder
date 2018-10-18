@@ -34,16 +34,8 @@ class TocNode extends Base
         return $html;
     }
 
-    /**
-     * @param mixed[]|array $titles
-     * @param mixed[]       $path
-     */
-    private function renderLevel(
-        ?string $url,
-        array $titles,
-        int $level = 1,
-        array $path = []
-    ): string {
+    private function renderLevel(?string $url, array $titles, int $level = 1, array $path = []): string
+    {
         if (-1 !== $this->depth && $level > $this->depth) {
             return '';
         }
@@ -63,7 +55,7 @@ class TocNode extends Base
             $anchor = Environment::slugify($slug);
             $target = $url;
             if (1 !== $level) {
-                $target = $url . '#' . $anchor;
+                $target = $url.'#'.$anchor;
             }
 
             if (is_array($title)) {
@@ -83,7 +75,6 @@ class TocNode extends Base
             }
 
             $html .= '</li>';
-
         }
 
         return $html;

@@ -8,7 +8,7 @@ class AnchorNode extends Base
 {
     public function render(): string
     {
-        return '<span id="'.$this->value.'"></span>';
+        return sprintf('<span id="%s"></span>', $this->value);
     }
 }
 

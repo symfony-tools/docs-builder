@@ -6,9 +6,9 @@ use Doctrine\RST\HTML\Span;
 
 class SpanNode extends Span
 {
-    public function literal(string $text) : string
+    public function literal(string $text): string
     {
-        return '<code class="notranslate">' . $text . '</code>';
+        return sprintf('<code class="notranslate">%s</code>', $text);
     }
 
     public function link(?string $url, string $title, array $attributes = []): string
@@ -21,6 +21,7 @@ class SpanNode extends Span
             $title = '<em>'.$title.'</em>';
             unset($attributes['is-doc']);
         }
+
         if (!$attributes) {
             $attributes['class'] = sprintf('reference %s', 0 === strpos($url, 'http') ? 'external' : 'internal');
         }
@@ -36,6 +37,10 @@ class SpanNode extends Span
             )
         );
 
-        return '<a href="'.htmlspecialchars((string) $url).'"'.($htmlAttributes !== '' ? ' '.$htmlAttributes : '').'>'.$title.'</a>';
+        if ($htmlAttributes) {
+            $htmlAttributes = ' '.$htmlAttributes;
+        }
+
+        return sprintf('<a href="%s"%s>%s</a>', htmlspecialchars((string) $url), $htmlAttributes, $title);
     }
 }

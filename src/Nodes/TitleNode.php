@@ -11,7 +11,14 @@ class TitleNode extends Base
     {
         $anchor = Environment::slugify((string) $this->value);
 
-        return '<h'.$this->level.' id="'.$anchor.'">'.$this->value.'<a class="headerlink" href="#'.$anchor.'" title="Permalink to this headline">¶</a></h'.$this->level.'>';
+        return sprintf(
+            '<h%s id="%s">%s<a class="headerlink" href="#%s" title="Permalink to this headline">¶</a></h%s>',
+            $this->level,
+            $anchor,
+            $this->value,
+            $anchor,
+            $this->level
+        );
     }
 }
 

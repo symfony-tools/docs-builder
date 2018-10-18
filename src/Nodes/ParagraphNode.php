@@ -8,30 +8,9 @@ use function trim;
 
 class ParagraphNode extends Base
 {
-    /** @var string */
-    private $class = '';
+    use ClassTrait;
 
-    /**
-     * @return string
-     */
-    public function getClass(): ?string
-    {
-        return $this->class;
-    }
-
-    /**
-     * @param string $class
-     *
-     * @return $this
-     */
-    public function setClass(?string $class)
-    {
-        $this->class = $class;
-
-        return $this;
-    }
-
-    public function render() : string
+    public function render(): string
     {
         if ($this->value instanceof Node) {
             $text = trim($this->value->render());
@@ -44,7 +23,7 @@ class ParagraphNode extends Base
                 return sprintf('<p class="%s">%s</p>', $this->class, $text);
             }
 
-            return '<p>' . $text . '</p>';
+            return sprintf('<p>%s</p>', $text);
         }
 
         return '';
