@@ -6,6 +6,11 @@ use Doctrine\RST\HTML\Span;
 
 class SpanNode extends Span
 {
+    public function literal(string $text) : string
+    {
+        return '<code class="notranslate">' . $text . '</code>';
+    }
+
     public function link(?string $url, string $title, array $attributes = []): string
     {
         if (isset($attributes['is-ref'])) {

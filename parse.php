@@ -9,7 +9,7 @@ $kernel = new HtmlKernel();
 $builder = new Builder($kernel);
 
 $builder->build(
-    __DIR__.'/../',
+    __DIR__.'/..',
     __DIR__.'/html',
-    true // verbose
+    false
 );
