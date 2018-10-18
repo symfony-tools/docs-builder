@@ -23,12 +23,13 @@ class CodeNode extends Base
         'markdown'        => 'markdown',
         'rst'             => 'markdown',
         'php-standalone'  => 'php',
-        'php-symfony'  => 'php',
-        'varnish4'  => 'c',
-        'varnish3'  => 'c',
+        'php-symfony'     => 'php',
+        'varnish4'        => 'c',
+        'varnish3'        => 'c',
     ];
 
-    private const CODE_BLOCK_TEMPLATE = '<div class="literal-block notranslate">
+    private const CODE_BLOCK_TEMPLATE = <<< TEMPLATE
+<div class="literal-block notranslate">
     <div class="highlight-%s">
         <table class="highlighttable">
             <tr>
@@ -45,7 +46,8 @@ class CodeNode extends Base
             </tr>
         </table>
     </div>
-</div>';
+</div>
+TEMPLATE;
 
     public function render(): string
     {

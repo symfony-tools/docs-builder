@@ -108,55 +108,59 @@ class IntegrationTest extends TestCase
     public function parserUnitBlockProvider()
     {
         yield 'tables' => [
-            'blockName' => 'tables',
-        ];
-
-        yield 'caution' => [
-            'blockName' => 'caution',
-        ];
-
-        yield 'note' => [
-            'blockName' => 'note',
-        ];
-
-        yield 'seealso' => [
-            'blockName' => 'seealso',
-        ];
-
-        yield 'tip' => [
-            'blockName' => 'tip',
-        ];
-
-        yield 'best-practice' => [
-            'blockName' => 'best-practice',
-        ];
-
-        yield 'versionadded' => [
-            'blockName' => 'versionadded',
-        ];
-
-        yield 'class' => [
-            'blockName' => 'class',
-        ];
-
-        yield 'configuration-block' => [
-            'blockName' => 'configuration-block',
-        ];
-
-        yield 'sidebar' => [
-            'blockName' => 'sidebar',
-        ];
-
-        yield 'note-code-block-nested' => [
-            'blockName' => 'note-code-block-nested',
-        ];
-
-        yield 'sidebar-code-block-nested' => [
-            'blockName' => 'sidebar-code-block-nested',
+            'blockName' => 'nodes/tables',
         ];
 
         yield 'literal' => [
-            'blockName' => 'literal',
+            'blockName' => 'nodes/literal',
+        ];
+
+        yield 'list' => [
+            'blockName' => 'nodes/list',
+        ];
+
+        yield 'caution' => [
+            'blockName' => 'directives/caution',
+        ];
+
+        yield 'note' => [
+            'blockName' => 'directives/note',
+        ];
+
+        yield 'note-code-block-nested' => [
+            'blockName' => 'directives/note-code-block-nested',
+        ];
+
+        yield 'seealso' => [
+            'blockName' => 'directives/seealso',
+        ];
+
+        yield 'tip' => [
+            'blockName' => 'directives/tip',
+        ];
+
+        yield 'best-practice' => [
+            'blockName' => 'directives/best-practice',
+        ];
+
+        yield 'versionadded' => [
+            'blockName' => 'directives/versionadded',
+        ];
+
+        yield 'class' => [
+            'blockName' => 'directives/class',
+        ];
+
+        yield 'configuration-block' => [
+            'blockName' => 'directives/configuration-block',
+        ];
+
+        yield 'sidebar' => [
+            'blockName' => 'directives/sidebar',
+        ];
+
+        yield 'sidebar-code-block-nested' => [
+            'blockName' => 'directives/sidebar-code-block-nested',
         ];
 
         yield 'class-reference' => [
@@ -229,10 +233,6 @@ class IntegrationTest extends TestCase
 
         yield 'code-block-terminal' => [
             'blockName' => 'code-blocks/terminal',
-        ];
-
-        yield 'list' => [
-            'blockName' => 'list',
         ];
     }
 
