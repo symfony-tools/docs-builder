@@ -17,16 +17,8 @@ class ConfigurationBlockDirective extends SubDirective
         return 'configuration-block';
     }
 
-    /**
-     * @param string[] $options
-     */
-    public function processSub(
-        Parser $parser,
-        ?Node $document,
-        string $variable,
-        string $data,
-        array $options
-    ): ?Node {
+    public function processSub(Parser $parser, ?Node $document, string $variable, string $data, array $options): ?Node
+    {
         if (!$document instanceof Document) {
             return null;
         }

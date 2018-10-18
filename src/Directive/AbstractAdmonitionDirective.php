@@ -21,13 +21,8 @@ abstract class AbstractAdmonitionDirective extends SubDirective
         $this->text = $text;
     }
 
-    final public function processSub(
-        Parser $parser,
-        ?Node $document,
-        string $variable,
-        string $data,
-        array $options
-    ): ?Node {
+    final public function processSub(Parser $parser, ?Node $document, string $variable, string $data, array $options): ?Node
+    {
         return new WrapperNode(
             $document,
             sprintf(

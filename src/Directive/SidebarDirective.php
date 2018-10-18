@@ -14,16 +14,8 @@ class SidebarDirective extends SubDirective
         return 'sidebar';
     }
 
-    /**
-     * @param string[] $options
-     */
-    public function processSub(
-        Parser $parser,
-        ?Node $document,
-        string $variable,
-        string $data,
-        array $options
-    ): ?Node {
+    public function processSub(Parser $parser, ?Node $document, string $variable, string $data, array $options): ?Node
+    {
         return new WrapperNode(
             $document,
             sprintf('<div class="admonition-wrapper"><div class="sidebar"></div><div class="admonition admonition-sidebar"><p class="sidebar-title">%s</p>', $data),

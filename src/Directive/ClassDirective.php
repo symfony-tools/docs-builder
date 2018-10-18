@@ -15,15 +15,16 @@ class ClassDirective extends SubDirective
         return 'class';
     }
 
-    public function processSub(
-        Parser $parser,
-        ?Node $document,
-        string $variable,
-        string $data,
-        array $options
-    ): ?Node {
+    public function processSub(Parser $parser, ?Node $document, string $variable, string $data, array $options): ?Node
+    {
         if (!$document instanceof ListNode && !$document instanceof ParagraphNode) {
-            throw new \RuntimeException('Class could only be applied to paragraphs or lists');
+            throw new \RuntimeException(
+                sprintf(
+                    "\".. class:\" directive could only be applied to paragraphs or lists (applied to \"%s\")\nTarget block:\n%s",
+                    \get_class($document),
+                    $document->render()
+                )
+            );
         }
 
         $document->setClass($data);

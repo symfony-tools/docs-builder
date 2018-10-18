@@ -14,16 +14,8 @@ class VersionAddedDirective extends SubDirective
         return 'versionadded';
     }
 
-    /**
-     * @param string[] $options
-     */
-    public function processSub(
-        Parser $parser,
-        ?Node $document,
-        string $variable,
-        string $data,
-        array $options
-    ): ?Node {
+    public function processSub(Parser $parser, ?Node $document, string $variable, string $data, array $options): ?Node
+    {
         return new WrapperNode(
             $document,
             sprintf('<div class="versionadded"><div><span class="versionmodified">New in version %s: </span>', $data),
