@@ -2,14 +2,13 @@
 
 namespace SymfonyDocs;
 
-use Doctrine\RST\HTML\Document;
 use Doctrine\RST\DefaultNodeFactory;
-use Doctrine\RST\Directive;
-use Doctrine\RST\NodeFactory as NodeFactoryInterface;
+use Doctrine\RST\HTML\Document;
 use Doctrine\RST\HTML\Kernel;
+use Doctrine\RST\HTML\Nodes as ParserNodes;
+use Doctrine\RST\NodeFactory as NodeFactoryInterface;
 use Doctrine\RST\NodeInstantiator;
 use Doctrine\RST\NodeTypes;
-use Doctrine\RST\HTML\Nodes as ParserNodes;
 use SymfonyDocs\Directive as SymfonyDoirectives;
 use SymfonyDocs\Nodes as SymfonyNodes;
 use SymfonyDocs\Reference as SymfonyRefernces;
@@ -35,6 +34,24 @@ class HtmlKernel extends Kernel
         }
 
         return self::getConfiguration()['version'];
+    }
+
+    public static function getSymfonyApiUrl(): string
+    {
+        if (!isset(self::getConfiguration()['symfony_api_url'])) {
+            throw new \RuntimeException('The "symfony_api_url" must be defined in "/_build/conf.json"');
+        }
+
+        return self::getConfiguration()['symfony_api_url'];
+    }
+
+    public static function getPhpDocUrl(): string
+    {
+        if (!isset(self::getConfiguration()['php_doc_url'])) {
+            throw new \RuntimeException('The "php_doc_url" must be defined in "/_build/conf.json"');
+        }
+
+        return self::getConfiguration()['php_doc_url'];
     }
 
     public function getDirectives(): array
@@ -74,7 +91,7 @@ class HtmlKernel extends Kernel
         ];
     }
 
-    protected function createNodeFactory() : NodeFactoryInterface
+    protected function createNodeFactory(): NodeFactoryInterface
     {
         return new DefaultNodeFactory(
             new NodeInstantiator(NodeTypes::ANCHOR, SymfonyNodes\AnchorNode::class),

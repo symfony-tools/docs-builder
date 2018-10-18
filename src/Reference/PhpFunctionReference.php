@@ -5,11 +5,10 @@ namespace SymfonyDocs\Reference;
 use Doctrine\RST\Environment;
 use Doctrine\RST\Reference;
 use Doctrine\RST\References\ResolvedReference;
+use SymfonyDocs\HtmlKernel;
 
 class PhpFunctionReference extends Reference
 {
-    private const BASE__URL = 'https://secure.php.net/manual/en/function.%s.php';
-
     public function getName(): string
     {
         return 'phpfunction';
@@ -19,7 +18,7 @@ class PhpFunctionReference extends Reference
     {
         return new ResolvedReference(
             $data,
-            sprintf(self::BASE__URL, str_replace('_', '-', strtolower($data))),
+            sprintf('%s/function.%s.php', HtmlKernel::getPhpDocUrl(), str_replace('_', '-', strtolower($data))),
             [],
             [
                 'class' => 'reference external',

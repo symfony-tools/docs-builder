@@ -9,8 +9,6 @@ use SymfonyDocs\HtmlKernel;
 
 class NamespaceReference extends Reference
 {
-    private const BASE__URL = 'https://api.symfony.com';
-
     public function getName(): string
     {
         return 'namespace';
@@ -22,7 +20,7 @@ class NamespaceReference extends Reference
 
         return new ResolvedReference(
             substr(strrchr($className, '\\'), 1),
-            sprintf('%s/%s/%s.html', self::BASE__URL, HtmlKernel::getVersion(), str_replace('\\', '/', $className)),
+            sprintf('%s/%s/%s.html', HtmlKernel::getSymfonyApiUrl(), HtmlKernel::getVersion(), str_replace('\\', '/', $className)),
             [],
             [
                 'class' => 'reference external',

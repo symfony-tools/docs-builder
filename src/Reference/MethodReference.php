@@ -9,8 +9,6 @@ use SymfonyDocs\HtmlKernel;
 
 class MethodReference extends Reference
 {
-    private const BASE__URL = 'https://api.symfony.com';
-
     public function getName(): string
     {
         return 'method';
@@ -25,7 +23,7 @@ class MethodReference extends Reference
 
         return new ResolvedReference(
             $methodName.'()',
-            sprintf('%s/%s/%s.html#method_%s', self::BASE__URL, HtmlKernel::getVersion(), str_replace('\\', '/', $className), $methodName),
+            sprintf('%s/%s/%s.html#method_%s', HtmlKernel::getSymfonyApiUrl(), HtmlKernel::getVersion(), str_replace('\\', '/', $className), $methodName),
             [],
             [
                 'class' => 'reference external',

@@ -5,11 +5,10 @@ namespace SymfonyDocs\Reference;
 use Doctrine\RST\Environment;
 use Doctrine\RST\Reference;
 use Doctrine\RST\References\ResolvedReference;
+use SymfonyDocs\HtmlKernel;
 
 class PhpMethodReference extends Reference
 {
-    private const BASE__URL = 'https://secure.php.net/manual/en/%s.%s.php';
-
     public function getName(): string
     {
         return 'phpmethod';
@@ -22,11 +21,11 @@ class PhpMethodReference extends Reference
 
         return new ResolvedReference(
             $data.'()',
-            sprintf(self::BASE__URL, strtolower($class), strtolower($method)),
+            sprintf('%s/%s.%s.php', HtmlKernel::getPhpDocUrl(), strtolower($class), strtolower($method)),
             [],
             [
                 'class' => 'reference external',
-                'title' => $class
+                'title' => $class,
             ]
         );
     }

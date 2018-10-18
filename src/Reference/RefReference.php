@@ -24,4 +24,9 @@ class RefReference extends Reference
 
         return $resolvedReference;
     }
+
+    public function found(Environment $environment, string $data) : void
+    {
+        $environment->addDependency($data);
+    }
 }

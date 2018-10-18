@@ -16,6 +16,7 @@ class CodeNode extends Base
         'ini'             => 'ini',
         'bash'            => 'bash',
         'html+twig'       => 'twig',
+        'jinja'           => 'twig',
         'html+php'        => 'html',
         'php-annotations' => 'php',
         'text'            => 'text',
@@ -26,6 +27,7 @@ class CodeNode extends Base
         'php-symfony'     => 'php',
         'varnish4'        => 'c',
         'varnish3'        => 'c',
+        'json'            => 'json',
     ];
 
     private const CODE_BLOCK_TEMPLATE = <<< TEMPLATE

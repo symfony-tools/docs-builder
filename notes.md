@@ -23,3 +23,12 @@ Notes
 - we're assuming there is only one toctree per page...
 - `rst` does not exist in highlight php
 - `varnish` = C ? (highlight php)
+
+Bugs in RST Parser
+==================
+
+- problem using glob: listed files are added twice (https://github.com/doctrine/rst-parser/issues/18)
+- problem with absolute path in toc trees (https://github.com/doctrine/rst-parser/pull/23)
+- problem with `_build` directory indexed (test case to create)
+- problem with `:ref:`, `:doc:` and `*.rst.inc` which are loaded in parseQueue (problem evoked in https://github.com/doctrine/rst-parser/pull/23)
+- problem with `.. include::` which are SOMETIMES failing to load (dirty fix in `UrlGenerator::relativeUrl`) 
