@@ -28,6 +28,12 @@ class CodeNode extends Base
         'varnish4'        => 'c',
         'varnish3'        => 'c',
         'json'            => 'json',
+        'apache'          => 'apache',
+        'nginx'           => 'nginx',
+        'javascript'      => 'javascript',
+        'sql'             => 'sql',
+        'css'             => 'css',
+        'diff'            => 'diff',
     ];
 
     private const CODE_BLOCK_TEMPLATE = <<< TEMPLATE
