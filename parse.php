@@ -6,17 +6,18 @@ use Doctrine\RST\Builder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use SymfonyDocs\HtmlKernel;
+use SymfonyDocs\JsonGenerator;
 
 $kernel  = new HtmlKernel();
 $builder = new Builder($kernel);
 
 $fs = new Filesystem();
-$fs->remove(__DIR__.'/html');
+$fs->remove($htmlOutputDir = __DIR__.'/html');
+$fs->remove($jsonOutputDir = __DIR__.'/json');
 
 $builder->build(
     __DIR__.'/..',
-    __DIR__.'/html',
-    true
+    $htmlOutputDir
 );
 
 $finder = new Finder();
@@ -31,5 +32,8 @@ foreach ($finder as $file) {
         dump("missing file: ".$htmlFile);
     }
 }
+
+$jsonGenerator = new JsonGenerator($builder->getDocuments()->getAll());
+$jsonGenerator->generateJson($htmlOutputDir, $jsonOutputDir);
 
 

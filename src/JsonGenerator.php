@@ -71,7 +71,7 @@ class JsonGenerator
     private function getEnvironment(string $parserFilename): Environment
     {
         if (!isset($this->environments[$parserFilename])) {
-            throw new \LogicException(sprintf('Cannot guess file name in parser "%s"', $parserFilename));
+            throw new \LogicException(sprintf('Cannot find environment for file "%s"', $parserFilename));
         }
 
         return $this->environments[$parserFilename];
@@ -117,9 +117,11 @@ class JsonGenerator
             return null;
         }
 
+        $nextFileName = $toc[$indexCurrentFile + 1];
+
         return [
-            'title' => $this->getMeta($toc[$indexCurrentFile + 1])->getTitle(),
-            'link'  => $this->getMeta($toc[$indexCurrentFile + 1])->getUrl(),
+            'title' => $this->getMeta($nextFileName)->getTitle(),
+            'link'  => $this->getMeta($nextFileName)->getUrl(),
         ];
     }
 
@@ -131,9 +133,11 @@ class JsonGenerator
             return null;
         }
 
+        $prevFileName = $toc[$indexCurrentFile - 1];
+
         return [
-            'title' => $this->getMeta($toc[$indexCurrentFile - 1])->getTitle(),
-            'link'  => $this->getMeta($toc[$indexCurrentFile - 1])->getUrl(),
+            'title' => $this->getMeta($prevFileName)->getTitle(),
+            'link'  => $this->getMeta($prevFileName)->getUrl(),
         ];
     }
 
@@ -143,19 +147,19 @@ class JsonGenerator
         $parentFile = $meta->getParent();
 
         if (!$parentFile) {
-            return [null, null];
+            return [null, null, null];
         }
 
         $metaParent = $this->getMeta($parentFile);
 
         if (!$metaParent->getTocs() || \count($metaParent->getTocs()) !== 1) {
-            return [null, null];
+            return [null, null, null];
         }
 
         $toc = current($metaParent->getTocs());
 
         if (\count($toc) < 2 || !isset(array_flip($toc)[$parserFilename])) {
-            return [null, null];
+            return [null, null, null];
         }
 
         $indexCurrentFile = array_flip($toc)[$parserFilename];
