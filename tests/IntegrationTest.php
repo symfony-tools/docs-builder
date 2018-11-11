@@ -6,6 +6,8 @@ use Doctrine\RST\Builder;
 use Doctrine\RST\Parser;
 use Gajus\Dindent\Indenter;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -46,8 +48,8 @@ class IntegrationTest extends TestCase
             );
         }
 
-        $jsonGenerator = new JsonGenerator($builder->getDocuments());
-        $jsonGenerator->generateJson(__DIR__.'/_output', __DIR__.'/_outputJson');
+        $jsonGenerator = new JsonGenerator($builder->getDocuments()->getAll());
+        $jsonGenerator->generateJson(__DIR__.'/_output', __DIR__.'/_outputJson', new ProgressBar(new NullOutput()));
 
         foreach ($finder as $htmlFile) {
             $relativePath   = $htmlFile->getRelativePathname();
@@ -234,17 +236,6 @@ class IntegrationTest extends TestCase
         yield 'code-block-terminal' => [
             'blockName' => 'code-blocks/terminal',
         ];
-    }
-
-    public function testRefReferenceError()
-    {
-        $this->expectException(\RuntimeException::class);
-
-        $this->createBuilder()->build(
-            sprintf('%s/fixtures/source/ref-reference-error', __DIR__),
-            __DIR__.'/_output',
-            false // verbose
-        );
     }
 
     private function createBuilder(): Builder

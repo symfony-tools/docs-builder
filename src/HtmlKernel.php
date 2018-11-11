@@ -104,7 +104,8 @@ class HtmlKernel extends Kernel
             new NodeInstantiator(NodeTypes::TOC, SymfonyNodes\TocNode::class),
             new NodeInstantiator(NodeTypes::DOCUMENT, Document::class),
             new NodeInstantiator(NodeTypes::SEPARATOR, ParserNodes\SeparatorNode::class),
-            new NodeInstantiator(NodeTypes::QUOTE, ParserNodes\QuoteNode::class)
+            new NodeInstantiator(NodeTypes::QUOTE, ParserNodes\QuoteNode::class),
+            new NodeInstantiator(NodeTypes::DEFINITION_LIST, ParserNodes\DefinitionListNode::class)
         );
     }
 }

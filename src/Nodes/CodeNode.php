@@ -57,7 +57,7 @@ class CodeNode extends Base
 </div>
 TEMPLATE;
 
-    public function render(): string
+    public function doRender(): string
     {
         $nodeValue = $this->getValue();
         assert(is_string($nodeValue));

@@ -7,7 +7,7 @@ use Doctrine\RST\Nodes\TableNode as Base;
 
 class TableNode extends Base
 {
-    public function render(): string
+    public function doRender(): string
     {
         $html = '<table class="docutils" border="1">';
 

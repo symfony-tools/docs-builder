@@ -10,7 +10,7 @@ class ParagraphNode extends Base
 {
     use ClassTrait;
 
-    public function render(): string
+    public function doRender(): string
     {
         if ($this->value instanceof Node) {
             $text = trim($this->value->render());

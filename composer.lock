@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/weaverryan/rst-parser.git",
-                "reference": "974fbe4c3439cc024552edfbd45deb2891765b9c"
+                "reference": "154f7bc801906401775674db2966dfaf378c65c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/weaverryan/rst-parser/zipball/974fbe4c3439cc024552edfbd45deb2891765b9c",
-                "reference": "974fbe4c3439cc024552edfbd45deb2891765b9c",
+                "url": "https://api.github.com/repos/weaverryan/rst-parser/zipball/154f7bc801906401775674db2966dfaf378c65c6",
+                "reference": "154f7bc801906401775674db2966dfaf378c65c6",
                 "shasum": ""
             },
             "require": {
@@ -69,9 +69,9 @@
                 "rst"
             ],
             "support": {
-                "source": "https://github.com/weaverryan/rst-parser/tree/master"
+                "source": "https://github.com/weaverryan/rst-parser/tree/sf-docs-tweaks"
             },
-            "time": "2018-11-02T21:39:51+00:00"
+            "time": "2018-11-07T05:20:02+00:00"
         },
         {
             "name": "scrivo/highlight.php",

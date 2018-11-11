@@ -7,7 +7,7 @@ use Doctrine\RST\Nodes\TitleNode as Base;
 
 class TitleNode extends Base
 {
-    public function render(): string
+    public function doRender(): string
     {
         $anchor = Environment::slugify((string) $this->value);
 

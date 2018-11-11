@@ -11,7 +11,7 @@ class TocNode extends Base
     /** @var int */
     private $depth;
 
-    public function render(): string
+    public function doRender(): string
     {
         if (isset($this->options['hidden'])) {
             return '';
