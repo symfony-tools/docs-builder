@@ -5,6 +5,7 @@ namespace SymfonyDocs;
 use Doctrine\RST\HTML\Document;
 use Doctrine\RST\HTML\Environment;
 use Doctrine\RST\MetaEntry;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -27,7 +28,7 @@ class JsonGenerator
         );
     }
 
-    public function generateJson(string $inputDir, string $outputDir)
+    public function generateJson(string $inputDir, string $outputDir, ProgressBar $progressBar)
     {
         $finder = new Finder();
         $finder->in($inputDir)
@@ -60,7 +61,11 @@ class JsonGenerator
                 str_replace([$inputDir, '.html'], [$outputDir, '.json'], $file->getRealPath()),
                 json_encode($data, JSON_PRETTY_PRINT)
             );
+
+            $progressBar->advance();
         }
+
+        $progressBar->finish();
     }
 
     private function getParserFilename(string $filePath, string $inputDir): string
