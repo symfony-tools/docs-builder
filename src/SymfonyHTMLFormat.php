@@ -2,6 +2,7 @@
 
 namespace SymfonyDocs;
 
+use Doctrine\RST\Formats\Format;
 use Doctrine\RST\HTML\HTMLFormat;
 use Doctrine\RST\Nodes\CodeNode;
 use Doctrine\RST\Nodes\SpanNode;
@@ -10,17 +11,29 @@ use Doctrine\RST\Renderers\NodeRendererFactory;
 use Doctrine\RST\Templates\TemplateRenderer;
 
 /**
- * Class SymfonyFormat
+ * Class SymfonyHTMLFormat
  */
-final class SymfonyFormat extends HTMLFormat
+final class SymfonyHTMLFormat implements Format
 {
     /** @var TemplateRenderer */
     protected $templateRenderer;
+    /** @var HTMLFormat */
+    private $htmlFormat;
 
-    public function __construct(TemplateRenderer $templateRenderer)
+    public function __construct(TemplateRenderer $templateRenderer, Format $HTMLFormat)
     {
-        parent::__construct($templateRenderer);
         $this->templateRenderer = $templateRenderer;
+        $this->htmlFormat       = $HTMLFormat;
+    }
+
+    public function getFileExtension(): string
+    {
+        return Format::HTML;
+    }
+
+    public function getDirectives(): array
+    {
+        return $this->htmlFormat->getDirectives();
     }
 
     /**
@@ -28,7 +41,7 @@ final class SymfonyFormat extends HTMLFormat
      */
     public function getNodeRendererFactories(): array
     {
-        $nodeRendererFactories = parent::getNodeRendererFactories();
+        $nodeRendererFactories = $this->htmlFormat->getNodeRendererFactories();
 
         $nodeRendererFactories[CodeNode::class] = new CallableNodeRendererFactory(
             function (CodeNode $node) {

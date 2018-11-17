@@ -3,7 +3,12 @@
 namespace SymfonyDocs\Command;
 
 use Doctrine\RST\Builder;
-use Doctrine\RST\Configuration;
+use Doctrine\RST\Event\PostBuildRenderEvent;
+use Doctrine\RST\Event\PostNodeRenderEvent;
+use Doctrine\RST\Event\PostParseDocumentEvent;
+use Doctrine\RST\Event\PreBuildParseEvent;
+use Doctrine\RST\Event\PreBuildRenderEvent;
+use Doctrine\RST\Event\PreBuildScanEvent;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,9 +17,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use SymfonyDocs\KernelFactory;
-use SymfonyDocs\SymfonyDocConfiguration;
 use SymfonyDocs\JsonGenerator;
+use SymfonyDocs\KernelFactory;
 
 /**
  * Class ParseDoc
@@ -29,16 +33,21 @@ class ParseDoc extends Command
     private $finder;
     /** @var ProgressBar */
     private $progressBar;
+    /** @var Builder */
+    private $builder;
+    /** @var OutputInterface */
+    private $output;
     private $sourceDir;
     private $htmlOutputDir;
     private $jsonOutputDir;
+    private $parsedFiles = [];
 
     public function __construct()
     {
         parent::__construct(self::$defaultName);
 
         $this->filesystem = new Filesystem();
-        $this->finder = new Finder();
+        $this->finder     = new Finder();
     }
 
     protected function configure()
@@ -48,13 +57,13 @@ class ParseDoc extends Command
         $this
             ->addOption('source-dir', null, InputOption::VALUE_REQUIRED, 'RST files Source directory', __DIR__.'/../../..')
             ->addOption('html-output-dir', null, InputOption::VALUE_REQUIRED, 'HTML files output directory', __DIR__.'/../../html')
-            ->addOption('json-output-dir', null, InputOption::VALUE_REQUIRED, 'JSON files output directory', __DIR__.'/../../json')
-        ;
+            ->addOption('json-output-dir', null, InputOption::VALUE_REQUIRED, 'JSON files output directory', __DIR__.'/../../json');
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->io = new SymfonyStyle($input, $output);
+        $this->output = $output;
 
         $this->sourceDir = $this->getRealAbsolutePath($input->getOption('source-dir'));
         if (!$this->filesystem->exists($this->sourceDir)) {
@@ -70,30 +79,36 @@ class ParseDoc extends Command
         if ($this->filesystem->exists($this->jsonOutputDir)) {
             $this->filesystem->remove($this->jsonOutputDir);
         }
+
+        $this->builder = new Builder(KernelFactory::createKernel());
+        $eventManager  = $this->builder->getConfiguration()->getEventManager();
+        $eventManager->addEventListener(
+            [PostParseDocumentEvent::POST_PARSE_DOCUMENT],
+            $this
+        );
+        $eventManager->addEventListener(
+            [PreBuildRenderEvent::PRE_BUILD_RENDER],
+            $this
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $builder = KernelFactory::createKernel();
-
-//        $builder->addHook([$this, 'handleProgressBar']);
-
         $this->finder->in($input->getOption('source-dir'))
             ->exclude(['_build', '.github', '.platform', '_images'])
             ->notName('*.rst.inc')
             ->name('*.rst');
 
-        $this->io->note(sprintf('Start parsing into html %d rst files', $this->finder->count()));
+        $this->io->note(sprintf('Start parsing %d rst files', $this->finder->count()));
         $this->progressBar = new ProgressBar($output, $this->finder->count());
 
-        $builder->build(
+        $this->builder->build(
             $this->sourceDir,
             $this->htmlOutputDir
         );
 
-        $this->progressBar->finish();
         $this->io->newLine(2);
-        $this->io->success('Parse into html complete');
+        $this->io->success('HTML rendering complete!');
 
         foreach ($this->finder as $file) {
             $htmlFile = str_replace([$this->sourceDir, '.rst'], [$this->htmlOutputDir, '.html'], $file->getRealPath());
@@ -104,7 +119,7 @@ class ParseDoc extends Command
 
         $this->io->note('Start transforming doc into json files');
         $this->progressBar = new ProgressBar($output, $this->finder->count());
-        $jsonGenerator = new JsonGenerator($builder->getDocuments()->getAll());
+        $jsonGenerator     = new JsonGenerator($this->builder->getDocuments()->getAll());
         $jsonGenerator->generateJson($this->htmlOutputDir, $this->jsonOutputDir, $this->progressBar);
         $this->io->newLine(2);
         $this->io->success('Parse process complete');
@@ -124,5 +139,28 @@ class ParseDoc extends Command
                 '/'
             )
         );
+    }
+
+    public function postParseDocument(PostParseDocumentEvent $postParseDocumentEvent)
+    {
+        $file = $postParseDocumentEvent->getDocumentNode()->getEnvironment()->getCurrentFileName();
+        if (!\in_array($file, $this->parsedFiles)) {
+            $this->parsedFiles[] = $postParseDocumentEvent->getDocumentNode()->getEnvironment()->getCurrentFileName();
+            $this->progressBar->advance();
+        }
+    }
+
+    public function preBuildRender()
+    {
+        $eventManager  = $this->builder->getConfiguration()->getEventManager();
+        $eventManager->removeEventListener(
+            [PostParseDocumentEvent::POST_PARSE_DOCUMENT],
+            $this
+        );
+
+        $this->progressBar->finish();
+
+        $this->io->newLine(2);
+        $this->io->note('Start rendering in HTML...');
     }
 }

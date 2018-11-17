@@ -4,7 +4,7 @@ namespace SymfonyDocs;
 
 use Doctrine\RST\Configuration;
 use Doctrine\RST\Kernel;
-use SymfonyDocs\Directive as SymfonyDoirectives;
+use SymfonyDocs\Directive as SymfonyDirectives;
 use SymfonyDocs\Reference as SymfonyRefernces;
 
 /**
@@ -17,7 +17,12 @@ final class KernelFactory
         $configuration = new Configuration();
         $configuration->setCustomTemplateDirs([__DIR__.'/Templates']);
         $configuration->setCacheDir(__DIR__.'/../var/cache');
-        $configuration->addFormat(new SymfonyFormat($configuration->getTemplateRenderer()));
+        $configuration->addFormat(
+            new SymfonyHTMLFormat(
+                $configuration->getTemplateRenderer(),
+                $configuration->getFormat()
+            )
+        );
 
         return new Kernel(
             $configuration,
@@ -29,17 +34,18 @@ final class KernelFactory
     private static function getDirectives(): array
     {
         return [
-            new SymfonyDoirectives\CautionDirective(),
-            new SymfonyDoirectives\ClassDirective(),
-            new SymfonyDoirectives\CodeBlockDirective(),
-            new SymfonyDoirectives\ConfigurationBlockDirective(),
-            new SymfonyDoirectives\IndexDirective(),
-            new SymfonyDoirectives\NoteDirective(),
-            new SymfonyDoirectives\SeeAlsoDirective(),
-            new SymfonyDoirectives\SidebarDirective(),
-            new SymfonyDoirectives\TipDirective(),
-            new SymfonyDoirectives\VersionAddedDirective(),
-            new SymfonyDoirectives\BestPracticeDirective(),
+            new SymfonyDirectives\CautionDirective(),
+            new SymfonyDirectives\ClassDirective(),
+            new SymfonyDirectives\CodeBlockDirective(),
+            new SymfonyDirectives\ConfigurationBlockDirective(),
+            new SymfonyDirectives\IndexDirective(),
+            new SymfonyDirectives\RoleDirective(),
+            new SymfonyDirectives\NoteDirective(),
+            new SymfonyDirectives\SeeAlsoDirective(),
+            new SymfonyDirectives\SidebarDirective(),
+            new SymfonyDirectives\TipDirective(),
+            new SymfonyDirectives\VersionAddedDirective(),
+            new SymfonyDirectives\BestPracticeDirective(),
         ];
     }
 
