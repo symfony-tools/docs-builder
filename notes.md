@@ -25,3 +25,6 @@ Notes
 - we're assuming there is only one toctree per page...
 - `rst` does not exist in highlight php
 - `varnish` = C ? (highlight php)
+- `RoleDirective` ?
+- `IndexDirective` ?
+- toctree maxdepth ?

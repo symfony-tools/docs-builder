@@ -2,10 +2,9 @@
 
 namespace SymfonyDocs\Directive;
 
-use Doctrine\RST\Nodes\Node;
-use Doctrine\RST\Nodes\WrapperNode;
-use Doctrine\RST\Parser;
 use Doctrine\RST\Directives\SubDirective;
+use Doctrine\RST\Nodes\Node;
+use Doctrine\RST\Parser;
 
 class SidebarDirective extends SubDirective
 {
@@ -16,10 +15,13 @@ class SidebarDirective extends SubDirective
 
     public function processSub(Parser $parser, ?Node $document, string $variable, string $data, array $options): ?Node
     {
-        return new WrapperNode(
-            $document,
-            sprintf('<div class="admonition-wrapper"><div class="sidebar"></div><div class="admonition admonition-sidebar"><p class="sidebar-title">%s</p>', $data),
-            '</div></div>'
+        $wrapperDiv = $parser->renderTemplate(
+            'directives/sidebar.html.twig',
+            [
+                'title' => $data,
+            ]
         );
+
+        return $parser->getNodeFactory()->createWrapperNode($document, $wrapperDiv, '</div></div>');
     }
 }

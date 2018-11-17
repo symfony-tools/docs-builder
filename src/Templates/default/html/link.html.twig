@@ -1,4 +1,4 @@
+{% spaceless %}
 {% set domElement = attributes.domElement|default %}
-<a href="{{ url|raw }}"{% for key, value in attributes if key != 'domElement' %} {{ key }}="{{ value }}"{% endfor %}>
-{% if domElement %}<{{ domElement }}>{% endif %}{{ title|raw }}{% if domElement %}</{{ domElement }}>{% endif %}
-</a>
+<a href="{{ url|raw }}"{% for key, value in attributes if key != 'domElement' %} {{ key }}="{{ value }}"{% endfor %}>{% if domElement %}<{{ domElement }}>{% endif %}{{ title|raw }}{% if domElement %}</{{ domElement }}>{% endif %}</a>
+{% endspaceless %}

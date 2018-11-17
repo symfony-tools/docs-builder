@@ -27,7 +27,7 @@ class ClassDirective extends SubDirective
             );
         }
 
-        $document->setClass($data);
+//        $document->setClass($data);
 
         return $document;
     }

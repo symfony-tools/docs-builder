@@ -7,12 +7,12 @@
 <h1 id="datetimetype-field">DateTimeType Field<a class="headerlink" href="#datetimetype-field" title="Permalink to this headline">¶</a></h1>
 
 <p>This field type allows the user to modify data that represents a specific
-date and time (e.g. <code class="notranslate">1984-06-05 12:15:30</code>).</p>
+date and time (e.g. <code>1984-06-05 12:15:30</code>).</p>
 <table class="docutils" border="1">
     <tbody valign="top">
     <tr class="row-odd">
         <td>Underlying Data Type</td>
-        <td>can be <code class="notranslate">DateTime</code>, string, timestamp, or array (see the <code class="notranslate">input</code> option)</td>
+        <td>can be <code>DateTime</code>, string, timestamp, or array (see the <code>input</code> option)</td>
     </tr>
     <tr class="row-even">
         <td>Rendered as</td>
@@ -22,10 +22,10 @@ date and time (e.g. <code class="notranslate">1984-06-05 12:15:30</code>).</p>
         <td>Options</td>
         <td>
             <ul class="simple">
-                <li><a href="#the-date-format-option" class="reference internal">The date_format Option</a></li>
-                <li><a href="#date-widget" class="reference internal">date_widget</a></li>
-                <li><a href="#placeholder" class="reference internal">placeholder</a></li>
-                <li><a href="#format" class="reference internal">format</a></li>
+                <li><a href="datetime.html#the-date-format-option" class="reference internal">The date_format Option</a></li>
+                <li><a href="datetime.html#date-widget" class="reference internal">date_widget</a></li>
+                <li><a href="datetime.html#placeholder" class="reference internal">placeholder</a></li>
+                <li><a href="datetime.html#format" class="reference internal">format</a></li>
             </ul>
         </td>
     </tr>
@@ -33,8 +33,8 @@ date and time (e.g. <code class="notranslate">1984-06-05 12:15:30</code>).</p>
         <td>Overridden options</td>
         <td>
             <ul class="simple">
-                <li><a href="#by-reference" class="reference internal">by_reference</a></li>
-                <li><a href="#error-bubbling" class="reference internal">error_bubbling</a></li>
+                <li><a href="datetime.html#by-reference" class="reference internal">by_reference</a></li>
+                <li><a href="datetime.html#error-bubbling" class="reference internal">error_bubbling</a></li>
             </ul>
         </td>
     </tr>
@@ -60,8 +60,8 @@ date and time (e.g. <code class="notranslate">1984-06-05 12:15:30</code>).</p>
 
 <h3 id="the-date-format-option">The date_format Option<a class="headerlink" href="#the-date-format-option" title="Permalink to this headline">¶</a></h3>
 
-<p><strong>type</strong>: <code class="notranslate">integer</code> or <code class="notranslate">string</code> <strong>default</strong>: <code class="notranslate">IntlDateFormatter::MEDIUM</code></p>
-<p>Defines the <code class="notranslate">format</code> option that will be passed down to the date field.
+<p><strong>type</strong>: <code>integer</code> or <code>string</code><strong>default</strong>: <code>IntlDateFormatter::MEDIUM</code></p>
+<p>Defines the <code>format</code> option that will be passed down to the date field.
 for more details.</p>
 
 <div class="admonition-tip admonition-wrapper">
@@ -88,20 +88,20 @@ the flow.
         </p>
     </div>
 </div>
-<p>This is included documentation about the <code class="notranslate">date_widget</code> option.</p>
+<p>This is included documentation about the <code>date_widget</code> option.</p>
 
 <h3 id="placeholder">placeholder<a class="headerlink" href="#placeholder" title="Permalink to this headline">¶</a></h3>
 <div class="versionadded">
-    <div><span class="versionmodified">New in version 2.6: </span><p>The <code class="notranslate">placeholder</code> option was introduced in Symfony 2.6 and replaces
-<code class="notranslate">empty_value</code>, which is available prior to 2.6.
+    <div><span class="versionmodified">New in version 2.6: </span><p>The <code>placeholder</code> option was introduced in Symfony 2.6 and replaces
+<code>empty_value</code>, which is available prior to 2.6.
 <a href="form/form_type.html#internal-reference" class="reference internal"><span>FormType Documentation</span></a></p></div>
 </div>
 
-<p><strong>type</strong>: <code class="notranslate">string</code> | <code class="notranslate">array</code></p>
-<p>If your widget option is set to <code class="notranslate">choice</code>, then this field will be represented
-as a series of <code class="notranslate">select</code> boxes. When the placeholder value is a string,
+<p><strong>type</strong>: <code>string</code> | <code>array</code></p>
+<p>If your widget option is set to <code>choice</code>, then this field will be represented
+as a series of <code>select</code> boxes. When the placeholder value is a string,
 it will be used as the <strong>blank value</strong> of all select boxes:</p>
-<div class="literal-block notranslate">
+<div class="literal-block">
     <div class="highlight-php">
         <table class="highlighttable">
             <tr>
@@ -127,19 +127,19 @@ it will be used as the <strong>blank value</strong> of all select boxes:</p>
 <p>Custom classes for links are also cool:</p>
 
 <ul class="simple list-config-options">
-    <li><code class="notranslate">excluded_ajax_paths</code></li>
-    <li><code class="notranslate">intercept_redirects</code></li>
-    <li><code class="notranslate">position</code></li>
-    <li><code class="notranslate">toolbar</code></li>
-    <li><code class="notranslate">verbose</code></li>
+    <li><code>excluded_ajax_paths</code></li>
+    <li><code>intercept_redirects</code></li>
+    <li><code>position</code></li>
+    <li><code>toolbar</code></li>
+    <li><code>verbose</code></li>
     <li>
         <a href="form/form_type.html#internal-reference" class="reference internal"><span>FormType Documentation</span></a>
     </li>
 </ul>
 
 <h3 id="format">format<a class="headerlink" href="#format" title="Permalink to this headline">¶</a></h3>
-<p><strong>type</strong>: <code class="notranslate">string</code> <strong>default</strong>: <code class="notranslate">Symfony\Component\Form\Extension\Core\Type\DateTimeType::HTML5_FORMAT</code></p>
-<p>If the <code class="notranslate">widget</code> option is set to <code class="notranslate">single_text</code>, this option specifies
+<p><strong>type</strong>: <code>string</code><strong>default</strong>: <code>Symfony\Component\Form\Extension\Core\Type\DateTimeType::HTML5_FORMAT</code></p>
+<p>If the <code>widget</code> option is set to <code>single_text</code>, this option specifies
 the format of the input, i.e. how Symfony will interpret the given input
 as a datetime string. See <a href="http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Time-Format-Syntax" class="reference external">Date/Time Format Syntax</a>.</p>
 
@@ -170,27 +170,27 @@ as a datetime string. See <a href="http://userguide.icu-project.org/formatparse/
 
 <h3 id="time-widget">time_widget<a class="headerlink" href="#time-widget" title="Permalink to this headline">¶</a></h3>
 
-<p><strong>type</strong>: <code class="notranslate">string</code> <strong>default</strong>: <code class="notranslate">choice</code></p>
-<p>Defines the <code class="notranslate">widget</code> option for the <code class="notranslate">TimeType</code>.</p>
+<p><strong>type</strong>: <code>string</code><strong>default</strong>: <code>choice</code></p>
+<p>Defines the <code>widget</code> option for the <code>TimeType</code>.</p>
 
 <h3 id="widget">widget<a class="headerlink" href="#widget" title="Permalink to this headline">¶</a></h3>
 
-<p><strong>type</strong>: <code class="notranslate">string</code> <strong>default</strong>: <code class="notranslate">null</code></p>
-<p>Defines the <code class="notranslate">widget</code> option for both the <code class="notranslate">DateType</code>.
-and <code class="notranslate">TimeType</code>. This can be overridden
-with the <a href="#date-widget" class="reference internal">date_widget</a> and <a href="#time-widget" class="reference internal">time_widget</a> options.</p>
+<p><strong>type</strong>: <code>string</code><strong>default</strong>: <code>null</code></p>
+<p>Defines the <code>widget</code> option for both the <code>DateType</code>.
+and <code>TimeType</code>. This can be overridden
+with the <a href="datetime.html#date-widget" class="reference internal">date_widget</a> and <a href="datetime.html#time-widget" class="reference internal">time_widget</a> options.</p>
 
 <h2 id="overridden-options">Overridden Options<a class="headerlink" href="#overridden-options" title="Permalink to this headline">¶</a></h2>
 
 <h3 id="by-reference">by_reference<a class="headerlink" href="#by-reference" title="Permalink to this headline">¶</a></h3>
 
-<p><strong>default</strong>: <code class="notranslate">false</code></p>
-<p>The <code class="notranslate">DateTime</code> classes are treated as immutable objects.</p>
+<p><strong>default</strong>: <code>false</code></p>
+<p>The <code>DateTime</code> classes are treated as immutable objects.</p>
 
 <h3 id="error-bubbling">error_bubbling<a class="headerlink" href="#error-bubbling" title="Permalink to this headline">¶</a></h3>
-<p><strong>default</strong>: <code class="notranslate">false</code></p>
+<p><strong>default</strong>: <code>false</code></p>
 <p>We also support code blocks!</p>
-<div class="literal-block notranslate">
+<div class="literal-block">
     <div class="highlight-yaml">
         <table class="highlighttable">
             <tr>
@@ -214,7 +214,7 @@ with the <a href="#date-widget" class="reference internal">date_widget</a> and <
 <div class="configuration-block">
     <ul class="simple">
         <li><em>YAML</em>
-            <div class="literal-block notranslate">
+            <div class="literal-block">
                 <div class="highlight-yaml">
                     <table class="highlighttable">
                         <tr>
@@ -236,7 +236,7 @@ with the <a href="#date-widget" class="reference internal">date_widget</a> and <
             </div>
         </li>
         <li><em>XML</em>
-            <div class="literal-block notranslate">
+            <div class="literal-block">
                 <div class="highlight-xml">
                     <table class="highlighttable">
                         <tr>
@@ -285,7 +285,7 @@ with the <a href="#date-widget" class="reference internal">date_widget</a> and <
             </div>
         </li>
         <li><em>PHP</em>
-            <div class="literal-block notranslate">
+            <div class="literal-block">
                 <div class="highlight-php">
                     <table class="highlighttable">
                         <tr>
@@ -321,12 +321,12 @@ $container-&gt;loadFromExtension(<span class="hljs-string">'framework'</span>, <
     <tbody valign="top">
     <tr class="row-even">
         <td>widget</td>
-        <td><code class="notranslate">mixed</code></td>
-        <td>The value of the <code class="notranslate">widget</code> option</td>
+        <td><code>mixed</code></td>
+        <td>The value of the <code>widget</code> option</td>
     </tr>
     <tr class="row-odd">
         <td>type</td>
-        <td><code class="notranslate">string</code></td>
+        <td><code>string</code></td>
         <td>Multiple lines of text here, to show
 that off</td>
     </tr>

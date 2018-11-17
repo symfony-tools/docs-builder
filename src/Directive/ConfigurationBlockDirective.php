@@ -2,12 +2,10 @@
 
 namespace SymfonyDocs\Directive;
 
-use Doctrine\RST\Document;
+use Doctrine\RST\Directives\SubDirective;
 use Doctrine\RST\Nodes\CodeNode;
 use Doctrine\RST\Nodes\Node;
-use Doctrine\RST\Nodes\RawNode;
 use Doctrine\RST\Parser;
-use Doctrine\RST\Directives\SubDirective;
 use function strtoupper;
 
 class ConfigurationBlockDirective extends SubDirective
@@ -19,12 +17,7 @@ class ConfigurationBlockDirective extends SubDirective
 
     public function processSub(Parser $parser, ?Node $document, string $variable, string $data, array $options): ?Node
     {
-        if (!$document instanceof Document) {
-            return null;
-        }
-
-        $html = '<div class="configuration-block"><ul class="simple">';
-
+        $blocks = [];
         foreach ($document->getNodes() as $node) {
             if (!$node instanceof CodeNode) {
                 continue;
@@ -32,15 +25,19 @@ class ConfigurationBlockDirective extends SubDirective
 
             $language = $node->getLanguage() ?? 'Unknown';
 
-            $html .= '<li>';
-            $html .= sprintf('<em>%s</em>', strtoupper($language));
-            $html .= trim($node->render());
-            $html .= '</li>';
+            $blocks[] = [
+                'language' => strtoupper($language),
+                'code'     => $node->render(),
+            ];
         }
 
-        $html .= '</ul>';
-        $html .= '</div>';
+        $wrapperDiv = $parser->renderTemplate(
+            'directives/configuration-block.html.twig',
+            [
+                'blocks' => $blocks,
+            ]
+        );
 
-        return new RawNode($html);
+        return $parser->getNodeFactory()->createWrapperNode(null, $wrapperDiv, '</div>');
     }
 }

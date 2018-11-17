@@ -35,7 +35,6 @@ final class KernelFactory
             new SymfonyDoirectives\ConfigurationBlockDirective(),
             new SymfonyDoirectives\IndexDirective(),
             new SymfonyDoirectives\NoteDirective(),
-            new SymfonyDoirectives\RoleDirective(),
             new SymfonyDoirectives\SeeAlsoDirective(),
             new SymfonyDoirectives\SidebarDirective(),
             new SymfonyDoirectives\TipDirective(),

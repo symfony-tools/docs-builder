@@ -2,10 +2,9 @@
 
 namespace SymfonyDocs\Directive;
 
-use Doctrine\RST\Nodes\Node;
-use Doctrine\RST\Nodes\WrapperNode;
-use Doctrine\RST\Parser;
 use Doctrine\RST\Directives\SubDirective;
+use Doctrine\RST\Nodes\Node;
+use Doctrine\RST\Parser;
 
 abstract class AbstractAdmonitionDirective extends SubDirective
 {
@@ -23,17 +22,15 @@ abstract class AbstractAdmonitionDirective extends SubDirective
 
     final public function processSub(Parser $parser, ?Node $document, string $variable, string $data, array $options): ?Node
     {
-        return new WrapperNode(
-            $document,
-            sprintf(
-                '<div class="admonition-%s admonition-wrapper"><div class="%s"></div><div class="admonition admonition-%s"><p class="admonition-title">%s</p>',
-                $this->name,
-                $this->name,
-                $this->name,
-                $this->text
-            ),
-            '</div></div>'
+        $wrapperDiv = $parser->renderTemplate(
+            'directives/admonition.html.twig',
+            [
+                'name' => $this->name,
+                'text' => $this->text,
+            ]
         );
+
+        return $parser->getNodeFactory()->createWrapperNode($document, $wrapperDiv, '</div></div>');
     }
 
     final public function getName(): string
