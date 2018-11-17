@@ -8,6 +8,7 @@ Changes needed in symfony.com
 - `<p>` added to `.. seealso::` directive 
 - `versionadded` dom changed 
 - toc level `.toctree-lX` class has disappeared (was it needed ?)
+- toc item: link: `.internal-reference` has gone
 
 Notes
 =====

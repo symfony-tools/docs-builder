@@ -13,13 +13,13 @@ class SpanNode extends Span
 
     public function link(?string $url, string $title, array $attributes = []): string
     {
-        if (isset($attributes['is-ref'])) {
+        if (isset($attributes['isRef'])) {
             $title = '<span>'.$title.'</span>';
-            unset($attributes['is-ref']);
+            unset($attributes['isRef']);
         }
-        if (isset($attributes['is-doc'])) {
+        if (isset($attributes['isDoc'])) {
             $title = '<em>'.$title.'</em>';
-            unset($attributes['is-doc']);
+            unset($attributes['isDoc']);
         }
 
         if (!$attributes) {

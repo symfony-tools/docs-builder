@@ -28,7 +28,7 @@ class DocReference extends Reference
 
     public function resolve(Environment $environment, string $data) : ResolvedReference
     {
-        return $this->resolver->resolve($environment, $data, ['class' => 'reference internal', 'is-doc' => true]);
+        return $this->resolver->resolve($environment, $data, ['class' => 'reference internal', 'domElement' => 'em']);
     }
 
     public function found(Environment $environment, string $data) : void

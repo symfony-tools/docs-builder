@@ -11,7 +11,8 @@
 
     <tbody valign="top">
     {% for tableRow in tableRows %}
-        <tr class="row-{{ loop.index0 is odd ? 'odd' : 'even' }}">
+        {% set index = tableHeader ? loop.index0 : loop.index %}
+        <tr class="row-{{ index is odd ? 'odd' : 'even' }}">
             {% for value in tableRow %}
                 <td>{{ value|raw }}</td>
             {% endfor %}

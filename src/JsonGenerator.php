@@ -2,9 +2,9 @@
 
 namespace SymfonyDocs;
 
-use Doctrine\RST\HTML\Document;
-use Doctrine\RST\HTML\Environment;
-use Doctrine\RST\MetaEntry;
+use Doctrine\RST\Environment;
+use Doctrine\RST\Meta\MetaEntry;
+use Doctrine\RST\Nodes\DocumentNode;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
@@ -21,7 +21,7 @@ class JsonGenerator
     public function __construct(array $documents)
     {
         $this->environments = array_map(
-            function (Document $document) {
+            function (DocumentNode $document) {
                 return $document->getEnvironment();
             },
             $documents
