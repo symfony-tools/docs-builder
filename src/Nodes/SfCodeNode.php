@@ -5,7 +5,7 @@ namespace SymfonyDocs\Nodes;
 use Doctrine\RST\Nodes\CodeNode as Base;
 use Highlight\Highlighter;
 
-class CodeNode extends Base
+class SfCodeNode extends Base
 {
     private const LANGUAGES_MAPPING = [
         'php'             => 'php',

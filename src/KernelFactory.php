@@ -17,6 +17,7 @@ final class KernelFactory
         $configuration = new Configuration();
         $configuration->setCustomTemplateDirs([__DIR__.'/Templates']);
         $configuration->setCacheDir(__DIR__.'/../var/cache');
+        $configuration->addFormat(new SymfonyFormat($configuration->getTemplateRenderer()));
 
         return new Kernel(
             $configuration,
