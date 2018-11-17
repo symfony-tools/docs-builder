@@ -7,6 +7,7 @@ Changes needed in symfony.com
 - `div.section` are now removed, so the `margin-top` needd to go on `<hX>`
 - `<p>` added to `.. seealso::` directive 
 - `versionadded` dom changed 
+- toc level `.toctree-lX` class has disappeared (was it needed ?)
 
 Notes
 =====

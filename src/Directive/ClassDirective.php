@@ -2,11 +2,11 @@
 
 namespace SymfonyDocs\Directive;
 
+use Doctrine\RST\Nodes\ListNode;
 use Doctrine\RST\Nodes\Node;
+use Doctrine\RST\Nodes\ParagraphNode;
 use Doctrine\RST\Parser;
-use Doctrine\RST\SubDirective;
-use SymfonyDocs\Nodes\ListNode;
-use SymfonyDocs\Nodes\ParagraphNode;
+use Doctrine\RST\Directives\SubDirective;
 
 class ClassDirective extends SubDirective
 {

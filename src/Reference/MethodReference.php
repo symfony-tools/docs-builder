@@ -3,9 +3,9 @@
 namespace SymfonyDocs\Reference;
 
 use Doctrine\RST\Environment;
-use Doctrine\RST\Reference;
+use Doctrine\RST\References\Reference;
 use Doctrine\RST\References\ResolvedReference;
-use SymfonyDocs\HtmlKernel;
+use SymfonyDocs\SymfonyDocConfiguration;
 
 class MethodReference extends Reference
 {
@@ -23,7 +23,7 @@ class MethodReference extends Reference
 
         return new ResolvedReference(
             $methodName.'()',
-            sprintf('%s/%s/%s.html#method_%s', HtmlKernel::getSymfonyApiUrl(), HtmlKernel::getVersion(), str_replace('\\', '/', $className), $methodName),
+            sprintf('%s/%s/%s.html#method_%s', SymfonyDocConfiguration::getSymfonyApiUrl(), SymfonyDocConfiguration::getVersion(), str_replace('\\', '/', $className), $methodName),
             [],
             [
                 'class' => 'reference external',

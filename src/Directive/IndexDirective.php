@@ -2,7 +2,7 @@
 
 namespace SymfonyDocs\Directive;
 
-use Doctrine\RST\SubDirective;
+use Doctrine\RST\Directives\SubDirective;
 
 class IndexDirective extends SubDirective
 {

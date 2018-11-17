@@ -2,7 +2,7 @@
 
 namespace SymfonyDocs\Directive;
 
-use Doctrine\RST\Directive;
+use Doctrine\RST\Directives\Directive;
 use Doctrine\RST\Nodes\CodeNode;
 use Doctrine\RST\Nodes\Node;
 use Doctrine\RST\Parser;

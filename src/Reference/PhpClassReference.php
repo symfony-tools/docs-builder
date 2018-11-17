@@ -3,9 +3,9 @@
 namespace SymfonyDocs\Reference;
 
 use Doctrine\RST\Environment;
-use Doctrine\RST\Reference;
+use Doctrine\RST\References\Reference;
 use Doctrine\RST\References\ResolvedReference;
-use SymfonyDocs\HtmlKernel;
+use SymfonyDocs\SymfonyDocConfiguration;
 
 class PhpClassReference extends Reference
 {
@@ -18,7 +18,7 @@ class PhpClassReference extends Reference
     {
         return new ResolvedReference(
             $data,
-            sprintf('%s/class.%s.php', HtmlKernel::getPhpDocUrl(), strtolower($data)),
+            sprintf('%s/class.%s.php', SymfonyDocConfiguration::getPhpDocUrl(), strtolower($data)),
             [],
             [
                 'class' => 'reference external',

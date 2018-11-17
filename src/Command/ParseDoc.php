@@ -3,6 +3,7 @@
 namespace SymfonyDocs\Command;
 
 use Doctrine\RST\Builder;
+use Doctrine\RST\Configuration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -11,7 +12,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use SymfonyDocs\HtmlKernel;
+use SymfonyDocs\KernelFactory;
+use SymfonyDocs\SymfonyDocConfiguration;
 use SymfonyDocs\JsonGenerator;
 
 /**
@@ -72,9 +74,9 @@ class ParseDoc extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $kernel  = new HtmlKernel();
-        $builder = new Builder($kernel);
-        $builder->addHook([$this, 'handleProgressBar']);
+        $builder = KernelFactory::createKernel();
+
+//        $builder->addHook([$this, 'handleProgressBar']);
 
         $this->finder->in($input->getOption('source-dir'))
             ->exclude(['_build', '.github', '.platform', '_images'])

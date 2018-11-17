@@ -3,6 +3,7 @@
 namespace SymfonyCasts\Tests;
 
 use Doctrine\RST\Builder;
+use Doctrine\RST\Configuration;
 use Doctrine\RST\Parser;
 use Gajus\Dindent\Indenter;
 use PHPUnit\Framework\TestCase;
@@ -11,22 +12,32 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use SymfonyDocs\HtmlKernel;
 use SymfonyDocs\JsonGenerator;
+use SymfonyDocs\KernelFactory;
 
 class IntegrationTest extends TestCase
 {
+    public function setUp()
+    {
+        $fs = new Filesystem();
+        $fs->remove(__DIR__.'/../var');
+    }
+
     /**
      * @dataProvider integrationProvider
      */
     public function testIntegration(string $folder)
     {
-        $builder = $this->createBuilder();
+        $fs = new Filesystem();
+        $fs->remove(__DIR__.'/_output');
+
+        $builder = new Builder(
+            KernelFactory::createKernel()
+        );
 
         $builder->build(
             sprintf('%s/fixtures/source/%s', __DIR__, $folder),
-            __DIR__.'/_output',
-            false // verbose
+            __DIR__.'/_output'
         );
 
         $finder = new Finder();
@@ -91,8 +102,12 @@ class IntegrationTest extends TestCase
      */
     public function testParseUnitBlock(string $blockName)
     {
-        $kernel = new HtmlKernel();
-        $parser = new Parser(null, $kernel);
+        $configuration = new Configuration();
+        $configuration->setCustomTemplateDirs([__DIR__.'/Templates']);
+
+        $parser = new Parser(
+            KernelFactory::createKernel()
+        );
 
         $sourceFile = sprintf('%s/fixtures/source/blocks/%s.rst', __DIR__, $blockName);
 
@@ -236,15 +251,5 @@ class IntegrationTest extends TestCase
         yield 'code-block-terminal' => [
             'blockName' => 'code-blocks/terminal',
         ];
-    }
-
-    private function createBuilder(): Builder
-    {
-        $kernel  = new HtmlKernel();
-        $builder = new Builder($kernel);
-        $fs      = new Filesystem();
-        $fs->remove(__DIR__.'/_output');
-
-        return $builder;
     }
 }

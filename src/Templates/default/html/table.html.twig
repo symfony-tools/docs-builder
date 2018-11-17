@@ -1,0 +1,21 @@
+<table class="docutils" border="1">
+    {% if tableHeader %}
+        <thead valign="bottom">
+        <tr class="row-odd">
+            {% for value in tableHeader %}
+                <th class="head">{{ value|raw }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+    {% endif %}
+
+    <tbody valign="top">
+    {% for tableRow in tableRows %}
+        <tr class="row-{{ loop.index0 is odd ? 'odd' : 'even' }}">
+            {% for value in tableRow %}
+                <td>{{ value|raw }}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

@@ -7,7 +7,7 @@ use Doctrine\RST\Nodes\CodeNode;
 use Doctrine\RST\Nodes\Node;
 use Doctrine\RST\Nodes\RawNode;
 use Doctrine\RST\Parser;
-use Doctrine\RST\SubDirective;
+use Doctrine\RST\Directives\SubDirective;
 use function strtoupper;
 
 class ConfigurationBlockDirective extends SubDirective

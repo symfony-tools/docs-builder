@@ -3,7 +3,7 @@
 namespace SymfonyDocs\Reference;
 
 use Doctrine\RST\Environment;
-use Doctrine\RST\Reference;
+use Doctrine\RST\References\Reference;
 use Doctrine\RST\References\ResolvedReference;
 use Doctrine\RST\References\Resolver;
 

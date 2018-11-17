@@ -1,3 +1,4 @@
 /vendor/
 /tests/_output
 /tests/_outputJson
+/var/
