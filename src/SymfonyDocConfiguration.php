@@ -42,4 +42,13 @@ class SymfonyDocConfiguration
 
         return self::getSymfonyDocConfiguration()['php_doc_url'];
     }
+
+    public static function getSymfonyDocUrl(): string
+    {
+        if (!isset(self::getSymfonyDocConfiguration()['symfony_doc_url'])) {
+            throw new \RuntimeException('The "symfony_doc_url" must be defined in "/_build/conf.json"');
+        }
+
+        return self::getSymfonyDocConfiguration()['symfony_doc_url'];
+    }
 }

@@ -6,7 +6,6 @@ use Doctrine\RST\Builder;
 use Doctrine\RST\Event\PostNodeRenderEvent;
 use Doctrine\RST\Event\PostParseDocumentEvent;
 use Doctrine\RST\Event\PreBuildRenderEvent;
-use Doctrine\RST\Nodes\DocumentNode;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,7 +14,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use SymfonyDocs\JsonGenerator;
+use SymfonyDocs\Generator\HtmlForPdfGenerator;
+use SymfonyDocs\Generator\JsonGenerator;
 use SymfonyDocs\KernelFactory;
 
 /**
@@ -56,9 +56,8 @@ class ParseDoc extends Command
         $this
             ->addOption('source-dir', null, InputOption::VALUE_REQUIRED, 'RST files Source directory', __DIR__.'/../../..')
             ->addOption('html-output-dir', null, InputOption::VALUE_REQUIRED, 'HTML files output directory', __DIR__.'/../../html')
-            ->addOption('json-output-dir', null, InputOption::VALUE_REQUIRED, 'JSON files output directory', __DIR__.'/../../json')->addOption('parse-only', null, InputOption::VALUE_OPTIONAL, 'Parse only given directory', null)
-//            ->addOption('for-pdf', null, InputOption::VALUE_NONE, 'Export for pdf')
-        ;
+            ->addOption('json-output-dir', null, InputOption::VALUE_REQUIRED, 'JSON files output directory', __DIR__.'/../../json')
+            ->addOption('parse-only', null, InputOption::VALUE_OPTIONAL, 'Parse only given directory for PDF (directory relative from source-dir)', null);
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
@@ -66,12 +65,12 @@ class ParseDoc extends Command
         $this->io     = new SymfonyStyle($input, $output);
         $this->output = $output;
 
-        $this->sourceDir = $this->getRealAbsolutePath($input->getOption('source-dir'));
+        $this->sourceDir = rtrim($this->getRealAbsolutePath($input->getOption('source-dir')), '/');
         if (!$this->filesystem->exists($this->sourceDir)) {
             throw new \InvalidArgumentException(sprintf('RST source directory "%s" does not exist', $this->sourceDir));
         }
 
-        $this->htmlOutputDir = $this->getRealAbsolutePath($input->getOption('html-output-dir'));
+        $this->htmlOutputDir = rtrim($this->getRealAbsolutePath($input->getOption('html-output-dir')), '/');
         if ($this->filesystem->exists($this->htmlOutputDir)) {
             $this->filesystem->remove($this->htmlOutputDir);
         }
@@ -81,12 +80,19 @@ class ParseDoc extends Command
             $this->filesystem->remove($this->jsonOutputDir);
         }
 
-//        $this->parseOnly = $this->getRealAbsolutePath($input->getOption('parse-only'));
-//        if ($this->parseOnly && !$this->filesystem->exists($this->parseOnly)) {
-//            throw new \InvalidArgumentException(sprintf('Given "parse-only" directory "%s" does not exist', $this->parseOnly));
-//        }
+        if ($this->parseOnly = trim($input->getOption('parse-only') ?? '', '/')) {
+            $absoluteParseOnly = sprintf(
+                '%s/%s',
+                $this->sourceDir,
+                $this->parseOnly
+            );
 
-        $this->builder = new Builder(KernelFactory::createKernel());
+            if (!$this->filesystem->exists($absoluteParseOnly) || !is_dir($absoluteParseOnly)) {
+                throw new \InvalidArgumentException(sprintf('Given "parse-only" directory "%s" does not exist', $this->parseOnly));
+            }
+        }
+
+        $this->builder = new Builder(KernelFactory::createKernel($this->parseOnly));
         $eventManager  = $this->builder->getConfiguration()->getEventManager();
         $eventManager->addEventListener(
             [PostParseDocumentEvent::POST_PARSE_DOCUMENT],
@@ -123,12 +129,28 @@ class ParseDoc extends Command
             }
         }
 
-        $this->io->note('Start exporting doc into json files');
-        $this->progressBar = new ProgressBar($output, $this->finder->count());
-        $jsonGenerator     = new JsonGenerator($this->builder->getDocuments()->getAll());
-        $jsonGenerator->generateJson($this->htmlOutputDir, $this->jsonOutputDir, $this->progressBar);
+        if (!$this->parseOnly) {
+            $this->generateJson();
+        } else {
+            $this->renderDocForPDF();
+        }
+
         $this->io->newLine(2);
         $this->io->success('Parse process complete');
+    }
+
+    private function generateJson()
+    {
+        $this->io->note('Start exporting doc into json files');
+        $this->progressBar = new ProgressBar($this->output, $this->finder->count());
+        $jsonGenerator     = new JsonGenerator($this->builder->getDocuments()->getAll());
+        $jsonGenerator->generateJson($this->htmlOutputDir, $this->jsonOutputDir, $this->progressBar);
+    }
+
+    private function renderDocForPDF()
+    {
+        $htmlForPdfGenerator = new HtmlForPdfGenerator($this->builder->getDocuments()->getAll());
+        $htmlForPdfGenerator->generateHtmlForPdf($this->htmlOutputDir, $this->parseOnly);
     }
 
     public function handleProgressBar()
@@ -151,7 +173,7 @@ class ParseDoc extends Command
     {
         $file = $postParseDocumentEvent->getDocumentNode()->getEnvironment()->getCurrentFileName();
         if (!\in_array($file, $this->parsedFiles)) {
-            $this->parsedFiles[] = $postParseDocumentEvent->getDocumentNode()->getEnvironment()->getCurrentFileName();
+            $this->parsedFiles[] = $file;
             $this->progressBar->advance();
         }
     }

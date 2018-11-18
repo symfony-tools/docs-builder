@@ -1,5 +1,6 @@
 {
     "version": "4.0",
     "symfony_api_url": "https://api.symfony.com",
-    "php_doc_url": "https://secure.php.net/manual/en"
+    "php_doc_url": "https://secure.php.net/manual/en",
+    "symfony_doc_url": "https://symfony.com/doc/%s"
 }
