@@ -3,12 +3,10 @@
 namespace SymfonyDocs\Command;
 
 use Doctrine\RST\Builder;
-use Doctrine\RST\Event\PostBuildRenderEvent;
 use Doctrine\RST\Event\PostNodeRenderEvent;
 use Doctrine\RST\Event\PostParseDocumentEvent;
-use Doctrine\RST\Event\PreBuildParseEvent;
 use Doctrine\RST\Event\PreBuildRenderEvent;
-use Doctrine\RST\Event\PreBuildScanEvent;
+use Doctrine\RST\Nodes\DocumentNode;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -41,6 +39,7 @@ class ParseDoc extends Command
     private $htmlOutputDir;
     private $jsonOutputDir;
     private $parsedFiles = [];
+    private $parseOnly;
 
     public function __construct()
     {
@@ -57,12 +56,14 @@ class ParseDoc extends Command
         $this
             ->addOption('source-dir', null, InputOption::VALUE_REQUIRED, 'RST files Source directory', __DIR__.'/../../..')
             ->addOption('html-output-dir', null, InputOption::VALUE_REQUIRED, 'HTML files output directory', __DIR__.'/../../html')
-            ->addOption('json-output-dir', null, InputOption::VALUE_REQUIRED, 'JSON files output directory', __DIR__.'/../../json');
+            ->addOption('json-output-dir', null, InputOption::VALUE_REQUIRED, 'JSON files output directory', __DIR__.'/../../json')->addOption('parse-only', null, InputOption::VALUE_OPTIONAL, 'Parse only given directory', null)
+//            ->addOption('for-pdf', null, InputOption::VALUE_NONE, 'Export for pdf')
+        ;
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        $this->io = new SymfonyStyle($input, $output);
+        $this->io     = new SymfonyStyle($input, $output);
         $this->output = $output;
 
         $this->sourceDir = $this->getRealAbsolutePath($input->getOption('source-dir'));
@@ -79,6 +80,11 @@ class ParseDoc extends Command
         if ($this->filesystem->exists($this->jsonOutputDir)) {
             $this->filesystem->remove($this->jsonOutputDir);
         }
+
+//        $this->parseOnly = $this->getRealAbsolutePath($input->getOption('parse-only'));
+//        if ($this->parseOnly && !$this->filesystem->exists($this->parseOnly)) {
+//            throw new \InvalidArgumentException(sprintf('Given "parse-only" directory "%s" does not exist', $this->parseOnly));
+//        }
 
         $this->builder = new Builder(KernelFactory::createKernel());
         $eventManager  = $this->builder->getConfiguration()->getEventManager();
@@ -117,7 +123,7 @@ class ParseDoc extends Command
             }
         }
 
-        $this->io->note('Start transforming doc into json files');
+        $this->io->note('Start exporting doc into json files');
         $this->progressBar = new ProgressBar($output, $this->finder->count());
         $jsonGenerator     = new JsonGenerator($this->builder->getDocuments()->getAll());
         $jsonGenerator->generateJson($this->htmlOutputDir, $this->jsonOutputDir, $this->progressBar);
@@ -152,7 +158,7 @@ class ParseDoc extends Command
 
     public function preBuildRender()
     {
-        $eventManager  = $this->builder->getConfiguration()->getEventManager();
+        $eventManager = $this->builder->getConfiguration()->getEventManager();
         $eventManager->removeEventListener(
             [PostParseDocumentEvent::POST_PARSE_DOCUMENT],
             $this
@@ -160,7 +166,19 @@ class ParseDoc extends Command
 
         $this->progressBar->finish();
 
+        $this->progressBar = new ProgressBar($this->output);
+
+        $eventManager->addEventListener(
+            [PostNodeRenderEvent::POST_NODE_RENDER],
+            $this
+        );
+
         $this->io->newLine(2);
         $this->io->note('Start rendering in HTML...');
+    }
+
+    public function postNodeRender()
+    {
+        $this->progressBar->advance();
     }
 }
