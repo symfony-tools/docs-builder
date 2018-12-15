@@ -10,7 +10,7 @@
     },
     "require": {
         "ext-json": "*",
-        "doctrine/rst-parser": "dev-sf-docs-tweaks",
+        "doctrine/rst-parser": "dev-master",
         "scrivo/highlight.php": "v9.12.0.5",
         "symfony/phpunit-bridge": "^4.1",
         "symfony/filesystem": "^4.1",
@@ -18,12 +18,6 @@
         "symfony/css-selector": "^4.1",
         "symfony/console": "^4.1"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@github.com:weaverryan/rst-parser.git"
-        }
-    ],
     "require-dev": {
         "gajus/dindent": "^2.0",
         "symfony/finder": "^4.1"
