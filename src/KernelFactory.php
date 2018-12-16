@@ -5,7 +5,7 @@ namespace SymfonyDocs;
 use Doctrine\RST\Configuration;
 use Doctrine\RST\Kernel;
 use SymfonyDocs\Directive as SymfonyDirectives;
-use SymfonyDocs\Reference as SymfonyRefernces;
+use SymfonyDocs\Reference as SymfonyReferences;
 
 /**
  * Class KernelFactory
@@ -66,14 +66,14 @@ final class KernelFactory
     private static function getReferences(): array
     {
         return [
-            new SymfonyRefernces\DocReference(),
-            new SymfonyRefernces\RefReference(),
-            new SymfonyRefernces\ClassReference(),
-            new SymfonyRefernces\MethodReference(),
-            new SymfonyRefernces\NamespaceReference(),
-            new SymfonyRefernces\PhpFunctionReference(),
-            new SymfonyRefernces\PhpMethodReference(),
-            new SymfonyRefernces\PhpClassReference(),
+            new SymfonyReferences\DocReference(),
+            new SymfonyReferences\RefReference(),
+            new SymfonyReferences\ClassReference(),
+            new SymfonyReferences\MethodReference(),
+            new SymfonyReferences\NamespaceReference(),
+            new SymfonyReferences\PhpFunctionReference(),
+            new SymfonyReferences\PhpMethodReference(),
+            new SymfonyReferences\PhpClassReference(),
         ];
     }
 }
