@@ -144,6 +144,10 @@ class IntegrationTest extends TestCase
             'blockName' => 'directives/note',
         ];
 
+        yield 'admonition' => [
+            'blockName' => 'directives/admonition',
+        ];
+
         yield 'note-code-block-nested' => [
             'blockName' => 'directives/note-code-block-nested',
         ];

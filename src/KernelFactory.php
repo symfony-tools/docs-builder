@@ -48,6 +48,7 @@ final class KernelFactory
     private static function getDirectives(): array
     {
         return [
+            new SymfonyDirectives\AdmonitionDirective(),
             new SymfonyDirectives\CautionDirective(),
             new SymfonyDirectives\ClassDirective(),
             new SymfonyDirectives\CodeBlockDirective(),

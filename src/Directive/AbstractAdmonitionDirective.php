@@ -27,6 +27,7 @@ abstract class AbstractAdmonitionDirective extends SubDirective
             [
                 'name' => $this->name,
                 'text' => $this->text,
+                'class' => null,
             ]
         );
 
