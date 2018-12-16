@@ -8,6 +8,7 @@ use Doctrine\RST\Event\PostParseDocumentEvent;
 use Doctrine\RST\Event\PreBuildRenderEvent;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -54,9 +55,8 @@ class ParseDoc extends Command
         parent::configure();
 
         $this
-            ->addOption('source-dir', null, InputOption::VALUE_REQUIRED, 'RST files Source directory', __DIR__.'/../../..')
-            ->addOption('html-output-dir', null, InputOption::VALUE_REQUIRED, 'HTML files output directory', __DIR__.'/../../html')
-            ->addOption('json-output-dir', null, InputOption::VALUE_REQUIRED, 'JSON files output directory', __DIR__.'/../../json')
+            ->addArgument('source-dir', null, InputArgument::REQUIRED, 'RST files Source directory')
+            ->addArgument('output-dir', null, InputArgument::OPTIONAL, 'HTML files output directory')
             ->addOption('parse-only', null, InputOption::VALUE_OPTIONAL, 'Parse only given directory for PDF (directory relative from source-dir)', null);
     }
 
@@ -65,17 +65,18 @@ class ParseDoc extends Command
         $this->io     = new SymfonyStyle($input, $output);
         $this->output = $output;
 
-        $this->sourceDir = rtrim($this->getRealAbsolutePath($input->getOption('source-dir')), '/');
+        $this->sourceDir = rtrim($this->getRealAbsolutePath($input->getArgument('source-dir')), '/');
         if (!$this->filesystem->exists($this->sourceDir)) {
             throw new \InvalidArgumentException(sprintf('RST source directory "%s" does not exist', $this->sourceDir));
         }
 
-        $this->htmlOutputDir = rtrim($this->getRealAbsolutePath($input->getOption('html-output-dir')), '/');
+        $outputDir = $input->getArgument('output-dir') ?? $this->sourceDir . '/html';
+        $this->htmlOutputDir = rtrim($this->getRealAbsolutePath($outputDir), '/');
         if ($this->filesystem->exists($this->htmlOutputDir)) {
             $this->filesystem->remove($this->htmlOutputDir);
         }
 
-        $this->jsonOutputDir = $this->getRealAbsolutePath($input->getOption('json-output-dir'));
+        $this->jsonOutputDir = $this->getRealAbsolutePath($outputDir.'/json');
         if ($this->filesystem->exists($this->jsonOutputDir)) {
             $this->filesystem->remove($this->jsonOutputDir);
         }
@@ -106,7 +107,7 @@ class ParseDoc extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->finder->in($input->getOption('source-dir'))
+        $this->finder->in($input->getArgument('source-dir'))
             ->exclude(['_build', '.github', '.platform', '_images'])
             ->notName('*.rst.inc')
             ->name('*.rst');
