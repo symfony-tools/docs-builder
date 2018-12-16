@@ -12,7 +12,7 @@ use SymfonyDocs\Reference as SymfonyRefernces;
  */
 final class KernelFactory
 {
-    public static function createKernel(?string $parseOnly): Kernel
+    public static function createKernel(string $parseOnlyPath = null): Kernel
     {
         $configuration = new Configuration();
         $configuration->setCustomTemplateDirs([__DIR__.'/Templates']);
@@ -24,7 +24,7 @@ final class KernelFactory
             )
         );
 
-        if ($parseOnly) {
+        if ($parseOnlyPath) {
             $configuration->setBaseUrl(
                 sprintf(
                     SymfonyDocConfiguration::getSymfonyDocUrl(),
@@ -32,8 +32,8 @@ final class KernelFactory
                 )
             );
             $configuration->setBaseUrlEnabledCallable(
-                static function (string $path) use ($parseOnly) : bool {
-                    return strpos($path, $parseOnly) !== 0;
+                static function (string $path) use ($parseOnlyPath) : bool {
+                    return strpos($path, $parseOnlyPath) !== 0;
                 }
             );
         }
