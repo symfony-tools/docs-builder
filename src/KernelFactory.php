@@ -50,7 +50,6 @@ final class KernelFactory
         return [
             new SymfonyDirectives\AdmonitionDirective(),
             new SymfonyDirectives\CautionDirective(),
-            new SymfonyDirectives\ClassDirective(),
             new SymfonyDirectives\CodeBlockDirective(),
             new SymfonyDirectives\ConfigurationBlockDirective(),
             new SymfonyDirectives\IndexDirective(),
