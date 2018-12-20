@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use SymfonyDocs\JsonGenerator;
+use SymfonyDocs\Generator\JsonGenerator;
 use SymfonyDocs\KernelFactory;
 
 class IntegrationTest extends TestCase
