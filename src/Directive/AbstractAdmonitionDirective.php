@@ -27,7 +27,7 @@ abstract class AbstractAdmonitionDirective extends SubDirective
             [
                 'name' => $this->name,
                 'text' => $this->text,
-                'class' => null,
+                'class' => isset($options['class']) ? $options['class'] : null,
             ]
         );
 
