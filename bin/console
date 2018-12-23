@@ -4,10 +4,10 @@
 require __DIR__.'/../vendor/autoload.php';
 
 use Symfony\Component\Console\Application;
-use SymfonyDocs\Command\ParseDoc;
+use SymfonyDocs\Command\BuildDocsCommand;
 
 $application = new Application();
 
-$application->add(new ParseDoc());
+$application->add(new BuildDocsCommand());
 
 $application->run();

@@ -19,12 +19,9 @@ use SymfonyDocs\Generator\HtmlForPdfGenerator;
 use SymfonyDocs\Generator\JsonGenerator;
 use SymfonyDocs\KernelFactory;
 
-/**
- * Class ParseDoc
- */
-class ParseDoc extends Command
+class BuildDocsCommand extends Command
 {
-    protected static $defaultName = 'symfony-docs:parse';
+    protected static $defaultName = 'build:docs';
 
     /** @var SymfonyStyle */
     private $io;
