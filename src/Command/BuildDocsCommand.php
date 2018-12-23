@@ -52,8 +52,8 @@ class BuildDocsCommand extends Command
         parent::configure();
 
         $this
-            ->addArgument('source-dir', null, InputArgument::REQUIRED, 'RST files Source directory')
-            ->addArgument('output-dir', null, InputArgument::OPTIONAL, 'HTML files output directory')
+            ->addArgument('source-dir', InputArgument::OPTIONAL, 'RST files Source directory', getcwd())
+            ->addArgument('output-dir', InputArgument::OPTIONAL, 'HTML files output directory')
             ->addOption('parse-only', null, InputOption::VALUE_OPTIONAL, 'Parse only given directory for PDF (directory relative from source-dir)', null);
     }
 
