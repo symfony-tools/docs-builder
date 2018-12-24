@@ -160,6 +160,10 @@ class IntegrationTest extends TestCase
             'blockName' => 'directives/tip',
         ];
 
+        yield 'topic' => [
+            'blockName' => 'directives/topic',
+        ];
+
         yield 'best-practice' => [
             'blockName' => 'directives/best-practice',
         ];
