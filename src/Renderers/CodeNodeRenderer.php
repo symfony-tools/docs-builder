@@ -12,6 +12,7 @@ use Highlight\Highlighter;
 class CodeNodeRenderer implements NodeRenderer
 {
     private const LANGUAGES_MAPPING = [
+        'html+jinja'      => 'twig',
         'html+twig'       => 'twig',
         'jinja'           => 'twig',
         'html+php'        => 'html',
