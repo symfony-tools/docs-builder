@@ -59,6 +59,7 @@ final class KernelFactory
             new SymfonyDirectives\SidebarDirective(),
             new SymfonyDirectives\TipDirective(),
             new SymfonyDirectives\TopicDirective(),
+            new SymfonyDirectives\WarningDirective(),
             new SymfonyDirectives\VersionAddedDirective(),
             new SymfonyDirectives\BestPracticeDirective(),
         ];
