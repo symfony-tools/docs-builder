@@ -68,8 +68,6 @@ final class KernelFactory
     private static function getReferences(): array
     {
         return [
-            new SymfonyReferences\DocReference(),
-            new SymfonyReferences\RefReference(),
             new SymfonyReferences\ClassReference(),
             new SymfonyReferences\MethodReference(),
             new SymfonyReferences\NamespaceReference(),
