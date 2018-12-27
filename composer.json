@@ -10,6 +10,7 @@
     },
     "require": {
         "ext-json": "*",
+        "ext-curl": "*",
         "doctrine/rst-parser": "dev-master",
         "scrivo/highlight.php": "v9.12.0.5",
         "symfony/phpunit-bridge": "^4.1",
