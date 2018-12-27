@@ -7,6 +7,7 @@ use Doctrine\RST\Kernel;
 use SymfonyDocsBuilder\CI\UrlChecker;
 use SymfonyDocsBuilder\Directive as SymfonyDirectives;
 use SymfonyDocsBuilder\Reference as SymfonyReferences;
+include_once __DIR__.'/../vendor/squizlabs/php_codesniffer/autoload.php';
 
 /**
  * Class KernelFactory

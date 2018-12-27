@@ -8,6 +8,7 @@ use Doctrine\RST\Nodes\CodeNode;
 use Doctrine\RST\Renderers\NodeRenderer;
 use Doctrine\RST\Templates\TemplateRenderer;
 use Highlight\Highlighter;
+use PHP_CodeSniffer;
 
 class CodeNodeRenderer implements NodeRenderer
 {
@@ -55,6 +56,37 @@ class CodeNodeRenderer implements NodeRenderer
         }
 
         $language = $this->codeNode->getLanguage() ?? 'php';
+
+        if ('php' === (self::LANGUAGES_MAPPING[$language] ?? $language)) {
+            dump($code);
+$tempFile = tempnam(sys_get_temp_dir(), 'symfony-docs-builder') .'.php';
+file_put_contents($tempFile, strpos($code, '<?php') === 0 ? $code : "<?php\n".$code);
+
+if (defined('PHP_CODESNIFFER_CBF') === false) {
+    define('PHP_CODESNIFFER_CBF', false);
+}
+
+if (defined('PHP_CODESNIFFER_VERBOSITY') === false) {
+    define('PHP_CODESNIFFER_VERBOSITY', 2);
+}
+
+$config = new PHP_CodeSniffer\Config([], false);
+$ruleset = new PHP_CodeSniffer\Ruleset($config);
+
+$file = new PHP_CodeSniffer\Files\File($tempFile, $ruleset, $config);
+$file->setContent(file_get_contents($tempFile));
+$file->process();
+////            dump($file);
+//            die;
+//            $runner->config = $config;
+//            $runner->ruleset = $ruleset;
+//            $runner->reporter = new PHP_CodeSniffer\Reporter($config);
+//            $runner->processFile(
+//                $file
+//            );
+            dump($file->getErrors());
+            die;
+        }
 
         if ('text' !== $language) {
             $highLighter = new Highlighter();
