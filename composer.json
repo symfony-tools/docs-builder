@@ -1,5 +1,5 @@
 {
-    "name": "symfony/symfony-docs",
+    "name": "symfony/docs-builder",
     "description": "The build system for Symfony's documentation",
     "type": "project",
     "license": "MIT",
