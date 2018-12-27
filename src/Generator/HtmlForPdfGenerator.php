@@ -2,6 +2,7 @@
 
 namespace SymfonyDocsBuilder\Generator;
 
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use SymfonyDocsBuilder\BuildContext;
@@ -35,8 +36,43 @@ class HtmlForPdfGenerator
             throw new \InvalidArgumentException('File "%s" does not exist', $indexFile);
         }
 
+        // extracting all files from index's TOC, in the right order
         $parserFilename = $this->getParserFilename($indexFile, $buildContext->getHtmlOutputDir());
         $meta           = $this->getMeta($environments, $parserFilename);
-        dump(current($meta->getTocs()));
+        $files          = current($meta->getTocs());
+
+        $htmlDir = $buildContext->getHtmlOutputDir();
+        $files   = array_map(
+            function ($file) use ($htmlDir, $fs) {
+                $file = sprintf('%s/%s.html', $htmlDir, $file);
+                if (!$fs->exists($file)) {
+                    throw new \LogicException('File "%s" does not exist', $file);
+                }
+
+                return $file;
+            },
+            $files
+        );
+        array_unshift($files, $indexFile);
+
+        // building one big html file with all contents
+        $fileContent = '';
+        foreach ($files as $file) {
+            $crawler = new Crawler(file_get_contents($file));
+
+            $fileContent .= "\n";
+            $fileContent .= $crawler->filter('body')->html();
+        }
+
+        $fileContent = sprintf(
+            '<html><head><title>%s</title></head><body>%s</body></html>',
+            $buildContext->getParseOnly(),
+            $fileContent
+        );
+
+        $filename = sprintf('%s/%s.html', $htmlDir, $buildContext->getParseOnly());
+        file_put_contents($filename, $fileContent);
+
+        $fs->remove($basePath);
     }
 }
