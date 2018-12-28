@@ -7,7 +7,9 @@ use Doctrine\RST\Event\PostNodeRenderEvent;
 use Doctrine\RST\Event\PostParseDocumentEvent;
 use Doctrine\RST\Event\PreNodeRenderEvent;
 use Doctrine\RST\Nodes\CodeNode;
+use PhpCsFixer\AbstractFixer;
 use PhpCsFixer\Console\Application;
+use PhpCsFixer\FixerFactory;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use SymfonyDocsBuilder\Renderers\CodeNodeRenderer;
@@ -15,11 +17,16 @@ use SymfonyDocsBuilder\Renderers\CodeNodeRenderer;
 class CodeSnifferListener
 {
     private $application;
+    private $fixerFactory;
+    private $fixers;
 
     public function __construct()
     {
         $this->application = new Application();
         $this->application->setAutoExit(false);
+
+        $this->fixerFactory = new FixerFactory();
+        $this->fixerFactory->registerBuiltInFixers();
     }
 
     /**
@@ -65,7 +72,7 @@ class CodeSnifferListener
                 sprintf(
                     "Found malformed code:\n%s\n\nReasons:\n%s",
                     $code,
-                    json_encode($content['files'][0]['appliedFixers'])
+                    implode("\n", array_map([$this, 'getFixerSummary'], $content['files'][0]['appliedFixers']))
                 )
             );
         }
@@ -116,5 +123,34 @@ class CodeSnifferListener
 //        }
 //
 //        dump($node->getLanguage());
+    }
+
+    /**
+     * @return AbstractFixer[]
+     */
+    private function getFixers(): array
+    {
+        if (null !== $this->fixers) {
+            return $this->fixers;
+        }
+
+        $fixers = [];
+        foreach ($this->fixerFactory->getFixers() as $fixer) {
+            $fixers[$fixer->getName()] = $fixer;
+        }
+
+        $this->fixers = $fixers;
+        ksort($this->fixers);
+
+        return $this->fixers;
+    }
+
+    private function getFixerSummary($name)
+    {
+        $fixers = $this->getFixers();
+
+        $fixer = $fixers[$name];
+
+        return sprintf("    - %s", $fixer->getDefinition()->getSummary());
     }
 }
