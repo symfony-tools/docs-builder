@@ -6,9 +6,6 @@
     "autoload": {
         "psr-4": {
             "SymfonyDocsBuilder\\": "src"
-        },
-        "psr-0": {
-            "PHP_CodeSniffer\\": "vendor/squizlabs/php_codesniffer"
         }
     },
     "require": {
