@@ -18,6 +18,7 @@ use SymfonyDocsBuilder\CI\MissingFilesChecker;
 use SymfonyDocsBuilder\Generator\HtmlForPdfGenerator;
 use SymfonyDocsBuilder\Generator\JsonGenerator;
 use SymfonyDocsBuilder\KernelFactory;
+use SymfonyDocsBuilder\Listener\AssetsCopyListener;
 use SymfonyDocsBuilder\Listener\BuildProgressListener;
 use SymfonyDocsBuilder\Listener\CopyImagesDirectoryListener;
 
@@ -170,6 +171,13 @@ class BuildDocsCommand extends Command
             PostBuildRenderEvent::POST_BUILD_RENDER,
             new CopyImagesDirectoryListener($this->buildContext)
         );
+
+        if (!$this->buildContext->getParseSubPath()) {
+            $eventManager->addEventListener(
+                [PostBuildRenderEvent::POST_BUILD_RENDER],
+                new AssetsCopyListener($this->buildContext->getOutputDir())
+            );
+        }
 
         $progressListener = new BuildProgressListener($this->io);
         $progressListener->attachListeners($eventManager);

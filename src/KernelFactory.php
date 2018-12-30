@@ -3,10 +3,13 @@
 namespace SymfonyDocsBuilder;
 
 use Doctrine\RST\Configuration as RSTParserConfiguration;
+use Doctrine\RST\Event\PostBuildRenderEvent;
 use Doctrine\RST\Kernel;
 use SymfonyDocsBuilder\CI\UrlChecker;
 use SymfonyDocsBuilder\Directive as SymfonyDirectives;
 use SymfonyDocsBuilder\Reference as SymfonyReferences;
+use SymfonyDocsBuilder\Listener\AssetsCopyListener;
+use SymfonyDocsBuilder\Twig\AssetsExtension;
 
 /**
  * Class KernelFactory
@@ -40,6 +43,9 @@ final class KernelFactory
                 }
             );
         }
+
+        $twig = $configuration->getTemplateRenderer()->getTwigEnvironment();
+        $twig->addExtension(new AssetsExtension($buildContext->getHtmlOutputDir()));
 
         return new Kernel(
             $configuration,
