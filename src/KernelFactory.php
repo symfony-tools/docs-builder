@@ -3,8 +3,10 @@
 namespace SymfonyDocs;
 
 use Doctrine\RST\Configuration;
+use Doctrine\RST\Event\PostBuildRenderEvent;
 use Doctrine\RST\Kernel;
 use SymfonyDocs\Directive as SymfonyDirectives;
+use SymfonyDocs\Listener\CopyImagesDirectoryListener;
 use SymfonyDocs\Reference as SymfonyReferences;
 
 /**
@@ -12,8 +14,11 @@ use SymfonyDocs\Reference as SymfonyReferences;
  */
 final class KernelFactory
 {
-    public static function createKernel(string $parseOnlyPath = null): Kernel
-    {
+    public static function createKernel(
+        string $sourceDir,
+        string $htmlOutputDir,
+        string $parseOnlyPath = null
+    ): Kernel {
         $configuration = new Configuration();
         $configuration->setCustomTemplateDirs([__DIR__.'/Templates']);
         $configuration->setCacheDir(__DIR__.'/../var/cache');
@@ -37,6 +42,11 @@ final class KernelFactory
                 }
             );
         }
+
+        $configuration->getEventManager()->addEventListener(
+            PostBuildRenderEvent::POST_BUILD_RENDER,
+            new CopyImagesDirectoryListener($sourceDir, $htmlOutputDir)
+        );
 
         return new Kernel(
             $configuration,

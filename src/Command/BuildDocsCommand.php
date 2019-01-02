@@ -67,7 +67,7 @@ class BuildDocsCommand extends Command
             throw new \InvalidArgumentException(sprintf('RST source directory "%s" does not exist', $this->sourceDir));
         }
 
-        $outputDir = $input->getArgument('output-dir') ?? $this->sourceDir . '/html';
+        $outputDir           = $input->getArgument('output-dir') ?? $this->sourceDir.'/html';
         $this->htmlOutputDir = rtrim($this->getRealAbsolutePath($outputDir), '/');
         if ($this->filesystem->exists($this->htmlOutputDir)) {
             $this->filesystem->remove($this->htmlOutputDir);
@@ -90,7 +90,14 @@ class BuildDocsCommand extends Command
             }
         }
 
-        $this->builder = new Builder(KernelFactory::createKernel($this->parseOnly));
+        $this->builder = new Builder(
+            KernelFactory::createKernel(
+                $this->sourceDir,
+                $this->htmlOutputDir,
+                $this->parseOnly
+            )
+        );
+
         $eventManager  = $this->builder->getConfiguration()->getEventManager();
         $eventManager->addEventListener(
             [PostParseDocumentEvent::POST_PARSE_DOCUMENT],
