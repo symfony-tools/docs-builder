@@ -23,7 +23,7 @@ class HtmlForPdfGenerator
         $finder = new Finder();
         $finder->in($buildContext->getHtmlOutputDir())
             ->depth(0)
-            ->notName($buildContext->getParseOnly());
+            ->notName([$buildContext->getParseOnly(), '_images']);
 
         $fs = new Filesystem();
         foreach ($finder as $file) {
