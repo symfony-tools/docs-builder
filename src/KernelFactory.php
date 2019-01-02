@@ -5,6 +5,7 @@ namespace SymfonyDocsBuilder;
 use Doctrine\RST\Configuration as RSTParserConfiguration;
 use Doctrine\RST\Event\PostBuildRenderEvent;
 use Doctrine\RST\Kernel;
+use SymfonyDocs\CI\UrlChecker;
 use SymfonyDocsBuilder\Directive as SymfonyDirectives;
 use SymfonyDocsBuilder\Listener\CopyImagesDirectoryListener;
 use SymfonyDocsBuilder\Reference as SymfonyReferences;
@@ -14,7 +15,7 @@ use SymfonyDocsBuilder\Reference as SymfonyReferences;
  */
 final class KernelFactory
 {
-    public static function createKernel(BuildContext $buildContext): Kernel
+    public static function createKernel(BuildContext $buildContext, ?UrlChecker $urlChecker = null): Kernel
     {
         $configuration = new RSTParserConfiguration();
         $configuration->setCustomTemplateDirs([sprintf('%s/src/Templates', $buildContext->getBasePath())]);
@@ -22,7 +23,8 @@ final class KernelFactory
         $configuration->addFormat(
             new SymfonyHTMLFormat(
                 $configuration->getTemplateRenderer(),
-                $configuration->getFormat()
+                $configuration->getFormat(),
+                $urlChecker
             )
         );
 

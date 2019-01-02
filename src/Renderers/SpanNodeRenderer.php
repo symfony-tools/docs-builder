@@ -8,20 +8,25 @@ use Doctrine\RST\Environment;
 use Doctrine\RST\HTML\Renderers\SpanNodeRenderer as BaseSpanNodeRenderer;
 use Doctrine\RST\Nodes\SpanNode;
 use Doctrine\RST\Templates\TemplateRenderer;
+use SymfonyDocs\CI\UrlChecker;
 
 class SpanNodeRenderer extends BaseSpanNodeRenderer
 {
     /** @var TemplateRenderer */
     private $templateRenderer;
+    /** @var UrlChecker|null */
+    private $urlChecker;
 
     public function __construct(
         Environment $environment,
         SpanNode $span,
-        TemplateRenderer $templateRenderer
+        TemplateRenderer $templateRenderer,
+        ?UrlChecker $urlChecker = null
     ) {
         parent::__construct($environment, $span, $templateRenderer);
 
         $this->templateRenderer = $templateRenderer;
+        $this->urlChecker       = $urlChecker;
     }
 
     /**
@@ -31,24 +36,12 @@ class SpanNodeRenderer extends BaseSpanNodeRenderer
     {
         $url = (string) $url;
 
-        if ($this->isExternalUrl($url)) {
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_HEADER, true);
-            curl_setopt($ch, CURLOPT_NOBODY, true);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 2);
-            curl_exec($ch);
-            $httpCode = (int) curl_getinfo($ch,  CURLINFO_RESPONSE_CODE);
-            curl_close($ch);
-
-            if ($httpCode < 200 || $httpCode >= 300) {
-                dump("$url : $httpCode");
-            }
-        }
-
         if (!$attributes) {
             $attributes['class'] = sprintf('reference %s', $this->isExternalUrl($url) ? 'external' : 'internal');
+        }
+
+        if ($this->urlChecker && $this->isExternalUrl($url) ) {
+            $this->urlChecker->checkUrl($url);
         }
 
         return $this->templateRenderer->render(
@@ -61,7 +54,7 @@ class SpanNodeRenderer extends BaseSpanNodeRenderer
         );
     }
 
-    private function isExternalUrl($url): bool
+    public function isExternalUrl($url): bool
     {
         if (0 === strpos($url, 'http://') || 0 === strpos($url, 'https://')) {
             return true;

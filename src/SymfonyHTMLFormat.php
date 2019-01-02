@@ -8,6 +8,7 @@ use Doctrine\RST\Nodes\SpanNode;
 use Doctrine\RST\Renderers\CallableNodeRendererFactory;
 use Doctrine\RST\Renderers\NodeRendererFactory;
 use Doctrine\RST\Templates\TemplateRenderer;
+use SymfonyDocs\CI\UrlChecker;
 
 /**
  * Class SymfonyHTMLFormat
@@ -16,11 +17,14 @@ final class SymfonyHTMLFormat implements Format
 {
     protected $templateRenderer;
     private $htmlFormat;
+    /** @var UrlChecker|null */
+    private $urlChecker;
 
-    public function __construct(TemplateRenderer $templateRenderer, Format $HTMLFormat)
+    public function __construct(TemplateRenderer $templateRenderer, Format $HTMLFormat, ?UrlChecker $urlChecker = null)
     {
         $this->templateRenderer = $templateRenderer;
         $this->htmlFormat       = $HTMLFormat;
+        $this->urlChecker = $urlChecker;
     }
 
     public function getFileExtension(): string
@@ -54,7 +58,8 @@ final class SymfonyHTMLFormat implements Format
                 return new Renderers\SpanNodeRenderer(
                     $node->getEnvironment(),
                     $node,
-                    $this->templateRenderer
+                    $this->templateRenderer,
+                    $this->urlChecker
                 );
             }
         );

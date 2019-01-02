@@ -21,6 +21,7 @@
     },
     "require-dev": {
         "gajus/dindent": "^2.0",
-        "symfony/finder": "^4.1"
+        "symfony/finder": "^4.1",
+        "guzzlehttp/guzzle": "~6.0"
     }
 }
