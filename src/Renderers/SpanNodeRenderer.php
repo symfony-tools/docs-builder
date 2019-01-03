@@ -40,7 +40,12 @@ class SpanNodeRenderer extends BaseSpanNodeRenderer
             $attributes['class'] = sprintf('reference %s', $this->isExternalUrl($url) ? 'external' : 'internal');
         }
 
-        if ($this->urlChecker && $this->isExternalUrl($url) ) {
+        if (
+            $this->urlChecker &&
+            $this->isExternalUrl($url) &&
+            false === strpos($url, 'http://localhost') &&
+            false === strpos($url, 'http://192.168')
+        ) {
             $this->urlChecker->checkUrl($url);
         }
 

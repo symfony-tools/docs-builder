@@ -11,7 +11,7 @@ final class UrlChecker
 
     public function checkUrl(string $url)
     {
-        $httpClient = new Client(['timeout' => 2.0]);
+        $httpClient = new Client(['timeout' => 10]);
 
         try {
             $response   = $httpClient->get($url, ['http_errors' => false]);
