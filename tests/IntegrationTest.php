@@ -4,6 +4,7 @@ namespace SymfonyDocsBuilder\Tests;
 
 use Doctrine\RST\Builder;
 use Doctrine\RST\Configuration;
+use Doctrine\RST\Kernel;
 use Doctrine\RST\Parser;
 use Gajus\Dindent\Indenter;
 use PHPUnit\Framework\TestCase;
@@ -14,6 +15,8 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use SymfonyDocsBuilder\Generator\JsonGenerator;
 use SymfonyDocsBuilder\KernelFactory;
+use SymfonyDocsBuilder\Listener\CopyImagesDirectoryListener;
+use SymfonyDocsBuilder\ParameterBag;
 
 class IntegrationTest extends TestCase
 {
@@ -32,7 +35,9 @@ class IntegrationTest extends TestCase
         $fs->remove(__DIR__.'/_output');
 
         $builder = new Builder(
-            KernelFactory::createKernel()
+            $this->createKernel(
+                $parameterBag = $this->createParameterBag(sprintf('%s/fixtures/source/%s', __DIR__, $folder))
+            )
         );
 
         $builder->build(
@@ -59,8 +64,13 @@ class IntegrationTest extends TestCase
             );
         }
 
-        $jsonGenerator = new JsonGenerator($builder->getDocuments()->getAll());
-        $jsonGenerator->generateJson(__DIR__.'/_output', __DIR__.'/_outputJson', new ProgressBar(new NullOutput()));
+        $jsonGenerator = new JsonGenerator();
+        $jsonGenerator->generateJson(
+            $builder->getDocuments()->getAll(),
+            $parameterBag->get('htmlOutputDir'),
+            $parameterBag->get('jsonOutputDir'),
+            new ProgressBar(new NullOutput())
+        );
 
         foreach ($finder as $htmlFile) {
             $relativePath   = $htmlFile->getRelativePathname();
@@ -106,7 +116,9 @@ class IntegrationTest extends TestCase
         $configuration->setCustomTemplateDirs([__DIR__.'/Templates']);
 
         $parser = new Parser(
-            KernelFactory::createKernel()
+            $builder = $this->createKernel(
+                $parameterBag = $this->createParameterBag(sprintf('%s/fixtures/source/blocks', __DIR__))
+            )
         );
 
         $sourceFile = sprintf('%s/fixtures/source/blocks/%s.rst', __DIR__, $blockName);
@@ -259,5 +271,32 @@ class IntegrationTest extends TestCase
         yield 'code-block-terminal' => [
             'blockName' => 'code-blocks/terminal',
         ];
+    }
+
+    private function createKernel(ParameterBag $parameterBag): Kernel
+    {
+        $kernelFactory = new KernelFactory(
+            $parameterBag,
+            $this->createMock(CopyImagesDirectoryListener::class),
+            'https://symfony.com/doc/4.0',
+            'https://api.symfony.com/4.0',
+            'https://secure.php.net/manual/en',
+            __DIR__.'/..'
+        );
+
+        return $kernelFactory->createKernel();
+    }
+
+    private function createParameterBag(string $sourceDir): ParameterBag
+    {
+        $parameterBag = new ParameterBag();
+        $parameterBag->initialize(
+            $sourceDir,
+            __DIR__.'/_output',
+            __DIR__.'/_outputJson',
+            null
+        );
+
+        return $parameterBag;
     }
 }

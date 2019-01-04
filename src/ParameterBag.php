@@ -15,7 +15,7 @@ class ParameterBag implements \IteratorAggregate, \Countable
     /** @var bool */
     private $initialized = false;
 
-    public function initialize(string $sourceDir, string $htmlOutputDir, string $jsonOutputDir, string $parseOnly)
+    public function initialize(string $sourceDir, string $htmlOutputDir, string $jsonOutputDir, ?string $parseOnly)
     {
         $this->set('sourceDir', $sourceDir);
         $this->set('htmlOutputDir', $htmlOutputDir);

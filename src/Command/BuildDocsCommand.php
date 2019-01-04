@@ -44,8 +44,6 @@ class BuildDocsCommand extends Command
     private $jsonGenerator;
     /** @var HtmlForPdfGenerator */
     private $htmlForPdfGenerator;
-    /** @var string */
-    private $symfonyDocUrl;
     /** @var ParameterBag */
     private $parameterBag;
     /** @var KernelFactory */

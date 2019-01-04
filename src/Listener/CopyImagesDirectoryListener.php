@@ -5,7 +5,7 @@ namespace SymfonyDocsBuilder\Listener;
 use Symfony\Component\Filesystem\Filesystem;
 use SymfonyDocsBuilder\ParameterBag;
 
-final class CopyImagesDirectoryListener
+class CopyImagesDirectoryListener
 {
     /** @var ParameterBag */
     private $parameterBag;
