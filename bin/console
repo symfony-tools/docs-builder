@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\ArgvInput;
 use SymfonyDocsBuilder\Application;
 
 $input       = new ArgvInput();
-$version = $input->getParameterOption(['--symfony-version'], false === getenv('SYMFONY_VERSION') ? '4.1' : getenv('SYMFONY_VERSION'));
+$version = $input->getParameterOption(['--symfony-version'], false === getenv('SYMFONY_VERSION') ? 'master' : getenv('SYMFONY_VERSION'));
 
 $application = new Application($version);
 $application->run($input);

@@ -33,7 +33,7 @@ class Application
             null,
             InputOption::VALUE_REQUIRED,
             'The symfony version of the doc to parse.',
-            false === getenv('SYMFONY_VERSION') ? '4.1' : getenv('SYMFONY_VERSION')
+            false === getenv('SYMFONY_VERSION') ? 'master' : getenv('SYMFONY_VERSION')
         );
         $this->application->getDefinition()->addOption($inputOption);
         $this->application->add(
