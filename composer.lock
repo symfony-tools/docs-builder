@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3a698ab30a829e1346a6709a83cddbd7",
+    "content-hash": "28946e0b2da0ad2a9c2e5441f97883e4",
     "packages": [
         {
             "name": "doctrine/event-manager",

@@ -1,27 +1,24 @@
 <?php declare(strict_types=1);
 
-namespace SymfonyDocs;
+namespace SymfonyDocsBuilder;
 
-use Doctrine\RST\Configuration;
+use Doctrine\RST\Configuration as RSTParserConfiguration;
 use Doctrine\RST\Event\PostBuildRenderEvent;
 use Doctrine\RST\Kernel;
-use SymfonyDocs\Directive as SymfonyDirectives;
-use SymfonyDocs\Listener\CopyImagesDirectoryListener;
-use SymfonyDocs\Reference as SymfonyReferences;
+use SymfonyDocsBuilder\Directive as SymfonyDirectives;
+use SymfonyDocsBuilder\Listener\CopyImagesDirectoryListener;
+use SymfonyDocsBuilder\Reference as SymfonyReferences;
 
 /**
  * Class KernelFactory
  */
 final class KernelFactory
 {
-    public static function createKernel(
-        string $sourceDir,
-        string $htmlOutputDir,
-        string $parseOnlyPath = null
-    ): Kernel {
-        $configuration = new Configuration();
-        $configuration->setCustomTemplateDirs([__DIR__.'/Templates']);
-        $configuration->setCacheDir(__DIR__.'/../var/cache');
+    public static function createKernel(BuildContext $configBag): Kernel
+    {
+        $configuration = new RSTParserConfiguration();
+        $configuration->setCustomTemplateDirs([sprintf('%s/src/Templates', $configBag->getBasePath())]);
+        $configuration->setCacheDir(sprintf('%s/var/cache', $configBag->getBasePath()));
         $configuration->addFormat(
             new SymfonyHTMLFormat(
                 $configuration->getTemplateRenderer(),
@@ -29,13 +26,8 @@ final class KernelFactory
             )
         );
 
-        if ($parseOnlyPath) {
-            $configuration->setBaseUrl(
-                sprintf(
-                    SymfonyDocConfiguration::getSymfonyDocUrl(),
-                    SymfonyDocConfiguration::getVersion()
-                )
-            );
+        if ($parseOnlyPath = $configBag->getParseOnly()) {
+            $configuration->setBaseUrl($configBag->getSymfonyDocUrl());
             $configuration->setBaseUrlEnabledCallable(
                 static function (string $path) use ($parseOnlyPath) : bool {
                     return strpos($path, $parseOnlyPath) !== 0;
@@ -45,13 +37,13 @@ final class KernelFactory
 
         $configuration->getEventManager()->addEventListener(
             PostBuildRenderEvent::POST_BUILD_RENDER,
-            new CopyImagesDirectoryListener($sourceDir, $htmlOutputDir)
+            new CopyImagesDirectoryListener($configBag)
         );
 
         return new Kernel(
             $configuration,
             self::getDirectives(),
-            self::getReferences()
+            self::getReferences($configBag)
         );
     }
 
@@ -75,15 +67,15 @@ final class KernelFactory
         ];
     }
 
-    private static function getReferences(): array
+    private static function getReferences(BuildContext $configBag): array
     {
         return [
-            new SymfonyReferences\ClassReference(),
-            new SymfonyReferences\MethodReference(),
-            new SymfonyReferences\NamespaceReference(),
-            new SymfonyReferences\PhpFunctionReference(),
-            new SymfonyReferences\PhpMethodReference(),
-            new SymfonyReferences\PhpClassReference(),
+            new SymfonyReferences\ClassReference($configBag->getSymfonyApiUrl()),
+            new SymfonyReferences\MethodReference($configBag->getSymfonyApiUrl()),
+            new SymfonyReferences\NamespaceReference($configBag->getSymfonyApiUrl()),
+            new SymfonyReferences\PhpFunctionReference($configBag->getPhpDocUrl()),
+            new SymfonyReferences\PhpMethodReference($configBag->getPhpDocUrl()),
+            new SymfonyReferences\PhpClassReference($configBag->getPhpDocUrl()),
         ];
     }
 }

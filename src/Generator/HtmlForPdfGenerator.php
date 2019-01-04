@@ -1,11 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace SymfonyDocs\Generator;
+namespace SymfonyDocsBuilder\Generator;
 
-use Doctrine\RST\Environment;
-use Doctrine\RST\Nodes\DocumentNode;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use SymfonyDocsBuilder\BuildContext;
 
 /**
  * Class HtmlForPdfGenerator
@@ -14,39 +13,30 @@ class HtmlForPdfGenerator
 {
     use GeneratorTrait;
 
-    /** @var Environment[] */
-    private $environments;
+    public function generateHtmlForPdf(
+        array $documents,
+        BuildContext $configBag
+    ) {
+        $environments = $this->extractEnvironments($documents);
 
-    public function __construct(array $documents)
-    {
-        $this->environments = array_map(
-            function (DocumentNode $document) {
-                return $document->getEnvironment();
-            },
-            $documents
-        );
-    }
-
-    public function generateHtmlForPdf(string $htmlDir, string $parseOnly/*, ProgressBar $progressBar*/)
-    {
         $finder = new Finder();
-        $finder->in($htmlDir)
+        $finder->in($configBag->getHtmlOutputDir())
             ->depth(0)
-            ->notName($parseOnly);
+            ->notName($configBag->getParseOnly());
 
         $fs = new Filesystem();
         foreach ($finder as $file) {
             $fs->remove($file->getRealPath());
         }
 
-        $basePath  = sprintf('%s/%s', $htmlDir, $parseOnly);
+        $basePath  = sprintf('%s/%s', $configBag->getHtmlOutputDir(), $configBag->getParseOnly());
         $indexFile = sprintf('%s/%s', $basePath, 'index.html');
         if (!$fs->exists($indexFile)) {
             throw new \InvalidArgumentException('File "%s" does not exist', $indexFile);
         }
 
-        $parserFilename = $this->getParserFilename($indexFile, $htmlDir);
-        $meta           = $this->getMeta($parserFilename);
+        $parserFilename = $this->getParserFilename($indexFile, $configBag->getHtmlOutputDir());
+        $meta           = $this->getMeta($environments, $parserFilename);
         dump(current($meta->getTocs()));
     }
 }

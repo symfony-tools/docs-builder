@@ -1,25 +1,24 @@
 <?php declare(strict_types=1);
 
-namespace SymfonyDocs\Listener;
+namespace SymfonyDocsBuilder\Listener;
 
 use Symfony\Component\Filesystem\Filesystem;
+use SymfonyDocsBuilder\BuildContext;
 
-final class CopyImagesDirectoryListener
+class CopyImagesDirectoryListener
 {
-    private $sourceDir;
-    private $htmlOutputDir;
+    private $configBag;
 
-    public function __construct(string $sourceDir, string $htmlOutputDir)
+    public function __construct(BuildContext $configBag)
     {
-        $this->sourceDir     = $sourceDir;
-        $this->htmlOutputDir = $htmlOutputDir;
+        $this->configBag = $configBag;
     }
 
     public function postBuildRender()
     {
         $fs = new Filesystem();
-        if ($fs->exists($imageDir = sprintf('%s/_images', $this->sourceDir))) {
-            $fs->mirror($imageDir, sprintf('%s/_images', $this->htmlOutputDir));
+        if ($fs->exists($imageDir = sprintf('%s/_images', $this->configBag->getSourceDir()))) {
+            $fs->mirror($imageDir, sprintf('%s/_images', $this->configBag->getHtmlOutputDir()));
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace SymfonyCasts\Tests;
+namespace SymfonyDocsBuilder\Tests;
 
 use Doctrine\RST\Builder;
 use Doctrine\RST\Configuration;
@@ -12,8 +12,9 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use SymfonyDocs\Generator\JsonGenerator;
-use SymfonyDocs\KernelFactory;
+use SymfonyDocsBuilder\BuildContext;
+use SymfonyDocsBuilder\Generator\JsonGenerator;
+use SymfonyDocsBuilder\KernelFactory;
 
 class IntegrationTest extends TestCase
 {
@@ -31,8 +32,10 @@ class IntegrationTest extends TestCase
         $fs = new Filesystem();
         $fs->remove(__DIR__.'/_output');
 
+        $configBag = $this->createParameterBag(sprintf('%s/fixtures/source/%s', __DIR__, $folder));
+
         $builder = new Builder(
-            KernelFactory::createKernel()
+            KernelFactory::createKernel($configBag)
         );
 
         $builder->build(
@@ -59,8 +62,12 @@ class IntegrationTest extends TestCase
             );
         }
 
-        $jsonGenerator = new JsonGenerator($builder->getDocuments()->getAll());
-        $jsonGenerator->generateJson(__DIR__.'/_output', __DIR__.'/_outputJson', new ProgressBar(new NullOutput()));
+        $jsonGenerator = new JsonGenerator();
+        $jsonGenerator->generateJson(
+            $builder->getDocuments()->getAll(),
+            $configBag,
+            new ProgressBar(new NullOutput())
+        );
 
         foreach ($finder as $htmlFile) {
             $relativePath   = $htmlFile->getRelativePathname();
@@ -106,7 +113,7 @@ class IntegrationTest extends TestCase
         $configuration->setCustomTemplateDirs([__DIR__.'/Templates']);
 
         $parser = new Parser(
-            KernelFactory::createKernel()
+            KernelFactory::createKernel($this->createParameterBag(sprintf('%s/fixtures/source/blocks', __DIR__)))
         );
 
         $sourceFile = sprintf('%s/fixtures/source/blocks/%s.rst', __DIR__, $blockName);
@@ -259,5 +266,24 @@ class IntegrationTest extends TestCase
         yield 'code-block-terminal' => [
             'blockName' => 'code-blocks/terminal',
         ];
+    }
+
+    private function createParameterBag(string $sourceDir): BuildContext
+    {
+        $parameterBag = new BuildContext(
+            realpath(__DIR__.'/..'),
+            '4.0',
+            'https://api.symfony.com/4.0',
+            'https://secure.php.net/manual/en',
+            'https://symfony.com/doc/4.0'
+        );
+        $parameterBag->initializeRuntimeConfig(
+            $sourceDir,
+            __DIR__.'/_output',
+            __DIR__.'/_outputJson',
+            null
+        );
+
+        return $parameterBag;
     }
 }

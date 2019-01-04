@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SymfonyDocs\Renderers;
+namespace SymfonyDocsBuilder\Renderers;
 
 use Doctrine\RST\Environment;
 use Doctrine\RST\HTML\Renderers\SpanNodeRenderer as BaseSpanNodeRenderer;

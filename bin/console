@@ -3,11 +3,11 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-use Symfony\Component\Console\Application;
-use SymfonyDocs\Command\BuildDocsCommand;
+use Symfony\Component\Console\Input\ArgvInput;
+use SymfonyDocsBuilder\Application;
 
-$application = new Application();
+$input       = new ArgvInput();
+$version = $input->getParameterOption(['--symfony-version'], false === getenv('SYMFONY_VERSION') ? 'master' : getenv('SYMFONY_VERSION'));
 
-$application->add(new BuildDocsCommand());
-
-$application->run();
+$application = new Application($version);
+$application->run($input);
