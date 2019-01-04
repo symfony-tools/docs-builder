@@ -19,23 +19,23 @@ class JsonGenerator
 
     public function generateJson(
         array $documents,
-        BuildContext $configBag,
+        BuildContext $buildContext,
         ProgressBar $progressBar
     ) {
         $environments = $this->extractEnvironments($documents);
 
         $finder = new Finder();
-        $finder->in($configBag->getHtmlOutputDir())
+        $finder->in($buildContext->getHtmlOutputDir())
             ->name('*.html')
             ->files();
 
         $fs = new Filesystem();
-        $fs->remove($configBag->getJsonOutputDir());
+        $fs->remove($buildContext->getJsonOutputDir());
 
         foreach ($finder as $file) {
             $crawler = new Crawler($file->getContents());
 
-            $parserFilename = $this->getParserFilename($file->getRealPath(), $configBag->getHtmlOutputDir());
+            $parserFilename = $this->getParserFilename($file->getRealPath(), $buildContext->getHtmlOutputDir());
             $meta           = $this->getMeta($environments, $parserFilename);
 
             $data = [
@@ -52,7 +52,7 @@ class JsonGenerator
             ];
 
             $fs->dumpFile(
-                str_replace([$configBag->getHtmlOutputDir(), '.html'], [$configBag->getJsonOutputDir(), '.json'], $file->getRealPath()),
+                str_replace([$buildContext->getHtmlOutputDir(), '.html'], [$buildContext->getJsonOutputDir(), '.json'], $file->getRealPath()),
                 json_encode($data, JSON_PRETTY_PRINT)
             );
 

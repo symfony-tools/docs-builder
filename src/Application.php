@@ -10,14 +10,14 @@ use SymfonyDocsBuilder\Command\BuildDocsCommand;
 class Application
 {
     private $application;
-    private $configBag;
+    private $buildContext;
 
     public function __construct(string $symfonyVersion)
     {
         $this->application = new BaseApplication();
 
         $configuration   = $this->getSymfonyDocConfiguration($basePath = realpath(__DIR__.'/..'));
-        $this->configBag = new BuildContext(
+        $this->buildContext = new BuildContext(
             $basePath,
             $symfonyVersion,
             sprintf($configuration['symfony_api_url'], $symfonyVersion),
@@ -37,7 +37,7 @@ class Application
         );
         $this->application->getDefinition()->addOption($inputOption);
         $this->application->add(
-            new BuildDocsCommand($this->configBag)
+            new BuildDocsCommand($this->buildContext)
         );
 
         return $this->application->run($input);

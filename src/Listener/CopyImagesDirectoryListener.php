@@ -7,18 +7,18 @@ use SymfonyDocsBuilder\BuildContext;
 
 class CopyImagesDirectoryListener
 {
-    private $configBag;
+    private $buildContext;
 
-    public function __construct(BuildContext $configBag)
+    public function __construct(BuildContext $buildContext)
     {
-        $this->configBag = $configBag;
+        $this->buildContext = $buildContext;
     }
 
     public function postBuildRender()
     {
         $fs = new Filesystem();
-        if ($fs->exists($imageDir = sprintf('%s/_images', $this->configBag->getSourceDir()))) {
-            $fs->mirror($imageDir, sprintf('%s/_images', $this->configBag->getHtmlOutputDir()));
+        if ($fs->exists($imageDir = sprintf('%s/_images', $this->buildContext->getSourceDir()))) {
+            $fs->mirror($imageDir, sprintf('%s/_images', $this->buildContext->getHtmlOutputDir()));
         }
     }
 }

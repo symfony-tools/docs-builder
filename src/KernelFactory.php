@@ -14,11 +14,11 @@ use SymfonyDocsBuilder\Reference as SymfonyReferences;
  */
 final class KernelFactory
 {
-    public static function createKernel(BuildContext $configBag): Kernel
+    public static function createKernel(BuildContext $buildContext): Kernel
     {
         $configuration = new RSTParserConfiguration();
-        $configuration->setCustomTemplateDirs([sprintf('%s/src/Templates', $configBag->getBasePath())]);
-        $configuration->setCacheDir(sprintf('%s/var/cache', $configBag->getBasePath()));
+        $configuration->setCustomTemplateDirs([sprintf('%s/src/Templates', $buildContext->getBasePath())]);
+        $configuration->setCacheDir(sprintf('%s/var/cache', $buildContext->getBasePath()));
         $configuration->addFormat(
             new SymfonyHTMLFormat(
                 $configuration->getTemplateRenderer(),
@@ -26,8 +26,8 @@ final class KernelFactory
             )
         );
 
-        if ($parseOnlyPath = $configBag->getParseOnly()) {
-            $configuration->setBaseUrl($configBag->getSymfonyDocUrl());
+        if ($parseOnlyPath = $buildContext->getParseOnly()) {
+            $configuration->setBaseUrl($buildContext->getSymfonyDocUrl());
             $configuration->setBaseUrlEnabledCallable(
                 static function (string $path) use ($parseOnlyPath) : bool {
                     return strpos($path, $parseOnlyPath) !== 0;
@@ -37,13 +37,13 @@ final class KernelFactory
 
         $configuration->getEventManager()->addEventListener(
             PostBuildRenderEvent::POST_BUILD_RENDER,
-            new CopyImagesDirectoryListener($configBag)
+            new CopyImagesDirectoryListener($buildContext)
         );
 
         return new Kernel(
             $configuration,
             self::getDirectives(),
-            self::getReferences($configBag)
+            self::getReferences($buildContext)
         );
     }
 
@@ -67,15 +67,15 @@ final class KernelFactory
         ];
     }
 
-    private static function getReferences(BuildContext $configBag): array
+    private static function getReferences(BuildContext $buildContext): array
     {
         return [
-            new SymfonyReferences\ClassReference($configBag->getSymfonyApiUrl()),
-            new SymfonyReferences\MethodReference($configBag->getSymfonyApiUrl()),
-            new SymfonyReferences\NamespaceReference($configBag->getSymfonyApiUrl()),
-            new SymfonyReferences\PhpFunctionReference($configBag->getPhpDocUrl()),
-            new SymfonyReferences\PhpMethodReference($configBag->getPhpDocUrl()),
-            new SymfonyReferences\PhpClassReference($configBag->getPhpDocUrl()),
+            new SymfonyReferences\ClassReference($buildContext->getSymfonyApiUrl()),
+            new SymfonyReferences\MethodReference($buildContext->getSymfonyApiUrl()),
+            new SymfonyReferences\NamespaceReference($buildContext->getSymfonyApiUrl()),
+            new SymfonyReferences\PhpFunctionReference($buildContext->getPhpDocUrl()),
+            new SymfonyReferences\PhpMethodReference($buildContext->getPhpDocUrl()),
+            new SymfonyReferences\PhpClassReference($buildContext->getPhpDocUrl()),
         ];
     }
 }

@@ -39,15 +39,15 @@ class BuildDocsCommand extends Command
     private $jsonOutputDir;
     private $parsedFiles = [];
     private $parseOnly;
-    private $configBag;
+    private $buildContext;
 
-    public function __construct(BuildContext $configBag)
+    public function __construct(BuildContext $buildContext)
     {
         parent::__construct(self::$defaultName);
 
         $this->filesystem = new Filesystem();
         $this->finder     = new Finder();
-        $this->configBag  = $configBag;
+        $this->buildContext  = $buildContext;
     }
 
     protected function configure()
@@ -93,10 +93,10 @@ class BuildDocsCommand extends Command
             }
         }
 
-        $this->configBag->initializeRuntimeConfig($this->sourceDir, $this->htmlOutputDir, $this->jsonOutputDir, $this->parseOnly);
+        $this->buildContext->initializeRuntimeConfig($this->sourceDir, $this->htmlOutputDir, $this->jsonOutputDir, $this->parseOnly);
 
         $this->builder = new Builder(
-            KernelFactory::createKernel($this->configBag)
+            KernelFactory::createKernel($this->buildContext)
         );
 
         $eventManager = $this->builder->getConfiguration()->getEventManager();
@@ -151,13 +151,13 @@ class BuildDocsCommand extends Command
         $this->progressBar = new ProgressBar($this->output, $this->finder->count());
 
         $jsonGenerator = new JsonGenerator();
-        $jsonGenerator->generateJson($this->builder->getDocuments()->getAll(), $this->configBag, $this->progressBar);
+        $jsonGenerator->generateJson($this->builder->getDocuments()->getAll(), $this->buildContext, $this->progressBar);
     }
 
     private function renderDocForPDF()
     {
         $htmlForPdfGenerator = new HtmlForPdfGenerator();
-        $htmlForPdfGenerator->generateHtmlForPdf($this->builder->getDocuments()->getAll(), $this->configBag);
+        $htmlForPdfGenerator->generateHtmlForPdf($this->builder->getDocuments()->getAll(), $this->buildContext);
     }
 
     public function handleProgressBar()
