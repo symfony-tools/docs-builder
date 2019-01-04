@@ -4,7 +4,6 @@ namespace SymfonyDocsBuilder\Tests;
 
 use Doctrine\RST\Builder;
 use Doctrine\RST\Configuration;
-use Doctrine\RST\Kernel;
 use Doctrine\RST\Parser;
 use Gajus\Dindent\Indenter;
 use PHPUnit\Framework\TestCase;
@@ -13,10 +12,9 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use SymfonyDocsBuilder\ConfigBag;
 use SymfonyDocsBuilder\Generator\JsonGenerator;
 use SymfonyDocsBuilder\KernelFactory;
-use SymfonyDocsBuilder\Listener\CopyImagesDirectoryListener;
-use SymfonyDocsBuilder\ParameterBag;
 
 class IntegrationTest extends TestCase
 {
@@ -34,10 +32,10 @@ class IntegrationTest extends TestCase
         $fs = new Filesystem();
         $fs->remove(__DIR__.'/_output');
 
+        $parameterBag = $this->createParameterBag(sprintf('%s/fixtures/source/%s', __DIR__, $folder));
+
         $builder = new Builder(
-            $this->createKernel(
-                $parameterBag = $this->createParameterBag(sprintf('%s/fixtures/source/%s', __DIR__, $folder))
-            )
+            KernelFactory::createKernel($parameterBag)
         );
 
         $builder->build(
@@ -273,23 +271,15 @@ class IntegrationTest extends TestCase
         ];
     }
 
-    private function createKernel(ParameterBag $parameterBag): Kernel
+    private function createParameterBag(string $sourceDir): ConfigBag
     {
-        $kernelFactory = new KernelFactory(
-            $parameterBag,
-            $this->createMock(CopyImagesDirectoryListener::class),
-            'https://symfony.com/doc/4.0',
+        $parameterBag = new ConfigBag(
+            realpath(__DIR__.'/..'),
+            '4.0',
             'https://api.symfony.com/4.0',
             'https://secure.php.net/manual/en',
-            __DIR__.'/..'
+            'https://symfony.com/doc/4.0'
         );
-
-        return $kernelFactory->createKernel();
-    }
-
-    private function createParameterBag(string $sourceDir): ParameterBag
-    {
-        $parameterBag = new ParameterBag();
         $parameterBag->initialize(
             $sourceDir,
             __DIR__.'/_output',

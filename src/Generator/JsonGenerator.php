@@ -8,6 +8,7 @@ use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use SymfonyDocsBuilder\ConfigBag;
 
 /**
  * Class JsonGenerator
@@ -18,24 +19,23 @@ class JsonGenerator
 
     public function generateJson(
         array $documents,
-        string $inputDir,
-        string $outputDir,
+        ConfigBag $configBag,
         ProgressBar $progressBar
     ) {
         $environments = $this->extractEnvironments($documents);
 
         $finder = new Finder();
-        $finder->in($inputDir)
+        $finder->in($configBag->getHtmlOutputDir())
             ->name('*.html')
             ->files();
 
         $fs = new Filesystem();
-        $fs->remove($outputDir);
+        $fs->remove($configBag->getJsonOutputDir());
 
         foreach ($finder as $file) {
             $crawler = new Crawler($file->getContents());
 
-            $parserFilename = $this->getParserFilename($file->getRealPath(), $inputDir);
+            $parserFilename = $this->getParserFilename($file->getRealPath(), $configBag->getHtmlOutputDir());
             $meta           = $this->getMeta($environments, $parserFilename);
 
             $data = [
@@ -52,7 +52,7 @@ class JsonGenerator
             ];
 
             $fs->dumpFile(
-                str_replace([$inputDir, '.html'], [$outputDir, '.json'], $file->getRealPath()),
+                str_replace([$configBag->getHtmlOutputDir(), '.html'], [$configBag->getJsonOutputDir(), '.json'], $file->getRealPath()),
                 json_encode($data, JSON_PRETTY_PRINT)
             );
 

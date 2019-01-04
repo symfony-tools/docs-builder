@@ -14,35 +14,11 @@ use SymfonyDocsBuilder\Reference as SymfonyReferences;
  */
 final class KernelFactory
 {
-    private $parameterBag;
-    private $copyImagesDirectoryListener;
-    private $symfonyDocUrl;
-    private $symfonyApiUrl;
-    private $phpDocUrl;
-    private $basePath;
-
-    public function __construct(
-        ParameterBag $parameterBag,
-        CopyImagesDirectoryListener $copyImagesDirectoryListener,
-        string $symfonyDocUrl,
-        string $symfonyApiUrl,
-        string $phpDocUrl,
-        string $basePath
-    ) {
-        $this->parameterBag                = $parameterBag;
-        $this->copyImagesDirectoryListener = $copyImagesDirectoryListener;
-
-        $this->symfonyDocUrl = $symfonyDocUrl;
-        $this->symfonyApiUrl = $symfonyApiUrl;
-        $this->phpDocUrl     = $phpDocUrl;
-        $this->basePath      = $basePath;
-    }
-
-    public function createKernel(): Kernel
+    public static function createKernel(ConfigBag $configBag): Kernel
     {
         $configuration = new RSTParserConfiguration();
-        $configuration->setCustomTemplateDirs([sprintf('%s/src/Templates', $this->basePath)]);
-        $configuration->setCacheDir(sprintf('%s/var/cache', $this->basePath));
+        $configuration->setCustomTemplateDirs([sprintf('%s/src/Templates', $configBag->getBasePath())]);
+        $configuration->setCacheDir(sprintf('%s/var/cache', $configBag->getBasePath()));
         $configuration->addFormat(
             new SymfonyHTMLFormat(
                 $configuration->getTemplateRenderer(),
@@ -50,8 +26,8 @@ final class KernelFactory
             )
         );
 
-        if ($parseOnlyPath = $this->parameterBag->get('parseOnly')) {
-            $configuration->setBaseUrl($this->symfonyDocUrl);
+        if ($parseOnlyPath = $configBag->getParseOnly()) {
+            $configuration->setBaseUrl($configBag->getSymfonyDocUrl());
             $configuration->setBaseUrlEnabledCallable(
                 static function (string $path) use ($parseOnlyPath) : bool {
                     return strpos($path, $parseOnlyPath) !== 0;
@@ -61,17 +37,17 @@ final class KernelFactory
 
         $configuration->getEventManager()->addEventListener(
             PostBuildRenderEvent::POST_BUILD_RENDER,
-            $this->copyImagesDirectoryListener
+            new CopyImagesDirectoryListener($configBag)
         );
 
         return new Kernel(
             $configuration,
-            $this->getDirectives(),
-            $this->getReferences()
+            self::getDirectives(),
+            self::getReferences($configBag)
         );
     }
 
-    private function getDirectives(): array
+    private static function getDirectives(): array
     {
         return [
             new SymfonyDirectives\AdmonitionDirective(),
@@ -91,15 +67,15 @@ final class KernelFactory
         ];
     }
 
-    private function getReferences(): array
+    private static function getReferences(ConfigBag $configBag): array
     {
         return [
-            new SymfonyReferences\ClassReference($this->symfonyApiUrl),
-            new SymfonyReferences\MethodReference($this->symfonyApiUrl),
-            new SymfonyReferences\NamespaceReference($this->symfonyApiUrl),
-            new SymfonyReferences\PhpFunctionReference($this->phpDocUrl),
-            new SymfonyReferences\PhpMethodReference($this->phpDocUrl),
-            new SymfonyReferences\PhpClassReference($this->phpDocUrl),
+            new SymfonyReferences\ClassReference($configBag->getSymfonyApiUrl()),
+            new SymfonyReferences\MethodReference($configBag->getSymfonyApiUrl()),
+            new SymfonyReferences\NamespaceReference($configBag->getSymfonyApiUrl()),
+            new SymfonyReferences\PhpFunctionReference($configBag->getPhpDocUrl()),
+            new SymfonyReferences\PhpMethodReference($configBag->getPhpDocUrl()),
+            new SymfonyReferences\PhpClassReference($configBag->getPhpDocUrl()),
         ];
     }
 }
