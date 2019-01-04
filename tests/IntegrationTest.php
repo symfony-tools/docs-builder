@@ -277,7 +277,7 @@ class IntegrationTest extends TestCase
             'https://secure.php.net/manual/en',
             'https://symfony.com/doc/4.0'
         );
-        $parameterBag->initialize(
+        $parameterBag->initializeRuntimeConfig(
             $sourceDir,
             __DIR__.'/_output',
             __DIR__.'/_outputJson',

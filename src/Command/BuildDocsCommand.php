@@ -93,7 +93,7 @@ class BuildDocsCommand extends Command
             }
         }
 
-        $this->configBag->initialize($this->sourceDir, $this->htmlOutputDir, $this->jsonOutputDir, $this->parseOnly);
+        $this->configBag->initializeRuntimeConfig($this->sourceDir, $this->htmlOutputDir, $this->jsonOutputDir, $this->parseOnly);
 
         $this->builder = new Builder(
             KernelFactory::createKernel($this->configBag)

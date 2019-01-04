@@ -10,6 +10,7 @@ class BuildContext
     private $phpDocUrl;
     private $symfonyDocUrl;
 
+    private $runtimeInitialized = false;
     private $sourceDir;
     private $htmlOutputDir;
     private $jsonOutputDir;
@@ -29,12 +30,13 @@ class BuildContext
         $this->symfonyDocUrl  = $symfonyDocUrl;
     }
 
-    public function initialize(string $sourceDir, string $htmlOutputDir, string $jsonOutputDir, ?string $parseOnly)
+    public function initializeRuntimeConfig(string $sourceDir, string $htmlOutputDir, string $jsonOutputDir, ?string $parseOnly)
     {
         $this->sourceDir     = $sourceDir;
         $this->htmlOutputDir = $htmlOutputDir;
         $this->jsonOutputDir = $jsonOutputDir;
         $this->parseOnly     = $parseOnly;
+        $this->runtimeInitialized = true;
     }
 
     public function getBasePath(): string
@@ -62,23 +64,38 @@ class BuildContext
         return $this->symfonyDocUrl;
     }
 
-    public function getSourceDir(): ?string
+    public function getSourceDir(): string
     {
+        $this->checkThatRuntimeConfigIsInitialized();
+
         return $this->sourceDir;
     }
 
-    public function getHtmlOutputDir(): ?string
+    public function getHtmlOutputDir(): string
     {
+        $this->checkThatRuntimeConfigIsInitialized();
+
         return $this->htmlOutputDir;
     }
 
-    public function getJsonOutputDir(): ?string
+    public function getJsonOutputDir(): string
     {
+        $this->checkThatRuntimeConfigIsInitialized();
+
         return $this->jsonOutputDir;
     }
 
     public function getParseOnly(): ?string
     {
+        $this->checkThatRuntimeConfigIsInitialized();
+
         return $this->parseOnly;
+    }
+
+    private function checkThatRuntimeConfigIsInitialized()
+    {
+        if (false === $this->runtimeInitialized) {
+            throw new \LogicException('The BuildContext has not been initialized');
+        }
     }
 }
