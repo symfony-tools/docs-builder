@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use SymfonyDocsBuilder\ConfigBag;
+use SymfonyDocsBuilder\BuildContext;
 use SymfonyDocsBuilder\Generator\JsonGenerator;
 use SymfonyDocsBuilder\KernelFactory;
 
@@ -268,9 +268,9 @@ class IntegrationTest extends TestCase
         ];
     }
 
-    private function createParameterBag(string $sourceDir): ConfigBag
+    private function createParameterBag(string $sourceDir): BuildContext
     {
-        $parameterBag = new ConfigBag(
+        $parameterBag = new BuildContext(
             realpath(__DIR__.'/..'),
             '4.0',
             'https://api.symfony.com/4.0',

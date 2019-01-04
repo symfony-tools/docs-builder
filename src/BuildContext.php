@@ -2,7 +2,7 @@
 
 namespace SymfonyDocsBuilder;
 
-class ConfigBag
+class BuildContext
 {
     private $basePath;
     private $symfonyVersion;

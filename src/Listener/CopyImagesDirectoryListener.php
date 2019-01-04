@@ -3,13 +3,13 @@
 namespace SymfonyDocsBuilder\Listener;
 
 use Symfony\Component\Filesystem\Filesystem;
-use SymfonyDocsBuilder\ConfigBag;
+use SymfonyDocsBuilder\BuildContext;
 
 class CopyImagesDirectoryListener
 {
     private $configBag;
 
-    public function __construct(ConfigBag $configBag)
+    public function __construct(BuildContext $configBag)
     {
         $this->configBag = $configBag;
     }

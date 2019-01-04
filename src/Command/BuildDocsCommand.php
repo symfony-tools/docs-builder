@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use SymfonyDocsBuilder\ConfigBag;
+use SymfonyDocsBuilder\BuildContext;
 use SymfonyDocsBuilder\Generator\HtmlForPdfGenerator;
 use SymfonyDocsBuilder\Generator\JsonGenerator;
 use SymfonyDocsBuilder\KernelFactory;
@@ -41,7 +41,7 @@ class BuildDocsCommand extends Command
     private $parseOnly;
     private $configBag;
 
-    public function __construct(ConfigBag $configBag)
+    public function __construct(BuildContext $configBag)
     {
         parent::__construct(self::$defaultName);
 

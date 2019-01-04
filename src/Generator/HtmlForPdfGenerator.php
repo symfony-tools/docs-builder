@@ -4,7 +4,7 @@ namespace SymfonyDocsBuilder\Generator;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use SymfonyDocsBuilder\ConfigBag;
+use SymfonyDocsBuilder\BuildContext;
 
 /**
  * Class HtmlForPdfGenerator
@@ -15,7 +15,7 @@ class HtmlForPdfGenerator
 
     public function generateHtmlForPdf(
         array $documents,
-        ConfigBag $configBag
+        BuildContext $configBag
     ) {
         $environments = $this->extractEnvironments($documents);
 

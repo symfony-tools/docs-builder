@@ -14,7 +14,7 @@ use SymfonyDocsBuilder\Reference as SymfonyReferences;
  */
 final class KernelFactory
 {
-    public static function createKernel(ConfigBag $configBag): Kernel
+    public static function createKernel(BuildContext $configBag): Kernel
     {
         $configuration = new RSTParserConfiguration();
         $configuration->setCustomTemplateDirs([sprintf('%s/src/Templates', $configBag->getBasePath())]);
@@ -67,7 +67,7 @@ final class KernelFactory
         ];
     }
 
-    private static function getReferences(ConfigBag $configBag): array
+    private static function getReferences(BuildContext $configBag): array
     {
         return [
             new SymfonyReferences\ClassReference($configBag->getSymfonyApiUrl()),

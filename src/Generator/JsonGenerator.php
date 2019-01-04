@@ -8,7 +8,7 @@ use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use SymfonyDocsBuilder\ConfigBag;
+use SymfonyDocsBuilder\BuildContext;
 
 /**
  * Class JsonGenerator
@@ -19,7 +19,7 @@ class JsonGenerator
 
     public function generateJson(
         array $documents,
-        ConfigBag $configBag,
+        BuildContext $configBag,
         ProgressBar $progressBar
     ) {
         $environments = $this->extractEnvironments($documents);

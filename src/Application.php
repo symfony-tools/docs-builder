@@ -17,7 +17,7 @@ class Application
         $this->application = new BaseApplication();
 
         $configuration   = $this->getSymfonyDocConfiguration($basePath = realpath(__DIR__.'/..'));
-        $this->configBag = new ConfigBag(
+        $this->configBag = new BuildContext(
             $basePath,
             $symfonyVersion,
             sprintf($configuration['symfony_api_url'], $symfonyVersion),
