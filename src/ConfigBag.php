@@ -29,7 +29,7 @@ class ConfigBag
         $this->symfonyDocUrl  = $symfonyDocUrl;
     }
 
-    public function initialize(string $sourceDir, string $htmlOutputDir, string $jsonOutputDir, string $parseOnly)
+    public function initialize(string $sourceDir, string $htmlOutputDir, string $jsonOutputDir, ?string $parseOnly)
     {
         $this->sourceDir     = $sourceDir;
         $this->htmlOutputDir = $htmlOutputDir;

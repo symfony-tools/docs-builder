@@ -32,10 +32,10 @@ class IntegrationTest extends TestCase
         $fs = new Filesystem();
         $fs->remove(__DIR__.'/_output');
 
-        $parameterBag = $this->createParameterBag(sprintf('%s/fixtures/source/%s', __DIR__, $folder));
+        $configBag = $this->createParameterBag(sprintf('%s/fixtures/source/%s', __DIR__, $folder));
 
         $builder = new Builder(
-            KernelFactory::createKernel($parameterBag)
+            KernelFactory::createKernel($configBag)
         );
 
         $builder->build(
@@ -65,8 +65,7 @@ class IntegrationTest extends TestCase
         $jsonGenerator = new JsonGenerator();
         $jsonGenerator->generateJson(
             $builder->getDocuments()->getAll(),
-            $parameterBag->get('htmlOutputDir'),
-            $parameterBag->get('jsonOutputDir'),
+            $configBag,
             new ProgressBar(new NullOutput())
         );
 
@@ -114,9 +113,7 @@ class IntegrationTest extends TestCase
         $configuration->setCustomTemplateDirs([__DIR__.'/Templates']);
 
         $parser = new Parser(
-            $builder = $this->createKernel(
-                $parameterBag = $this->createParameterBag(sprintf('%s/fixtures/source/blocks', __DIR__))
-            )
+            KernelFactory::createKernel($this->createParameterBag(sprintf('%s/fixtures/source/blocks', __DIR__)))
         );
 
         $sourceFile = sprintf('%s/fixtures/source/blocks/%s.rst', __DIR__, $blockName);
