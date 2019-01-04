@@ -1,6 +1,6 @@
 <?php
 
-namespace SymfonyDocs\Directive;
+namespace SymfonyDocsBuilder\Directive;
 
 class SeeAlsoDirective extends AbstractAdmonitionDirective
 {

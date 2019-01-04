@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SymfonyDocs;
+namespace SymfonyDocsBuilder;
 
 use Doctrine\RST\Formats\Format;
 use Doctrine\RST\HTML\HTMLFormat;

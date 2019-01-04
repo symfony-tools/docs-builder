@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace SymfonyDocs;
+namespace SymfonyDocsBuilder;
 
 use Doctrine\RST\Configuration;
 use Doctrine\RST\Event\PostBuildRenderEvent;
 use Doctrine\RST\Kernel;
-use SymfonyDocs\Directive as SymfonyDirectives;
-use SymfonyDocs\Listener\CopyImagesDirectoryListener;
-use SymfonyDocs\Reference as SymfonyReferences;
+use SymfonyDocsBuilder\Directive as SymfonyDirectives;
+use SymfonyDocsBuilder\Listener\CopyImagesDirectoryListener;
+use SymfonyDocsBuilder\Reference as SymfonyReferences;
 
 /**
  * Class KernelFactory

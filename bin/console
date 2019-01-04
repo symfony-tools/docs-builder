@@ -3,8 +3,15 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Application;
-use SymfonyDocs\Command\BuildDocsCommand;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use SymfonyDocsBuilder\Command\BuildDocsCommand;
+
+$containerBuilder = new ContainerBuilder();
+$loader = new PhpFileLoader($containerBuilder, new FileLocator(sprintf('%s/../config', __DIR__)));
+$loader->load('services.php');
 
 $application = new Application();
 

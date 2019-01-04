@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SymfonyDocs\Listener;
+namespace SymfonyDocsBuilder\Listener;
 
 use Symfony\Component\Filesystem\Filesystem;
 

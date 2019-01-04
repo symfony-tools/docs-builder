@@ -1,11 +1,11 @@
 <?php
 
-namespace SymfonyDocs\Reference;
+namespace SymfonyDocsBuilder\Reference;
 
 use Doctrine\RST\Environment;
 use Doctrine\RST\References\Reference;
 use Doctrine\RST\References\ResolvedReference;
-use SymfonyDocs\SymfonyDocConfiguration;
+use SymfonyDocsBuilder\SymfonyDocConfiguration;
 
 class PhpMethodReference extends Reference
 {

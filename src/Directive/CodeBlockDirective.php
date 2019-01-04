@@ -1,6 +1,6 @@
 <?php
 
-namespace SymfonyDocs\Directive;
+namespace SymfonyDocsBuilder\Directive;
 
 use Doctrine\RST\Directives\Directive;
 use Doctrine\RST\Nodes\CodeNode;

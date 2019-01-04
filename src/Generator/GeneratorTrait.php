@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SymfonyDocs\Generator;
+namespace SymfonyDocsBuilder\Generator;
 
 use Doctrine\RST\Environment;
 use Doctrine\RST\Meta\MetaEntry;

@@ -5,7 +5,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "SymfonyDocs\\": "src"
+            "SymfonyDocsBuilder\\": "src"
         }
     },
     "require": {
@@ -16,7 +16,9 @@
         "symfony/filesystem": "^4.1",
         "symfony/dom-crawler": "^4.1",
         "symfony/css-selector": "^4.1",
-        "symfony/console": "^4.1"
+        "symfony/console": "^4.1",
+        "symfony/dependency-injection": "^4.2",
+        "symfony/config": "^4.2"
     },
     "require-dev": {
         "gajus/dindent": "^2.0",

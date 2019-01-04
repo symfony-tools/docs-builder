@@ -1,6 +1,6 @@
 <?php
 
-namespace SymfonyDocs;
+namespace SymfonyDocsBuilder;
 
 class SymfonyDocConfiguration
 {

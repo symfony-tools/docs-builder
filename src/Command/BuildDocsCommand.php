@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SymfonyDocs\Command;
+namespace SymfonyDocsBuilder\Command;
 
 use Doctrine\RST\Builder;
 use Doctrine\RST\Event\PostNodeRenderEvent;
@@ -15,9 +15,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use SymfonyDocs\Generator\HtmlForPdfGenerator;
-use SymfonyDocs\Generator\JsonGenerator;
-use SymfonyDocs\KernelFactory;
+use SymfonyDocsBuilder\Generator\HtmlForPdfGenerator;
+use SymfonyDocsBuilder\Generator\JsonGenerator;
+use SymfonyDocsBuilder\KernelFactory;
 
 class BuildDocsCommand extends Command
 {

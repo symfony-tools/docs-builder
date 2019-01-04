@@ -1,6 +1,6 @@
 <?php
 
-namespace SymfonyCasts\Tests;
+namespace SymfonyDocsBuilder\Tests;
 
 use Doctrine\RST\Builder;
 use Doctrine\RST\Configuration;
@@ -12,8 +12,8 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use SymfonyDocs\Generator\JsonGenerator;
-use SymfonyDocs\KernelFactory;
+use SymfonyDocsBuilder\Generator\JsonGenerator;
+use SymfonyDocsBuilder\KernelFactory;
 
 class IntegrationTest extends TestCase
 {
