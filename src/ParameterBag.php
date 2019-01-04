@@ -10,7 +10,7 @@ class ParameterBag implements \IteratorAggregate, \Countable
     /**
      * Parameter storage.
      */
-    protected $parameters;
+    private $parameters;
 
     /** @var bool */
     private $initialized = false;

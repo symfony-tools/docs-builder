@@ -3,7 +3,6 @@
 namespace SymfonyDocsBuilder;
 
 use Doctrine\RST\Formats\Format;
-use Doctrine\RST\HTML\HTMLFormat;
 use Doctrine\RST\Nodes\CodeNode;
 use Doctrine\RST\Nodes\SpanNode;
 use Doctrine\RST\Renderers\CallableNodeRendererFactory;
@@ -15,9 +14,7 @@ use Doctrine\RST\Templates\TemplateRenderer;
  */
 final class SymfonyHTMLFormat implements Format
 {
-    /** @var TemplateRenderer */
     protected $templateRenderer;
-    /** @var HTMLFormat */
     private $htmlFormat;
 
     public function __construct(TemplateRenderer $templateRenderer, Format $HTMLFormat)

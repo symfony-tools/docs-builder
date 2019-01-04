@@ -12,9 +12,7 @@ use SymfonyDocsBuilder\Command\BuildDocsCommand;
 
 class Application
 {
-    /** @var BaseApplication */
     private $application;
-    /** @var BuildDocsCommand */
     private $buildDocsCommand;
 
     public function __construct(BaseApplication $application, BuildDocsCommand $buildDocsCommand)
@@ -38,7 +36,7 @@ class Application
         return $this->application->run($input);
     }
 
-    public static function getContainer(string $version): ContainerBuilder
+    public static function createContainer(string $version): ContainerBuilder
     {
         $container = new ContainerBuilder();
         $container->setParameter('symfony_docs_builder.base_path', realpath(__DIR__.'/..'));

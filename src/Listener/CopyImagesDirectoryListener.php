@@ -7,7 +7,6 @@ use SymfonyDocsBuilder\ParameterBag;
 
 class CopyImagesDirectoryListener
 {
-    /** @var ParameterBag */
     private $parameterBag;
 
     public function __construct(ParameterBag $parameterBag)

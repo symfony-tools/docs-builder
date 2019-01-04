@@ -5,11 +5,9 @@ namespace SymfonyDocsBuilder\Reference;
 use Doctrine\RST\Environment;
 use Doctrine\RST\References\Reference;
 use Doctrine\RST\References\ResolvedReference;
-use SymfonyDocsBuilder\Configuration;
 
 class MethodReference extends Reference
 {
-    /** @var string */
     private $symfonyApiUrl;
 
     public function __construct(string $symfonyApiUrl)

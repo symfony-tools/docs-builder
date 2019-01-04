@@ -8,7 +8,6 @@ use Doctrine\RST\References\ResolvedReference;
 
 class PhpFunctionReference extends Reference
 {
-    /** @var string */
     private $phpDocUrl;
 
     public function __construct(string $phpDocUrl)

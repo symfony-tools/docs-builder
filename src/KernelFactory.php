@@ -14,17 +14,11 @@ use SymfonyDocsBuilder\Reference as SymfonyReferences;
  */
 final class KernelFactory
 {
-    /** @var ParameterBag */
     private $parameterBag;
-    /** @var string */
-    private $symfonyDocUrl;
-    /** @var CopyImagesDirectoryListener */
     private $copyImagesDirectoryListener;
-    /** @var string */
+    private $symfonyDocUrl;
     private $symfonyApiUrl;
-    /** @var string */
     private $phpDocUrl;
-    /** @var string */
     private $basePath;
 
     public function __construct(

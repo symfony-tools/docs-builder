@@ -8,7 +8,7 @@ use SymfonyDocsBuilder\Application;
 
 $input       = new ArgvInput();
 $version = $input->getParameterOption(['--symfony-version'], false === getenv('SYMFONY_VERSION') ? '4.1' : getenv('SYMFONY_VERSION'));
-$container   = Application::getContainer($version);
+$container   = Application::createContainer($version);
 
 $application = $container->get(Application::class);
 $application->run($input);

@@ -8,7 +8,6 @@ use Doctrine\RST\References\ResolvedReference;
 
 class NamespaceReference extends Reference
 {
-    /** @var string */
     private $symfonyApiUrl;
 
     public function __construct(string $symfonyApiUrl)

@@ -39,14 +39,9 @@ class BuildDocsCommand extends Command
     private $jsonOutputDir;
     private $parsedFiles = [];
     private $parseOnly;
-
-    /** @var JsonGenerator */
     private $jsonGenerator;
-    /** @var HtmlForPdfGenerator */
     private $htmlForPdfGenerator;
-    /** @var ParameterBag */
     private $parameterBag;
-    /** @var KernelFactory */
     private $kernelFactory;
 
     public function __construct(
