@@ -18,6 +18,7 @@ use Symfony\Component\Finder\Finder;
 use SymfonyDocsBuilder\Generator\HtmlForPdfGenerator;
 use SymfonyDocsBuilder\Generator\JsonGenerator;
 use SymfonyDocsBuilder\KernelFactory;
+use SymfonyDocsBuilder\ParameterBag;
 
 class BuildDocsCommand extends Command
 {
@@ -39,12 +40,31 @@ class BuildDocsCommand extends Command
     private $parsedFiles = [];
     private $parseOnly;
 
-    public function __construct()
-    {
+    /** @var JsonGenerator */
+    private $jsonGenerator;
+    /** @var HtmlForPdfGenerator */
+    private $htmlForPdfGenerator;
+    /** @var string */
+    private $symfonyDocUrl;
+    /** @var ParameterBag */
+    private $parameterBag;
+    /** @var KernelFactory */
+    private $kernelFactory;
+
+    public function __construct(
+        ParameterBag $parameterBag,
+        JsonGenerator $jsonGenerator,
+        HtmlForPdfGenerator $htmlForPdfGenerator,
+        KernelFactory $kernelFactory
+    ) {
         parent::__construct(self::$defaultName);
 
-        $this->filesystem = new Filesystem();
-        $this->finder     = new Finder();
+        $this->filesystem          = new Filesystem();
+        $this->finder              = new Finder();
+        $this->jsonGenerator       = $jsonGenerator;
+        $this->htmlForPdfGenerator = $htmlForPdfGenerator;
+        $this->parameterBag        = $parameterBag;
+        $this->kernelFactory       = $kernelFactory;
     }
 
     protected function configure()
@@ -90,15 +110,13 @@ class BuildDocsCommand extends Command
             }
         }
 
+        $this->parameterBag->initialize($this->sourceDir, $this->htmlOutputDir, $this->jsonOutputDir, $this->parseOnly);
+
         $this->builder = new Builder(
-            KernelFactory::createKernel(
-                $this->sourceDir,
-                $this->htmlOutputDir,
-                $this->parseOnly
-            )
+            $this->kernelFactory->createKernel()
         );
 
-        $eventManager  = $this->builder->getConfiguration()->getEventManager();
+        $eventManager = $this->builder->getConfiguration()->getEventManager();
         $eventManager->addEventListener(
             [PostParseDocumentEvent::POST_PARSE_DOCUMENT],
             $this
@@ -148,14 +166,12 @@ class BuildDocsCommand extends Command
     {
         $this->io->note('Start exporting doc into json files');
         $this->progressBar = new ProgressBar($this->output, $this->finder->count());
-        $jsonGenerator     = new JsonGenerator($this->builder->getDocuments()->getAll());
-        $jsonGenerator->generateJson($this->htmlOutputDir, $this->jsonOutputDir, $this->progressBar);
+        $this->jsonGenerator->generateJson($this->builder->getDocuments()->getAll(), $this->htmlOutputDir, $this->jsonOutputDir, $this->progressBar);
     }
 
     private function renderDocForPDF()
     {
-        $htmlForPdfGenerator = new HtmlForPdfGenerator($this->builder->getDocuments()->getAll());
-        $htmlForPdfGenerator->generateHtmlForPdf($this->htmlOutputDir, $this->parseOnly);
+        $this->htmlForPdfGenerator->generateHtmlForPdf($this->builder->getDocuments()->getAll(), $this->htmlOutputDir, $this->parseOnly);
     }
 
     public function handleProgressBar()

@@ -4,7 +4,6 @@ namespace SymfonyDocsBuilder\Generator;
 
 use Doctrine\RST\Environment;
 use Doctrine\RST\Meta\MetaEntry;
-use Doctrine\RST\Nodes\DocumentNode;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
@@ -17,21 +16,14 @@ class JsonGenerator
 {
     use GeneratorTrait;
 
-    /** @var Environment[] */
-    private $environments;
+    public function generateJson(
+        array $documents,
+        string $inputDir,
+        string $outputDir,
+        ProgressBar $progressBar
+    ) {
+        $environments = $this->extractEnvironments($documents);
 
-    public function __construct(array $documents)
-    {
-        $this->environments = array_map(
-            function (DocumentNode $document) {
-                return $document->getEnvironment();
-            },
-            $documents
-        );
-    }
-
-    public function generateJson(string $inputDir, string $outputDir, ProgressBar $progressBar)
-    {
         $finder = new Finder();
         $finder->in($inputDir)
             ->name('*.html')
@@ -44,18 +36,18 @@ class JsonGenerator
             $crawler = new Crawler($file->getContents());
 
             $parserFilename = $this->getParserFilename($file->getRealPath(), $inputDir);
-            $meta           = $this->getMeta($parserFilename);
+            $meta           = $this->getMeta($environments, $parserFilename);
 
             $data = [
                 'body'              => $crawler->filter('body')->html(),
                 'title'             => $meta->getTitle(),
                 'current_page_name' => $parserFilename,
                 'toc'               => $this->generateToc($meta, current($meta->getTitles())[1]),
-                'next'              => $this->guessNext($parserFilename),
-                'prev'              => $this->guessPrev($parserFilename),
+                'next'              => $this->guessNext($environments, $parserFilename),
+                'prev'              => $this->guessPrev($environments, $parserFilename),
                 'rellinks'          => [
-                    $this->guessNext($parserFilename),
-                    $this->guessPrev($parserFilename),
+                    $this->guessNext($environments, $parserFilename),
+                    $this->guessPrev($environments, $parserFilename),
                 ],
             ];
 
@@ -89,9 +81,9 @@ class JsonGenerator
         return $tocTree;
     }
 
-    private function guessNext(string $parserFilename): ?array
+    private function guessNext(array $environments, string $parserFilename): ?array
     {
-        list($toc, $indexCurrentFile) = $this->getNextPrevInformation($parserFilename);
+        list($toc, $indexCurrentFile) = $this->getNextPrevInformation($environments, $parserFilename);
 
         if (!isset($toc[$indexCurrentFile + 1])) {
             return null;
@@ -100,14 +92,14 @@ class JsonGenerator
         $nextFileName = $toc[$indexCurrentFile + 1];
 
         return [
-            'title' => $this->getMeta($nextFileName)->getTitle(),
-            'link'  => $this->getMeta($nextFileName)->getUrl(),
+            'title' => $this->getMeta($environments, $nextFileName)->getTitle(),
+            'link'  => $this->getMeta($environments, $nextFileName)->getUrl(),
         ];
     }
 
-    private function guessPrev(string $parserFilename): ?array
+    private function guessPrev(array $environments, string $parserFilename): ?array
     {
-        list($toc, $indexCurrentFile) = $this->getNextPrevInformation($parserFilename);
+        list($toc, $indexCurrentFile) = $this->getNextPrevInformation($environments, $parserFilename);
 
         if (!isset($toc[$indexCurrentFile - 1])) {
             return null;
@@ -116,21 +108,21 @@ class JsonGenerator
         $prevFileName = $toc[$indexCurrentFile - 1];
 
         return [
-            'title' => $this->getMeta($prevFileName)->getTitle(),
-            'link'  => $this->getMeta($prevFileName)->getUrl(),
+            'title' => $this->getMeta($environments, $prevFileName)->getTitle(),
+            'link'  => $this->getMeta($environments, $prevFileName)->getUrl(),
         ];
     }
 
-    private function getNextPrevInformation(string $parserFilename): ?array
+    private function getNextPrevInformation(array $environments, string $parserFilename): ?array
     {
-        $meta       = $this->getMeta($parserFilename);
+        $meta       = $this->getMeta($environments, $parserFilename);
         $parentFile = $meta->getParent();
 
         if (!$parentFile) {
             return [null, null, null];
         }
 
-        $metaParent = $this->getMeta($parentFile);
+        $metaParent = $this->getMeta($environments, $parentFile);
 
         if (!$metaParent->getTocs() || \count($metaParent->getTocs()) !== 1) {
             return [null, null, null];

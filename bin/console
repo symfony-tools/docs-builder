@@ -3,18 +3,12 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Console\Application;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
-use SymfonyDocsBuilder\Command\BuildDocsCommand;
+use Symfony\Component\Console\Input\ArgvInput;
+use SymfonyDocsBuilder\Application;
 
-$containerBuilder = new ContainerBuilder();
-$loader = new PhpFileLoader($containerBuilder, new FileLocator(sprintf('%s/../config', __DIR__)));
-$loader->load('services.php');
+$input       = new ArgvInput();
+$version = $input->getParameterOption(['--symfony-version'], false === getenv('SYMFONY_VERSION') ? '4.1' : getenv('SYMFONY_VERSION'));
+$container   = Application::getContainer($version);
 
-$application = new Application();
-
-$application->add(new BuildDocsCommand());
-
-$application->run();
+$application = $container->get(Application::class);
+$application->run($input);

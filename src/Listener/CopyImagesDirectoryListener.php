@@ -3,23 +3,23 @@
 namespace SymfonyDocsBuilder\Listener;
 
 use Symfony\Component\Filesystem\Filesystem;
+use SymfonyDocsBuilder\ParameterBag;
 
 final class CopyImagesDirectoryListener
 {
-    private $sourceDir;
-    private $htmlOutputDir;
+    /** @var ParameterBag */
+    private $parameterBag;
 
-    public function __construct(string $sourceDir, string $htmlOutputDir)
+    public function __construct(ParameterBag $parameterBag)
     {
-        $this->sourceDir     = $sourceDir;
-        $this->htmlOutputDir = $htmlOutputDir;
+        $this->parameterBag = $parameterBag;
     }
 
     public function postBuildRender()
     {
         $fs = new Filesystem();
-        if ($fs->exists($imageDir = sprintf('%s/_images', $this->sourceDir))) {
-            $fs->mirror($imageDir, sprintf('%s/_images', $this->htmlOutputDir));
+        if ($fs->exists($imageDir = sprintf('%s/_images', $this->parameterBag->get('sourceDir')))) {
+            $fs->mirror($imageDir, sprintf('%s/_images', $this->parameterBag->get('htmlOutputDir')));
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace SymfonyDocsBuilder;
 
-use Doctrine\RST\Configuration;
+use Doctrine\RST\Configuration as RSTParserConfiguration;
 use Doctrine\RST\Event\PostBuildRenderEvent;
 use Doctrine\RST\Kernel;
 use SymfonyDocsBuilder\Directive as SymfonyDirectives;
@@ -14,14 +14,41 @@ use SymfonyDocsBuilder\Reference as SymfonyReferences;
  */
 final class KernelFactory
 {
-    public static function createKernel(
-        string $sourceDir,
-        string $htmlOutputDir,
-        string $parseOnlyPath = null
-    ): Kernel {
-        $configuration = new Configuration();
-        $configuration->setCustomTemplateDirs([__DIR__.'/Templates']);
-        $configuration->setCacheDir(__DIR__.'/../var/cache');
+    /** @var ParameterBag */
+    private $parameterBag;
+    /** @var string */
+    private $symfonyDocUrl;
+    /** @var CopyImagesDirectoryListener */
+    private $copyImagesDirectoryListener;
+    /** @var string */
+    private $symfonyApiUrl;
+    /** @var string */
+    private $phpDocUrl;
+    /** @var string */
+    private $basePath;
+
+    public function __construct(
+        ParameterBag $parameterBag,
+        CopyImagesDirectoryListener $copyImagesDirectoryListener,
+        string $symfonyDocUrl,
+        string $symfonyApiUrl,
+        string $phpDocUrl,
+        string $basePath
+    ) {
+        $this->parameterBag                = $parameterBag;
+        $this->copyImagesDirectoryListener = $copyImagesDirectoryListener;
+
+        $this->symfonyDocUrl = $symfonyDocUrl;
+        $this->symfonyApiUrl = $symfonyApiUrl;
+        $this->phpDocUrl     = $phpDocUrl;
+        $this->basePath      = $basePath;
+    }
+
+    public function createKernel(): Kernel
+    {
+        $configuration = new RSTParserConfiguration();
+        $configuration->setCustomTemplateDirs([sprintf('%s/src/Templates', $this->basePath)]);
+        $configuration->setCacheDir(sprintf('%s/var/cache', $this->basePath));
         $configuration->addFormat(
             new SymfonyHTMLFormat(
                 $configuration->getTemplateRenderer(),
@@ -29,13 +56,8 @@ final class KernelFactory
             )
         );
 
-        if ($parseOnlyPath) {
-            $configuration->setBaseUrl(
-                sprintf(
-                    SymfonyDocConfiguration::getSymfonyDocUrl(),
-                    SymfonyDocConfiguration::getVersion()
-                )
-            );
+        if ($parseOnlyPath = $this->parameterBag->get('parseOnly')) {
+            $configuration->setBaseUrl($this->symfonyDocUrl);
             $configuration->setBaseUrlEnabledCallable(
                 static function (string $path) use ($parseOnlyPath) : bool {
                     return strpos($path, $parseOnlyPath) !== 0;
@@ -45,17 +67,17 @@ final class KernelFactory
 
         $configuration->getEventManager()->addEventListener(
             PostBuildRenderEvent::POST_BUILD_RENDER,
-            new CopyImagesDirectoryListener($sourceDir, $htmlOutputDir)
+            $this->copyImagesDirectoryListener
         );
 
         return new Kernel(
             $configuration,
-            self::getDirectives(),
-            self::getReferences()
+            $this->getDirectives(),
+            $this->getReferences()
         );
     }
 
-    private static function getDirectives(): array
+    private function getDirectives(): array
     {
         return [
             new SymfonyDirectives\AdmonitionDirective(),
@@ -75,15 +97,15 @@ final class KernelFactory
         ];
     }
 
-    private static function getReferences(): array
+    private function getReferences(): array
     {
         return [
-            new SymfonyReferences\ClassReference(),
-            new SymfonyReferences\MethodReference(),
-            new SymfonyReferences\NamespaceReference(),
-            new SymfonyReferences\PhpFunctionReference(),
-            new SymfonyReferences\PhpMethodReference(),
-            new SymfonyReferences\PhpClassReference(),
+            new SymfonyReferences\ClassReference($this->symfonyApiUrl),
+            new SymfonyReferences\MethodReference($this->symfonyApiUrl),
+            new SymfonyReferences\NamespaceReference($this->symfonyApiUrl),
+            new SymfonyReferences\PhpFunctionReference($this->phpDocUrl),
+            new SymfonyReferences\PhpMethodReference($this->phpDocUrl),
+            new SymfonyReferences\PhpClassReference($this->phpDocUrl),
         ];
     }
 }

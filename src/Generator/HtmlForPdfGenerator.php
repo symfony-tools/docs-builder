@@ -2,8 +2,6 @@
 
 namespace SymfonyDocsBuilder\Generator;
 
-use Doctrine\RST\Environment;
-use Doctrine\RST\Nodes\DocumentNode;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
@@ -14,21 +12,14 @@ class HtmlForPdfGenerator
 {
     use GeneratorTrait;
 
-    /** @var Environment[] */
-    private $environments;
-
-    public function __construct(array $documents)
+    public function generateHtmlForPdf(
+        array $documents,
+        string $htmlDir,
+        string $parseOnly/*, ProgressBar $progressBar*/
+    )
     {
-        $this->environments = array_map(
-            function (DocumentNode $document) {
-                return $document->getEnvironment();
-            },
-            $documents
-        );
-    }
+        $environments = $this->extractEnvironments($documents);
 
-    public function generateHtmlForPdf(string $htmlDir, string $parseOnly/*, ProgressBar $progressBar*/)
-    {
         $finder = new Finder();
         $finder->in($htmlDir)
             ->depth(0)
@@ -46,7 +37,7 @@ class HtmlForPdfGenerator
         }
 
         $parserFilename = $this->getParserFilename($indexFile, $htmlDir);
-        $meta           = $this->getMeta($parserFilename);
+        $meta           = $this->getMeta($environments, $parserFilename);
         dump(current($meta->getTocs()));
     }
 }

@@ -5,10 +5,17 @@ namespace SymfonyDocsBuilder\Reference;
 use Doctrine\RST\Environment;
 use Doctrine\RST\References\Reference;
 use Doctrine\RST\References\ResolvedReference;
-use SymfonyDocsBuilder\SymfonyDocConfiguration;
 
 class PhpClassReference extends Reference
 {
+    /** @var string */
+    private $phpDocUrl;
+
+    public function __construct(string $phpDocUrl)
+    {
+        $this->phpDocUrl = $phpDocUrl;
+    }
+
     public function getName(): string
     {
         return 'phpclass';
@@ -18,7 +25,7 @@ class PhpClassReference extends Reference
     {
         return new ResolvedReference(
             $data,
-            sprintf('%s/class.%s.php', SymfonyDocConfiguration::getPhpDocUrl(), strtolower($data)),
+            sprintf('%s/class.%s.php', $this->phpDocUrl, strtolower($data)),
             [],
             [
                 'class' => 'reference external',
