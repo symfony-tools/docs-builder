@@ -29,7 +29,6 @@ class NamespaceReference extends Reference
             sprintf('%s/%s.html', $this->symfonyApiUrl, str_replace('\\', '/', $className)),
             [],
             [
-                'class' => 'reference external',
                 'title' => $className,
             ]
         );

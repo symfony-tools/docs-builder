@@ -1,4 +1,5 @@
 {% spaceless %}
 {% set domElement = attributes.domElement|default %}
-<a href="{{ url|raw }}"{% for key, value in attributes if key != 'domElement' %} {{ key }}="{{ value }}"{% endfor %}>{% if domElement %}<{{ domElement }}>{% endif %}{{ title|raw }}{% if domElement %}</{{ domElement }}>{% endif %}</a>
+{% set class = (attributes.class|default ? attributes.class ~ ' ' : '') ~ 'reference ' ~ (('://' in url) ? 'external' : 'internal') %}
+<a href="{{ url|raw }}" class="{{ class }}"{% for key, value in attributes if key != 'domElement' and key != 'class' %} {{ key }}="{{ value }}"{% endfor %}>{% if domElement %}<{{ domElement }}>{% endif %}{{ title|raw }}{% if domElement %}</{{ domElement }}>{% endif %}</a>
 {% endspaceless %}

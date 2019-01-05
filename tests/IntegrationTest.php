@@ -270,20 +270,20 @@ class IntegrationTest extends TestCase
 
     private function createParameterBag(string $sourceDir): BuildContext
     {
-        $parameterBag = new BuildContext(
+        $buildContext = new BuildContext(
             realpath(__DIR__.'/..'),
             '4.0',
             'https://api.symfony.com/4.0',
             'https://secure.php.net/manual/en',
             'https://symfony.com/doc/4.0'
         );
-        $parameterBag->initializeRuntimeConfig(
+        $buildContext->initializeRuntimeConfig(
             $sourceDir,
             __DIR__.'/_output',
             __DIR__.'/_outputJson',
             null
         );
 
-        return $parameterBag;
+        return $buildContext;
     }
 }

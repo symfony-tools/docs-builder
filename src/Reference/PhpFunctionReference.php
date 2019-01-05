@@ -27,7 +27,6 @@ class PhpFunctionReference extends Reference
             sprintf('%s/function.%s.php', $this->phpDocUrl, str_replace('_', '-', strtolower($data))),
             [],
             [
-                'class' => 'reference external',
                 'title' => $data,
             ]
         );

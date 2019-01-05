@@ -8,20 +8,25 @@ use Doctrine\RST\Environment;
 use Doctrine\RST\HTML\Renderers\SpanNodeRenderer as BaseSpanNodeRenderer;
 use Doctrine\RST\Nodes\SpanNode;
 use Doctrine\RST\Templates\TemplateRenderer;
+use SymfonyDocsBuilder\CI\UrlChecker;
 
 class SpanNodeRenderer extends BaseSpanNodeRenderer
 {
     /** @var TemplateRenderer */
     private $templateRenderer;
+    /** @var UrlChecker|null */
+    private $urlChecker;
 
     public function __construct(
         Environment $environment,
         SpanNode $span,
-        TemplateRenderer $templateRenderer
+        TemplateRenderer $templateRenderer,
+        ?UrlChecker $urlChecker = null
     ) {
         parent::__construct($environment, $span, $templateRenderer);
 
         $this->templateRenderer = $templateRenderer;
+        $this->urlChecker       = $urlChecker;
     }
 
     /**
@@ -31,8 +36,13 @@ class SpanNodeRenderer extends BaseSpanNodeRenderer
     {
         $url = (string) $url;
 
-        if (!$attributes) {
-            $attributes['class'] = sprintf('reference %s', 0 === strpos($url, 'http') ? 'external' : 'internal');
+        if (
+            $this->urlChecker &&
+            $this->isExternalUrl($url) &&
+            false === strpos($url, 'http://localhost') &&
+            false === strpos($url, 'http://192.168')
+        ) {
+            $this->urlChecker->checkUrl($url);
         }
 
         return $this->templateRenderer->render(
@@ -43,5 +53,10 @@ class SpanNodeRenderer extends BaseSpanNodeRenderer
                 'attributes' => $attributes,
             ]
         );
+    }
+
+    public function isExternalUrl($url): bool
+    {
+        return strpos($url, '://') !== false;
     }
 }
