@@ -3,11 +3,9 @@
 namespace SymfonyDocsBuilder;
 
 use Doctrine\RST\Configuration as RSTParserConfiguration;
-use Doctrine\RST\Event\PostBuildRenderEvent;
 use Doctrine\RST\Kernel;
 use SymfonyDocsBuilder\CI\UrlChecker;
 use SymfonyDocsBuilder\Directive as SymfonyDirectives;
-use SymfonyDocsBuilder\Listener\CopyImagesDirectoryListener;
 use SymfonyDocsBuilder\Reference as SymfonyReferences;
 
 /**
@@ -36,11 +34,6 @@ final class KernelFactory
                 }
             );
         }
-
-        $configuration->getEventManager()->addEventListener(
-            PostBuildRenderEvent::POST_BUILD_RENDER,
-            new CopyImagesDirectoryListener($buildContext)
-        );
 
         return new Kernel(
             $configuration,

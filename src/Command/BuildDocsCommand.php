@@ -2,6 +2,7 @@
 
 namespace SymfonyDocsBuilder\Command;
 
+use Doctrine\RST\Event\PostBuildRenderEvent;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -14,6 +15,7 @@ use SymfonyDocsBuilder\BuildContext;
 use SymfonyDocsBuilder\CI\MissingFilesChecker;
 use SymfonyDocsBuilder\Generator\HtmlForPdfGenerator;
 use SymfonyDocsBuilder\Generator\JsonGenerator;
+use SymfonyDocsBuilder\Listener\CopyImagesDirectoryListener;
 
 class BuildDocsCommand extends Command
 {
@@ -50,6 +52,11 @@ class BuildDocsCommand extends Command
         $outputDir = $input->getArgument('output-dir') ?? $sourceDir.'/html';
 
         $this->doInitialize($input, $output, $sourceDir, $outputDir);
+
+        $this->builder->getConfiguration()->getEventManager()->addEventListener(
+            PostBuildRenderEvent::POST_BUILD_RENDER,
+            new CopyImagesDirectoryListener($this->buildContext)
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

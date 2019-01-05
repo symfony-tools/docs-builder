@@ -55,7 +55,7 @@ trait CommandInitializerTrait
 
         $this->eventManager = $this->builder->getConfiguration()->getEventManager();
 
-        $this->initializeEventListeners();
+        $this->initializeProgressBarEventListeners();
     }
 
     private function initializeSourceDir(InputInterface $input, Filesystem $filesystem): string
@@ -120,7 +120,7 @@ trait CommandInitializerTrait
         );
     }
 
-    private function initializeEventListeners(): void
+    private function initializeProgressBarEventListeners(): void
     {
         $this->eventManager->addEventListener(
             [PostParseDocumentEvent::POST_PARSE_DOCUMENT],
