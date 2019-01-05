@@ -18,6 +18,7 @@ final class KernelFactory
         $configuration = new RSTParserConfiguration();
         $configuration->setCustomTemplateDirs([sprintf('%s/src/Templates', $buildContext->getBasePath())]);
         $configuration->setCacheDir(sprintf('%s/var/cache', $buildContext->getBasePath()));
+
         $configuration->addFormat(
             new SymfonyHTMLFormat(
                 $configuration->getTemplateRenderer(),
@@ -26,11 +27,11 @@ final class KernelFactory
             )
         );
 
-        if ($parseOnlyPath = $buildContext->getParseOnly()) {
+        if ($parseSubPath = $buildContext->getParseSubPath()) {
             $configuration->setBaseUrl($buildContext->getSymfonyDocUrl());
             $configuration->setBaseUrlEnabledCallable(
-                static function (string $path) use ($parseOnlyPath) : bool {
-                    return strpos($path, $parseOnlyPath) !== 0;
+                static function (string $path) use ($parseSubPath) : bool {
+                    return strpos($path, $parseSubPath) !== 0;
                 }
             );
         }

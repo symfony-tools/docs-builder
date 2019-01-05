@@ -46,7 +46,7 @@ trait CommandInitializerTrait
             $sourceDir,
             $this->initializeHtmlOutputDir($this->filesystem, $outputDir),
             $this->initializeJsonOutputDir($outputDir),
-            $this->initializeParseOnly($input, $sourceDir)
+            $this->initializeParseSubPath($input, $sourceDir)
         );
 
         $this->builder = new Builder(
@@ -78,25 +78,25 @@ trait CommandInitializerTrait
         return $htmlOutputDir;
     }
 
-    private function initializeParseOnly(InputInterface $input, string $sourceDir): string
+    private function initializeParseSubPath(InputInterface $input, string $sourceDir): string
     {
-        if (!$input->hasOption('parse-only')) {
+        if (!$input->hasOption('parse-sub-path')) {
             return '';
         }
 
-        if ($parseOnly = trim($input->getOption('parse-only'), '/')) {
-            $absoluteParseOnly = sprintf(
+        if ($parseSubPath = trim($input->getOption('parse-sub-path'), '/')) {
+            $absoluteParseSubPath = sprintf(
                 '%s/%s',
                 $sourceDir,
-                $parseOnly
+                $parseSubPath
             );
 
-            if (!$this->filesystem->exists($absoluteParseOnly) || !is_dir($absoluteParseOnly)) {
-                throw new \InvalidArgumentException(sprintf('Given "parse-only" directory "%s" does not exist', $parseOnly));
+            if (!$this->filesystem->exists($absoluteParseSubPath) || !is_dir($absoluteParseSubPath)) {
+                throw new \InvalidArgumentException(sprintf('Given "parse-sub-path" directory "%s" does not exist', $parseSubPath));
             }
         }
 
-        return $parseOnly;
+        return $parseSubPath;
     }
 
     private function initializeJsonOutputDir(string $outputDir): string

@@ -43,7 +43,13 @@ class BuildDocsCommand extends Command
         $this
             ->addArgument('source-dir', InputArgument::OPTIONAL, 'RST files Source directory', getcwd())
             ->addArgument('output-dir', InputArgument::OPTIONAL, 'HTML files output directory')
-            ->addOption('parse-only', null, InputOption::VALUE_OPTIONAL, 'Parse only given directory for PDF (directory relative from source-dir)', '');
+            ->addOption(
+                'parse-sub-path',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Parse only given sub directory and combine it into a single file (directory relative from source-dir)',
+                ''
+            );
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
@@ -68,7 +74,7 @@ class BuildDocsCommand extends Command
 
         $this->missingFilesChecker->checkMissingFiles($this->io);
 
-        if (!$this->buildContext->getParseOnly()) {
+        if (!$this->buildContext->getParseSubPath()) {
             $this->generateJson();
         } else {
             $this->renderDocForPDF();

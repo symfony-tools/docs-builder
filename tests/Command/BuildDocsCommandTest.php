@@ -42,7 +42,7 @@ class BuildDocsCommandTest extends TestCase
             [
                 'source-dir'   => sprintf('%s/tests/fixtures/source/build-pdf', $buildContext->getBasePath()),
                 'output-dir'   => $outputDir,
-                '--parse-only' => 'book',
+                '--parse-sub-path' => 'book',
             ]
         );
 
