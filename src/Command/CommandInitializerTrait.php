@@ -35,6 +35,8 @@ trait CommandInitializerTrait
     /** @var EventManager */
     private $eventManager;
 
+    private $parsedFiles = [];
+
     private function doInitialize(InputInterface $input, OutputInterface $output, string $sourceDir, string $outputDir)
     {
         $this->io     = new SymfonyStyle($input, $output);
@@ -48,7 +50,7 @@ trait CommandInitializerTrait
         );
 
         $this->builder = new Builder(
-            KernelFactory::createKernel($this->buildContext)
+            KernelFactory::createKernel($this->buildContext, $this->urlChecker ?? null)
         );
 
         $this->eventManager = $this->builder->getConfiguration()->getEventManager();
@@ -78,6 +80,10 @@ trait CommandInitializerTrait
 
     private function initializeParseOnly(InputInterface $input, string $sourceDir): string
     {
+        if (!$input->hasOption('parse-only')) {
+            return '';
+        }
+
         if ($parseOnly = trim($input->getOption('parse-only'), '/')) {
             $absoluteParseOnly = sprintf(
                 '%s/%s',

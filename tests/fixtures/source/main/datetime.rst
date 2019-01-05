@@ -218,5 +218,13 @@ Field Variables
 |          |            | that off                              |
 +----------+------------+---------------------------------------+
 
+Url checker errors
+------------------
+
+This is a `404 error`_.
+And here is an invalid url `invalid-url`_.
+
 .. _`RFC 3339`: https://tools.ietf.org/html/rfc3339
 .. _`Date/Time Format Syntax`: http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Time-Format-Syntax
+.. _`404 error`: https://symfony.com/404
+.. _`invalid-url`: http://invalid-url

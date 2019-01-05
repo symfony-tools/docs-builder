@@ -19,13 +19,8 @@ class BuildDocsCommand extends Command
 {
     use CommandInitializerTrait;
 
-    protected static $defaultName = 'build:docs';
+    protected static $defaultName = 'symfony-docs-builder:build-docs';
 
-    private $sourceDir;
-    private $htmlOutputDir;
-    private $jsonOutputDir;
-    private $parsedFiles = [];
-    private $parseOnly;
     private $missingFilesChecker;
 
     public function __construct(BuildContext $buildContext)
@@ -66,7 +61,7 @@ class BuildDocsCommand extends Command
 
         $this->missingFilesChecker->checkMissingFiles($this->io);
 
-        if (!$this->parseOnly) {
+        if (!$this->buildContext->getParseOnly()) {
             $this->generateJson();
         } else {
             $this->renderDocForPDF();

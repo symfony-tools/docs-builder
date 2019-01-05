@@ -2,14 +2,10 @@
 
 namespace SymfonyDocsBuilder\Command;
 
-use Doctrine\Common\EventManager;
-use Doctrine\RST\Builder;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use SymfonyDocsBuilder\BuildContext;
@@ -19,27 +15,9 @@ class CheckUrlsCommand extends Command
 {
     use CommandInitializerTrait;
 
-    protected static $defaultName = 'build:check-urls';
+    protected static $defaultName = 'symfony-docs-builder:build-docs';
 
-    /** @var SymfonyStyle */
-    private $io;
-    /** @var Filesystem */
-    private $filesystem;
-    private $finder;
-    /** @var ProgressBar */
-    private $progressBar;
-    /** @var Builder */
-    private $builder;
-    /** @var OutputInterface */
-    private $output;
-    private $sourceDir;
-    private $htmlOutputDir;
-    private $parsedFiles = [];
     private $urlChecker;
-    private $buildContext;
-
-    /** @var EventManager */
-    private $eventManager;
 
     public function __construct(BuildContext $buildContext)
     {
@@ -47,8 +25,9 @@ class CheckUrlsCommand extends Command
 
         $this->filesystem   = new Filesystem();
         $this->finder       = new Finder();
-        $this->urlChecker   = new UrlChecker();
         $this->buildContext = $buildContext;
+
+        $this->urlChecker = new UrlChecker();
     }
 
     protected function configure()
@@ -65,7 +44,7 @@ class CheckUrlsCommand extends Command
             $input,
             $output,
             $this->initializeSourceDir($input, $this->filesystem),
-            sprintf('%s/../../var/urls-checker', __DIR__)
+            sprintf('%s/../../var/urls-checker', $this->buildContext->getBasePath())
         );
     }
 
@@ -82,7 +61,7 @@ class CheckUrlsCommand extends Command
             $this->io->success('All urls in the docs are valid!');
         }
 
-        $this->filesystem->remove($this->htmlOutputDir);
+        $this->filesystem->remove($this->buildContext->getHtmlOutputDir());
     }
 
     public function preBuildRender()
