@@ -33,7 +33,9 @@ class MissingFilesChecker
                 [$this->buildContext->getHtmlOutputDir(), '.html'],
                 $file->getRealPath()
             );
-            if (!$this->filesystem->exists($htmlFile)) {
+
+            $firstLine = fgets(fopen($file->getRealPath(), 'r'));
+            if (!$this->filesystem->exists($htmlFile) && ':orphan:' !== trim($firstLine)) {
                 $io->warning(sprintf('Missing file "%s"', $htmlFile));
             }
         }

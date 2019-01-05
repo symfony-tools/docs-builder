@@ -25,7 +25,7 @@ class BuildDocsCommandTest extends TestCase
             ]
         );
 
-        $this->assertNotContains('[WARNING]', $output);
+        $this->assertEquals(1, substr_count($output, '[WARNING]'));
         $this->assertContains('[OK] Parse process complete', $output);
 
         $filesystem = new Filesystem();
