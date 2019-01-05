@@ -33,7 +33,7 @@ class HtmlForPdfGenerator
         $basePath  = sprintf('%s/%s', $buildContext->getHtmlOutputDir(), $buildContext->getParseOnly());
         $indexFile = sprintf('%s/%s', $basePath, 'index.html');
         if (!$fs->exists($indexFile)) {
-            throw new \InvalidArgumentException('File "%s" does not exist', $indexFile);
+            throw new \InvalidArgumentException(sprintf('File "%s" does not exist', $indexFile));
         }
 
         // extracting all files from index's TOC, in the right order
@@ -45,6 +45,7 @@ class HtmlForPdfGenerator
         // building one big html file with all contents
         $content = '';
         $htmlDir = $buildContext->getHtmlOutputDir();
+        $relativeImagesPath = str_repeat('../', substr_count($buildContext->getParseOnly(), '/'));
         foreach ($files as $file) {
             $meta = $this->getMeta($environments, $file);
 
@@ -84,7 +85,7 @@ class HtmlForPdfGenerator
             );
 
             // fix internal images
-            // $page = preg_replace('{src="(?:\.\./)+([^"]+?)"}', "src=\"$relativeImagesPath$1\"", $fileContent);
+            $fileContent = preg_replace('{src="(?:\.\./)+([^"]+?)"}', "src=\"$relativeImagesPath$1\"", $fileContent);
 
             // fix # and id references to be unique
             $fileContent = preg_replace_callback(
