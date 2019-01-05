@@ -30,7 +30,7 @@ class BuildContext
         $this->symfonyDocUrl  = $symfonyDocUrl;
     }
 
-    public function initializeRuntimeConfig(string $sourceDir, string $htmlOutputDir, string $jsonOutputDir, ?string $parseOnly)
+    public function initializeRuntimeConfig(string $sourceDir, string $htmlOutputDir, ?string $jsonOutputDir = null, ?string $parseOnly = null)
     {
         $this->sourceDir     = $sourceDir;
         $this->htmlOutputDir = $htmlOutputDir;

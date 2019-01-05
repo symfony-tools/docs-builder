@@ -5,7 +5,7 @@ namespace SymfonyDocsBuilder;
 use Doctrine\RST\Configuration as RSTParserConfiguration;
 use Doctrine\RST\Event\PostBuildRenderEvent;
 use Doctrine\RST\Kernel;
-use SymfonyDocs\CI\UrlChecker;
+use SymfonyDocsBuilder\CI\UrlChecker;
 use SymfonyDocsBuilder\Directive as SymfonyDirectives;
 use SymfonyDocsBuilder\Listener\CopyImagesDirectoryListener;
 use SymfonyDocsBuilder\Reference as SymfonyReferences;

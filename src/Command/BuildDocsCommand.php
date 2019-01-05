@@ -2,52 +2,41 @@
 
 namespace SymfonyDocsBuilder\Command;
 
-use Doctrine\RST\Builder;
-use Doctrine\RST\Event\PostNodeRenderEvent;
-use Doctrine\RST\Event\PostParseDocumentEvent;
-use Doctrine\RST\Event\PreBuildRenderEvent;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use SymfonyDocsBuilder\BuildContext;
+use SymfonyDocsBuilder\CI\MissingFilesChecker;
 use SymfonyDocsBuilder\Generator\HtmlForPdfGenerator;
 use SymfonyDocsBuilder\Generator\JsonGenerator;
-use SymfonyDocsBuilder\KernelFactory;
 
 class BuildDocsCommand extends Command
 {
+    use CommandInitializerTrait;
+
     protected static $defaultName = 'build:docs';
 
-    /** @var SymfonyStyle */
-    private $io;
-    private $filesystem;
-    private $finder;
-    /** @var ProgressBar */
-    private $progressBar;
-    /** @var Builder */
-    private $builder;
-    /** @var OutputInterface */
-    private $output;
     private $sourceDir;
     private $htmlOutputDir;
     private $jsonOutputDir;
     private $parsedFiles = [];
     private $parseOnly;
-    private $buildContext;
+    private $missingFilesChecker;
 
     public function __construct(BuildContext $buildContext)
     {
         parent::__construct(self::$defaultName);
 
-        $this->filesystem = new Filesystem();
-        $this->finder     = new Finder();
-        $this->buildContext  = $buildContext;
+        $this->filesystem   = new Filesystem();
+        $this->finder       = new Finder();
+        $this->buildContext = $buildContext;
+
+        $this->missingFilesChecker = new MissingFilesChecker($buildContext);
     }
 
     protected function configure()
@@ -57,83 +46,25 @@ class BuildDocsCommand extends Command
         $this
             ->addArgument('source-dir', InputArgument::OPTIONAL, 'RST files Source directory', getcwd())
             ->addArgument('output-dir', InputArgument::OPTIONAL, 'HTML files output directory')
-            ->addOption('parse-only', null, InputOption::VALUE_OPTIONAL, 'Parse only given directory for PDF (directory relative from source-dir)', null);
+            ->addOption('parse-only', null, InputOption::VALUE_OPTIONAL, 'Parse only given directory for PDF (directory relative from source-dir)', '');
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        $this->io     = new SymfonyStyle($input, $output);
-        $this->output = $output;
+        $sourceDir = $this->initializeSourceDir($input, $this->filesystem);
+        $outputDir = $input->getArgument('output-dir') ?? $sourceDir.'/html';
 
-        $this->sourceDir = rtrim($this->getRealAbsolutePath($input->getArgument('source-dir')), '/');
-        if (!$this->filesystem->exists($this->sourceDir)) {
-            throw new \InvalidArgumentException(sprintf('RST source directory "%s" does not exist', $this->sourceDir));
-        }
-
-        $outputDir           = $input->getArgument('output-dir') ?? $this->sourceDir.'/html';
-        $this->htmlOutputDir = rtrim($this->getRealAbsolutePath($outputDir), '/');
-        if ($this->filesystem->exists($this->htmlOutputDir)) {
-            $this->filesystem->remove($this->htmlOutputDir);
-        }
-
-        $this->jsonOutputDir = $this->getRealAbsolutePath($outputDir.'/json');
-        if ($this->filesystem->exists($this->jsonOutputDir)) {
-            $this->filesystem->remove($this->jsonOutputDir);
-        }
-
-        if ($this->parseOnly = trim($input->getOption('parse-only') ?? '', '/')) {
-            $absoluteParseOnly = sprintf(
-                '%s/%s',
-                $this->sourceDir,
-                $this->parseOnly
-            );
-
-            if (!$this->filesystem->exists($absoluteParseOnly) || !is_dir($absoluteParseOnly)) {
-                throw new \InvalidArgumentException(sprintf('Given "parse-only" directory "%s" does not exist', $this->parseOnly));
-            }
-        }
-
-        $this->buildContext->initializeRuntimeConfig($this->sourceDir, $this->htmlOutputDir, $this->jsonOutputDir, $this->parseOnly);
-
-        $this->builder = new Builder(
-            KernelFactory::createKernel($this->buildContext)
-        );
-
-        $eventManager = $this->builder->getConfiguration()->getEventManager();
-        $eventManager->addEventListener(
-            [PostParseDocumentEvent::POST_PARSE_DOCUMENT],
-            $this
-        );
-        $eventManager->addEventListener(
-            [PreBuildRenderEvent::PRE_BUILD_RENDER],
-            $this
-        );
+        $this->doInitialize($input, $output, $sourceDir, $outputDir);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->finder->in($input->getArgument('source-dir'))
-            ->exclude(['_build', '.github', '.platform', '_images'])
-            ->notName('*.rst.inc')
-            ->name('*.rst');
-
-        $this->io->note(sprintf('Start parsing %d rst files', $this->finder->count()));
-        $this->progressBar = new ProgressBar($output, $this->finder->count());
-
-        $this->builder->build(
-            $this->sourceDir,
-            $this->htmlOutputDir
-        );
+        $this->startBuild();
 
         $this->io->newLine(2);
         $this->io->success('HTML rendering complete!');
 
-        foreach ($this->finder as $file) {
-            $htmlFile = str_replace([$this->sourceDir, '.rst'], [$this->htmlOutputDir, '.html'], $file->getRealPath());
-            if (!$this->filesystem->exists($htmlFile)) {
-                $this->io->warning(sprintf('Missing file "%s"', $htmlFile));
-            }
-        }
+        $this->missingFilesChecker->checkMissingFiles($this->io);
 
         if (!$this->parseOnly) {
             $this->generateJson();
@@ -160,54 +91,10 @@ class BuildDocsCommand extends Command
         $htmlForPdfGenerator->generateHtmlForPdf($this->builder->getDocuments()->getAll(), $this->buildContext);
     }
 
-    public function handleProgressBar()
-    {
-        $this->progressBar->advance();
-    }
-
-    private function getRealAbsolutePath(string $path): string
-    {
-        return sprintf(
-            '/%s',
-            rtrim(
-                $this->filesystem->makePathRelative($path, '/'),
-                '/'
-            )
-        );
-    }
-
-    public function postParseDocument(PostParseDocumentEvent $postParseDocumentEvent)
-    {
-        $file = $postParseDocumentEvent->getDocumentNode()->getEnvironment()->getCurrentFileName();
-        if (!\in_array($file, $this->parsedFiles)) {
-            $this->parsedFiles[] = $file;
-            $this->progressBar->advance();
-        }
-    }
-
     public function preBuildRender()
     {
-        $eventManager = $this->builder->getConfiguration()->getEventManager();
-        $eventManager->removeEventListener(
-            [PostParseDocumentEvent::POST_PARSE_DOCUMENT],
-            $this
-        );
+        $this->doPreBuildRender();
 
-        $this->progressBar->finish();
-
-        $this->progressBar = new ProgressBar($this->output);
-
-        $eventManager->addEventListener(
-            [PostNodeRenderEvent::POST_NODE_RENDER],
-            $this
-        );
-
-        $this->io->newLine(2);
         $this->io->note('Start rendering in HTML...');
-    }
-
-    public function postNodeRender()
-    {
-        $this->progressBar->advance();
     }
 }

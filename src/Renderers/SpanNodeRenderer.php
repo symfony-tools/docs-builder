@@ -8,7 +8,7 @@ use Doctrine\RST\Environment;
 use Doctrine\RST\HTML\Renderers\SpanNodeRenderer as BaseSpanNodeRenderer;
 use Doctrine\RST\Nodes\SpanNode;
 use Doctrine\RST\Templates\TemplateRenderer;
-use SymfonyDocs\CI\UrlChecker;
+use SymfonyDocsBuilder\CI\UrlChecker;
 
 class SpanNodeRenderer extends BaseSpanNodeRenderer
 {
@@ -61,10 +61,6 @@ class SpanNodeRenderer extends BaseSpanNodeRenderer
 
     public function isExternalUrl($url): bool
     {
-        if (0 === strpos($url, 'http://') || 0 === strpos($url, 'https://')) {
-            return true;
-        }
-
-        return false;
+        return strpos($url, '://') !== false;
     }
 }

@@ -1,29 +1,29 @@
 <?php declare(strict_types=1);
 
-namespace SymfonyDocs\Command;
+namespace SymfonyDocsBuilder\Command;
 
+use Doctrine\Common\EventManager;
 use Doctrine\RST\Builder;
-use Doctrine\RST\Event\PostNodeRenderEvent;
-use Doctrine\RST\Event\PostParseDocumentEvent;
-use Doctrine\RST\Event\PreBuildRenderEvent;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use SymfonyDocs\CI\UrlChecker;
-use SymfonyDocs\KernelFactory;
+use SymfonyDocsBuilder\BuildContext;
+use SymfonyDocsBuilder\CI\UrlChecker;
 
 class CheckUrlsCommand extends Command
 {
+    use CommandInitializerTrait;
+
     protected static $defaultName = 'build:check-urls';
 
     /** @var SymfonyStyle */
     private $io;
+    /** @var Filesystem */
     private $filesystem;
     private $finder;
     /** @var ProgressBar */
@@ -36,14 +36,19 @@ class CheckUrlsCommand extends Command
     private $htmlOutputDir;
     private $parsedFiles = [];
     private $urlChecker;
+    private $buildContext;
 
-    public function __construct()
+    /** @var EventManager */
+    private $eventManager;
+
+    public function __construct(BuildContext $buildContext)
     {
         parent::__construct(self::$defaultName);
 
-        $this->filesystem = new Filesystem();
-        $this->finder     = new Finder();
-        $this->urlChecker = new UrlChecker();
+        $this->filesystem   = new Filesystem();
+        $this->finder       = new Finder();
+        $this->urlChecker   = new UrlChecker();
+        $this->buildContext = $buildContext;
     }
 
     protected function configure()
@@ -51,54 +56,22 @@ class CheckUrlsCommand extends Command
         parent::configure();
 
         $this
-            ->addArgument('source-dir', InputArgument::OPTIONAL, 'RST files Source directory', getcwd())
-            ->addOption('parse-only', null, InputOption::VALUE_OPTIONAL, 'Parse only given directory for PDF (directory relative from source-dir)', null);
+            ->addArgument('source-dir', InputArgument::OPTIONAL, 'RST files Source directory', getcwd());
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        $this->io     = new SymfonyStyle($input, $output);
-        $this->output = $output;
-
-        $this->sourceDir = rtrim($this->getRealAbsolutePath($input->getArgument('source-dir')), '/');
-        if (!$this->filesystem->exists($this->sourceDir)) {
-            throw new \InvalidArgumentException(sprintf('RST source directory "%s" does not exist', $this->sourceDir));
-        }
-
-        $this->htmlOutputDir = rtrim($this->getRealAbsolutePath(sprintf('%s/../../var/urls-checker', __DIR__)), '/');
-        if ($this->filesystem->exists($this->htmlOutputDir)) {
-            $this->filesystem->remove($this->htmlOutputDir);
-        }
-
-        $this->builder = new Builder(
-            KernelFactory::createKernel($this->sourceDir, $this->htmlOutputDir, null, $this->urlChecker)
-        );
-
-        $eventManager = $this->builder->getConfiguration()->getEventManager();
-        $eventManager->addEventListener(
-            [PostParseDocumentEvent::POST_PARSE_DOCUMENT],
-            $this
-        );
-        $eventManager->addEventListener(
-            [PreBuildRenderEvent::PRE_BUILD_RENDER],
-            $this
+        $this->doInitialize(
+            $input,
+            $output,
+            $this->initializeSourceDir($input, $this->filesystem),
+            sprintf('%s/../../var/urls-checker', __DIR__)
         );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->finder->in($input->getArgument('source-dir'))
-            ->exclude(['_build', '.github', '.platform', '_images'])
-            ->notName('*.rst.inc')
-            ->name('*.rst');
-
-        $this->io->note(sprintf('Start parsing %d rst files', $this->finder->count()));
-        $this->progressBar = new ProgressBar($output, $this->finder->count());
-
-        $this->builder->build(
-            $this->sourceDir,
-            $this->htmlOutputDir
-        );
+        $this->startBuild();
 
         $this->io->newLine(2);
 
@@ -112,46 +85,8 @@ class CheckUrlsCommand extends Command
         $this->filesystem->remove($this->htmlOutputDir);
     }
 
-    private function getRealAbsolutePath(string $path): string
-    {
-        return sprintf(
-            '/%s',
-            rtrim(
-                $this->filesystem->makePathRelative($path, '/'),
-                '/'
-            )
-        );
-    }
-
-    public function postParseDocument(PostParseDocumentEvent $postParseDocumentEvent)
-    {
-        $file = $postParseDocumentEvent->getDocumentNode()->getEnvironment()->getCurrentFileName();
-        if (!\in_array($file, $this->parsedFiles)) {
-            $this->parsedFiles[] = $file;
-            $this->progressBar->advance();
-        }
-    }
-
     public function preBuildRender()
     {
-        $eventManager = $this->builder->getConfiguration()->getEventManager();
-        $eventManager->removeEventListener(
-            [PostParseDocumentEvent::POST_PARSE_DOCUMENT],
-            $this
-        );
-
-        $this->progressBar->finish();
-
-        $this->progressBar = new ProgressBar($this->output);
-
-        $eventManager->addEventListener(
-            [PostNodeRenderEvent::POST_NODE_RENDER],
-            $this
-        );
-    }
-
-    public function postNodeRender()
-    {
-        $this->progressBar->advance();
+        $this->doPreBuildRender();
     }
 }

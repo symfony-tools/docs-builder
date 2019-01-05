@@ -8,7 +8,7 @@ use Doctrine\RST\Nodes\SpanNode;
 use Doctrine\RST\Renderers\CallableNodeRendererFactory;
 use Doctrine\RST\Renderers\NodeRendererFactory;
 use Doctrine\RST\Templates\TemplateRenderer;
-use SymfonyDocs\CI\UrlChecker;
+use SymfonyDocsBuilder\CI\UrlChecker;
 
 /**
  * Class SymfonyHTMLFormat
