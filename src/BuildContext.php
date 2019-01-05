@@ -14,7 +14,7 @@ class BuildContext
     private $sourceDir;
     private $htmlOutputDir;
     private $jsonOutputDir;
-    private $parseOnly;
+    private $parseSubPath;
 
     public function __construct(
         string $basePath,
@@ -30,12 +30,12 @@ class BuildContext
         $this->symfonyDocUrl  = $symfonyDocUrl;
     }
 
-    public function initializeRuntimeConfig(string $sourceDir, string $htmlOutputDir, ?string $jsonOutputDir = null, ?string $parseOnly = null)
+    public function initializeRuntimeConfig(string $sourceDir, string $htmlOutputDir, ?string $jsonOutputDir = null, ?string $parseSubPath = null)
     {
-        $this->sourceDir     = $sourceDir;
-        $this->htmlOutputDir = $htmlOutputDir;
-        $this->jsonOutputDir = $jsonOutputDir;
-        $this->parseOnly     = $parseOnly;
+        $this->sourceDir          = $sourceDir;
+        $this->htmlOutputDir      = $htmlOutputDir;
+        $this->jsonOutputDir      = $jsonOutputDir;
+        $this->parseSubPath       = $parseSubPath;
         $this->runtimeInitialized = true;
     }
 
@@ -85,11 +85,11 @@ class BuildContext
         return $this->jsonOutputDir;
     }
 
-    public function getParseOnly(): ?string
+    public function getParseSubPath(): ?string
     {
         $this->checkThatRuntimeConfigIsInitialized();
 
-        return $this->parseOnly;
+        return $this->parseSubPath;
     }
 
     private function checkThatRuntimeConfigIsInitialized()

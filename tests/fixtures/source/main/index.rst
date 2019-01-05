@@ -1,6 +1,8 @@
 Some Test Docs!
 ===============
 
+.. image:: /_images/symfony-logo.png
+
 .. toctree::
 
     datetime
