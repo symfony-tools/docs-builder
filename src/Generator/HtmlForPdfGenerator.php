@@ -7,17 +7,11 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use SymfonyDocsBuilder\BuildContext;
 
-/**
- * Class HtmlForPdfGenerator
- */
 class HtmlForPdfGenerator
 {
     use GeneratorTrait;
 
-    public function generateHtmlForPdf(
-        array $documents,
-        BuildContext $buildContext
-    ) {
+    public function generateHtmlForPdf(array $documents, BuildContext $buildContext) {
         $environments = $this->extractEnvironments($documents);
 
         $finder = new Finder();
@@ -54,47 +48,17 @@ class HtmlForPdfGenerator
                 throw new \LogicException(sprintf('File "%s" does not exist', $filename));
             }
 
+            // extract <body> content
             $crawler     = new Crawler(file_get_contents($filename));
             $fileContent = $crawler->filter('body')->html();
 
-            $uid = str_replace('/', '-', $meta->getFile());
             $dir = dirname($meta->getFile());
+            $fileContent = $this->fixInternalUrls($fileContent, $dir);
 
-            // fix internal URLs
-            $fileContent = preg_replace_callback(
-                '/href="([^"]+?)"/',
-                function ($matches) use ($dir) {
-                    if ('http' === substr($matches[1], 0, 4) || '#' === substr($matches[1], 0, 1)) {
-                        return $matches[0];
-                    }
+            $fileContent = $this->fixInternalImages($fileContent, $relativeImagesPath);
 
-                    $path = [];
-                    foreach (explode('/', $dir.'/'.str_replace(['.html', '#'], ['', '-'], $matches[1])) as $part) {
-                        if ('..' == $part) {
-                            array_pop($path);
-                        } else {
-                            $path[] = $part;
-                        }
-                    }
-
-                    $path = implode('-', $path);
-
-                    return sprintf('href="#%s"', $path);
-                },
-                $fileContent
-            );
-
-            // fix internal images
-            $fileContent = preg_replace('{src="(?:\.\./)+([^"]+?)"}', "src=\"$relativeImagesPath$1\"", $fileContent);
-
-            // fix # and id references to be unique
-            $fileContent = preg_replace_callback(
-                '/id="([^"]+)"/',
-                function ($matches) use ($uid) {
-                    return sprintf('id="%s-%s"', $uid, $matches[1]);
-                },
-                $fileContent
-            );
+            $uid = str_replace('/', '-', $meta->getFile());
+            $fileContent = $this->fixUniqueIdsAndAnchors($fileContent, $uid);
 
             $content .= "\n";
             $content .= sprintf('<div id="%s">%s</div>', $uid, $fileContent);
@@ -113,7 +77,49 @@ class HtmlForPdfGenerator
         $fs->remove($basePath);
     }
 
-    protected function cleanupContent($content)
+    private function fixInternalUrls(string $fileContent, string $dir): string
+    {
+        return preg_replace_callback(
+            '/href="([^"]+?)"/',
+            function ($matches) use ($dir) {
+                if ('http' === substr($matches[1], 0, 4) || '#' === substr($matches[1], 0, 1)) {
+                    return $matches[0];
+                }
+
+                $path = [];
+                foreach (explode('/', $dir.'/'.str_replace(['.html', '#'], ['', '-'], $matches[1])) as $part) {
+                    if ('..' == $part) {
+                        array_pop($path);
+                    } else {
+                        $path[] = $part;
+                    }
+                }
+
+                $path = implode('-', $path);
+
+                return sprintf('href="#%s"', $path);
+            },
+            $fileContent
+        );
+    }
+    
+    private function fixInternalImages(string $fileContent, string $relativeImagesPath): string
+    {
+        return $fileContent = preg_replace('{src="(?:\.\./)+([^"]+?)"}', "src=\"$relativeImagesPath$1\"", $fileContent);
+    }
+
+    private function fixUniqueIdsAndAnchors(string $fileContent, string $uid): string
+    {
+        return preg_replace_callback(
+            '/id="([^"]+)"/',
+            function ($matches) use ($uid) {
+                return sprintf('id="%s-%s"', $uid, $matches[1]);
+            },
+            $fileContent
+        );
+    }
+
+    private function cleanupContent($content)
     {
         // remove internal anchors
         $content = preg_replace('#<a class="headerlink"([^>]+)>¶</a>#', '', $content);
