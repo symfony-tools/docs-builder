@@ -27,7 +27,6 @@ class PhpClassReference extends Reference
             sprintf('%s/class.%s.php', $this->phpDocUrl, strtolower($data)),
             [],
             [
-                'class' => 'reference external',
                 'title' => $data,
             ]
         );

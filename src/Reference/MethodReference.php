@@ -32,7 +32,6 @@ class MethodReference extends Reference
             sprintf('%s/%s.html#method_%s', $this->symfonyApiUrl, str_replace('\\', '/', $className), $methodName),
             [],
             [
-                'class' => 'reference external',
                 'title' => sprintf('%s::%s()', $className, $methodName),
             ]
         );

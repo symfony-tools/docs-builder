@@ -30,7 +30,6 @@ class PhpMethodReference extends Reference
             sprintf('%s/%s.%s.php', $this->phpDocUrl, strtolower($class), strtolower($method)),
             [],
             [
-                'class' => 'reference external',
                 'title' => $class,
             ]
         );
