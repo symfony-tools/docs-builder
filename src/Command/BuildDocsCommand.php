@@ -21,7 +21,7 @@ class BuildDocsCommand extends Command
 {
     use CommandInitializerTrait;
 
-    protected static $defaultName = 'build:docs';
+    protected static $defaultName = 'symfony-docs-builder:build-docs';
 
     private $missingFilesChecker;
 
