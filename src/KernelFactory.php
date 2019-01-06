@@ -3,14 +3,9 @@
 namespace SymfonyDocsBuilder;
 
 use Doctrine\RST\Configuration as RSTParserConfiguration;
-use Doctrine\RST\Event\PostNodeCreateEvent;
-use Doctrine\RST\Event\PostNodeRenderEvent;
-use Doctrine\RST\Event\PostParseDocumentEvent;
-use Doctrine\RST\Event\PreNodeRenderEvent;
 use Doctrine\RST\Kernel;
 use SymfonyDocsBuilder\CI\UrlChecker;
 use SymfonyDocsBuilder\Directive as SymfonyDirectives;
-use SymfonyDocsBuilder\Listener\CodeSnifferListener;
 use SymfonyDocsBuilder\Reference as SymfonyReferences;
 
 /**
@@ -40,16 +35,6 @@ final class KernelFactory
                 }
             );
         }
-
-        $configuration->getEventManager()->addEventListener(
-            [
-                PostNodeRenderEvent::POST_NODE_RENDER,
-                PostNodeCreateEvent::POST_NODE_CREATE,
-                PostParseDocumentEvent::POST_PARSE_DOCUMENT,
-                PreNodeRenderEvent::PRE_NODE_RENDER,
-            ],
-            new CodeSnifferListener()
-        );
 
         return new Kernel(
             $configuration,
