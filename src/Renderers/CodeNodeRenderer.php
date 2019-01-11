@@ -23,6 +23,7 @@ class CodeNodeRenderer implements NodeRenderer
         'php-symfony'     => 'php',
         'varnish4'        => 'c',
         'varnish3'        => 'c',
+        'diff+php'        => 'diff',
     ];
 
     /** @var CodeNode */

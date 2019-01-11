@@ -5,6 +5,7 @@ namespace SymfonyDocsBuilder;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use SymfonyDocsBuilder\Command\BuildCodeCommand;
 use SymfonyDocsBuilder\Command\BuildDocsCommand;
 use SymfonyDocsBuilder\Command\CheckUrlsCommand;
 
@@ -39,6 +40,7 @@ class Application
         $this->application->getDefinition()->addOption($inputOption);
         $this->application->add(new BuildDocsCommand($this->buildContext));
         $this->application->add(new CheckUrlsCommand($this->buildContext));
+        $this->application->add(new BuildCodeCommand($this->buildContext));
 
         return $this->application->run($input);
     }
