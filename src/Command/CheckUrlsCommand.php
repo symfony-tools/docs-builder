@@ -15,7 +15,7 @@ class CheckUrlsCommand extends Command
 {
     use CommandInitializerTrait;
 
-    protected static $defaultName = 'symfony-docs-builder:check-urls';
+    protected static $defaultName = 'check:urls';
 
     private $urlChecker;
 
