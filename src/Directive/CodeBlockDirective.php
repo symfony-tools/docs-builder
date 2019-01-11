@@ -6,6 +6,7 @@ use Doctrine\RST\Directives\Directive;
 use Doctrine\RST\Nodes\CodeNode;
 use Doctrine\RST\Nodes\Node;
 use Doctrine\RST\Parser;
+use SymfonyDocsBuilder\Renderers\CodeNodeRenderer;
 
 class CodeBlockDirective extends Directive
 {
@@ -18,6 +19,10 @@ class CodeBlockDirective extends Directive
     {
         if (!$node instanceof CodeNode) {
             return;
+        }
+
+        if (!CodeNodeRenderer::isLanguageSupported($data)) {
+            throw new \Exception(sprintf('Unsupported code block language "%s"', $data));
         }
 
         $node->setLanguage($data);

@@ -16,6 +16,7 @@ class CodeNodeRenderer implements NodeRenderer
         'html+twig'       => 'twig',
         'jinja'           => 'twig',
         'html+php'        => 'html',
+        'xml+php'         => 'xml',
         'php-annotations' => 'php',
         'terminal'        => 'bash',
         'rst'             => 'markdown',
@@ -69,6 +70,17 @@ class CodeNodeRenderer implements NodeRenderer
                 'lineNumbers'     => rtrim($lineNumbers),
             ]
         );
+    }
+
+    public static function isLanguageSupported(string $lang): bool
+    {
+        $highlighter = new Highlighter();
+        $supportedLanguages = array_merge(
+            array_keys(self::LANGUAGES_MAPPING),
+            $highlighter->listLanguages(true)
+        );
+
+        return in_array($lang, $supportedLanguages);
     }
 
     private function getLines(string $code): array
