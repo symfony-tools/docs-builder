@@ -77,7 +77,9 @@ class CodeNodeRenderer implements NodeRenderer
         $highlighter = new Highlighter();
         $supportedLanguages = array_merge(
             array_keys(self::LANGUAGES_MAPPING),
-            $highlighter->listLanguages(true)
+            $highlighter->listLanguages(true),
+            // not highlighted, but valid
+            ['text']
         );
 
         return in_array($lang, $supportedLanguages);
