@@ -3,6 +3,8 @@
 namespace SymfonyDocsBuilder\Command;
 
 use Doctrine\RST\Event\PostBuildRenderEvent;
+use Doctrine\RST\Meta\CachedMetasLoader;
+use Doctrine\RST\Meta\Metas;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -49,6 +51,12 @@ class BuildDocsCommand extends Command
                 InputOption::VALUE_OPTIONAL,
                 'Parse only given sub directory and combine it into a single file (directory relative from source-dir)',
                 ''
+            )
+            ->addOption(
+                'disable-cache',
+                null,
+                InputOption::VALUE_NONE,
+                'If provided, caching meta will be disabled'
             );
     }
 
@@ -74,29 +82,40 @@ class BuildDocsCommand extends Command
 
         $this->missingFilesChecker->checkMissingFiles($this->io);
 
+        $metas = $this->getMetas();
         if (!$this->buildContext->getParseSubPath()) {
-            $this->generateJson();
+            $this->generateJson($metas);
         } else {
-            $this->renderDocForPDF();
+            $this->renderDocForPDF($metas);
         }
 
         $this->io->newLine(2);
-        $this->io->success('Parse process complete');
+
+        $successMessage = 'Parse process complete';
+
+        if (!$this->buildContext->getDisableCache()) {
+            $successMessage = sprintf(
+                '%s (%d files were loaded from cache)',
+                $successMessage,
+                $this->finder->count() - count($this->builder->getDocuments()->getAll())
+            );
+        }
+        $this->io->success($successMessage);
     }
 
-    private function generateJson()
+    private function generateJson(Metas $metas)
     {
         $this->io->note('Start exporting doc into json files');
         $this->progressBar = new ProgressBar($this->output, $this->finder->count());
 
-        $jsonGenerator = new JsonGenerator();
-        $jsonGenerator->generateJson($this->builder->getDocuments()->getAll(), $this->buildContext, $this->progressBar);
+        $jsonGenerator = new JsonGenerator($metas, $this->buildContext);
+        $jsonGenerator->generateJson($this->progressBar);
     }
 
-    private function renderDocForPDF()
+    private function renderDocForPDF(Metas $metas)
     {
-        $htmlForPdfGenerator = new HtmlForPdfGenerator();
-        $htmlForPdfGenerator->generateHtmlForPdf($this->builder->getDocuments()->getAll(), $this->buildContext);
+        $htmlForPdfGenerator = new HtmlForPdfGenerator($metas, $this->buildContext);
+        $htmlForPdfGenerator->generateHtmlForPdf();
     }
 
     public function preBuildRender()
@@ -104,5 +123,18 @@ class BuildDocsCommand extends Command
         $this->doPreBuildRender();
 
         $this->io->note('Start rendering in HTML...');
+    }
+
+    private function getMetas(): Metas
+    {
+        /*
+         * TODO - get this from the Builder when it is exposed
+         * https://github.com/doctrine/rst-parser/pull/97
+         */
+        $metas = new Metas();
+        $cachedMetasLoader = new CachedMetasLoader();
+        $cachedMetasLoader->loadCachedMetaEntries($this->buildContext->getHtmlOutputDir(), $metas);
+
+        return $metas;
     }
 }

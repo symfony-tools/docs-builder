@@ -4,6 +4,7 @@ namespace SymfonyDocsBuilder\Generator;
 
 use Doctrine\RST\Environment;
 use Doctrine\RST\Meta\MetaEntry;
+use Doctrine\RST\Meta\Metas;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
@@ -15,44 +16,41 @@ use SymfonyDocsBuilder\BuildContext;
  */
 class JsonGenerator
 {
-    use GeneratorTrait;
+    private $metas;
 
-    public function generateJson(
-        array $documents,
-        BuildContext $buildContext,
-        ProgressBar $progressBar
-    ) {
-        $environments = $this->extractEnvironments($documents);
+    private $buildContext;
 
-        $finder = new Finder();
-        $finder->in($buildContext->getHtmlOutputDir())
-            ->name('*.html')
-            ->files();
+    public function __construct(Metas $metas, BuildContext $buildContext)
+    {
+        $this->metas = $metas;
+        $this->buildContext = $buildContext;
+    }
 
+    public function generateJson(ProgressBar $progressBar)
+    {
         $fs = new Filesystem();
-        $fs->remove($buildContext->getJsonOutputDir());
 
-        foreach ($finder as $file) {
-            $crawler = new Crawler($file->getContents());
+        foreach ($this->metas->getAll() as $filename => $metaEntry) {
+            $parserFilename = $filename;
+            $jsonFilename   = $this->buildContext->getJsonOutputDir().'/'.$filename.'.json';
 
-            $parserFilename = $this->getParserFilename($file->getRealPath(), $buildContext->getHtmlOutputDir());
-            $meta           = $this->getMeta($environments, $parserFilename);
+            $crawler = new Crawler(file_get_contents($this->buildContext->getHtmlOutputDir().'/'.$filename.'.html'));
 
             $data = [
                 'body'              => $crawler->filter('body')->html(),
-                'title'             => $meta->getTitle(),
+                'title'             => $metaEntry->getTitle(),
                 'current_page_name' => $parserFilename,
-                'toc'               => $this->generateToc($meta, current($meta->getTitles())[1]),
-                'next'              => $this->guessNext($environments, $parserFilename),
-                'prev'              => $this->guessPrev($environments, $parserFilename),
+                'toc'               => $this->generateToc($metaEntry, current($metaEntry->getTitles())[1]),
+                'next'              => $this->guessNext($parserFilename),
+                'prev'              => $this->guessPrev($parserFilename),
                 'rellinks'          => [
-                    $this->guessNext($environments, $parserFilename),
-                    $this->guessPrev($environments, $parserFilename),
+                    $this->guessNext($parserFilename),
+                    $this->guessPrev($parserFilename),
                 ],
             ];
 
             $fs->dumpFile(
-                str_replace([$buildContext->getHtmlOutputDir(), '.html'], [$buildContext->getJsonOutputDir(), '.json'], $file->getRealPath()),
+                $jsonFilename,
                 json_encode($data, JSON_PRETTY_PRINT)
             );
 
@@ -81,20 +79,20 @@ class JsonGenerator
         return $tocTree;
     }
 
-    private function guessNext(array $environments, string $parserFilename): ?array
+    private function guessNext(string $parserFilename): ?array
     {
-        $meta       = $this->getMeta($environments, $parserFilename);
+        $meta       = $this->getMetaEntry($parserFilename);
         $parentFile = $meta->getParent();
 
         // if current file is an index, next is the first chapter
         if ('index' === $parentFile && \count($tocs = $meta->getTocs()) === 1 && \count($tocs[0]) > 0) {
             return [
-                'title' => $this->getMeta($environments, $tocs[0][0])->getTitle(),
-                'link'  => $this->getMeta($environments, $tocs[0][0])->getUrl(),
+                'title' => $this->getMetaEntry($tocs[0][0])->getTitle(),
+                'link'  => $this->getMetaEntry($tocs[0][0])->getUrl(),
             ];
         }
 
-        list($toc, $indexCurrentFile) = $this->getNextPrevInformation($environments, $parserFilename);
+        list($toc, $indexCurrentFile) = $this->getNextPrevInformation($parserFilename);
 
         if (!isset($toc[$indexCurrentFile + 1])) {
             return null;
@@ -103,14 +101,14 @@ class JsonGenerator
         $nextFileName = $toc[$indexCurrentFile + 1];
 
         return [
-            'title' => $this->getMeta($environments, $nextFileName)->getTitle(),
-            'link'  => $this->getMeta($environments, $nextFileName)->getUrl(),
+            'title' => $this->getMetaEntry($nextFileName)->getTitle(),
+            'link'  => $this->getMetaEntry($nextFileName)->getUrl(),
         ];
     }
 
-    private function guessPrev(array $environments, string $parserFilename): ?array
+    private function guessPrev(string $parserFilename): ?array
     {
-        $meta       = $this->getMeta($environments, $parserFilename);
+        $meta       = $this->getMetaEntry($parserFilename);
         $parentFile = $meta->getParent();
 
         // no prev if parent is an index
@@ -118,13 +116,13 @@ class JsonGenerator
             return null;
         }
 
-        list($toc, $indexCurrentFile) = $this->getNextPrevInformation($environments, $parserFilename);
+        list($toc, $indexCurrentFile) = $this->getNextPrevInformation($parserFilename);
 
         // if current file is the first one of the chapter, prev is the direct parent
         if (0 === $indexCurrentFile) {
             return [
-                'title' => $this->getMeta($environments, $parentFile)->getTitle(),
-                'link'  => $this->getMeta($environments, $parentFile)->getUrl(),
+                'title' => $this->getMetaEntry($parentFile)->getTitle(),
+                'link'  => $this->getMetaEntry($parentFile)->getUrl(),
             ];
         }
 
@@ -135,21 +133,21 @@ class JsonGenerator
         $prevFileName = $toc[$indexCurrentFile - 1];
 
         return [
-            'title' => $this->getMeta($environments, $prevFileName)->getTitle(),
-            'link'  => $this->getMeta($environments, $prevFileName)->getUrl(),
+            'title' => $this->getMetaEntry($prevFileName)->getTitle(),
+            'link'  => $this->getMetaEntry($prevFileName)->getUrl(),
         ];
     }
 
-    private function getNextPrevInformation(array $environments, string $parserFilename): ?array
+    private function getNextPrevInformation(string $parserFilename): ?array
     {
-        $meta       = $this->getMeta($environments, $parserFilename);
+        $meta       = $this->getMetaEntry($parserFilename);
         $parentFile = $meta->getParent();
 
         if (!$parentFile) {
             return [null, null];
         }
 
-        $metaParent = $this->getMeta($environments, $parentFile);
+        $metaParent = $this->getMetaEntry($parentFile);
 
         if (!$metaParent->getTocs() || \count($metaParent->getTocs()) !== 1) {
             return [null, null];
@@ -164,5 +162,16 @@ class JsonGenerator
         $indexCurrentFile = array_flip($toc)[$parserFilename];
 
         return [$toc, $indexCurrentFile];
+    }
+
+    private function getMetaEntry(string $parserFilename): MetaEntry
+    {
+        $metaEntry = $this->metas->get($parserFilename);
+
+        if (null === $metaEntry) {
+            throw new \LogicException(sprintf('Could not find MetaEntry for file "%s"', $parserFilename));
+        }
+
+        return $metaEntry;
     }
 }

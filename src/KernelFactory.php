@@ -19,6 +19,10 @@ final class KernelFactory
         $configuration->setCustomTemplateDirs([sprintf('%s/src/Templates', $buildContext->getBasePath())]);
         $configuration->setCacheDir(sprintf('%s/var/cache', $buildContext->getBasePath()));
 
+        if ($buildContext->getDisableCache()) {
+            $configuration->setUseCachedMetas(false);
+        }
+
         $configuration->addFormat(
             new SymfonyHTMLFormat(
                 $configuration->getTemplateRenderer(),
