@@ -105,7 +105,7 @@ trait CommandInitializerTrait
 
     private function initializeJsonOutputDir(string $outputDir): string
     {
-        $jsonOutputDir = $this->getRealAbsolutePath($outputDir.'/json', $this->filesystem);
+        $jsonOutputDir = $this->getRealAbsolutePath($outputDir.'/_json', $this->filesystem);
         if ($this->isCacheDisabled() && $this->filesystem->exists($jsonOutputDir)) {
             $this->filesystem->remove($jsonOutputDir);
         }
@@ -143,6 +143,8 @@ trait CommandInitializerTrait
             ->notName('*.rst.inc')
             ->name('*.rst');
 
+        $this->sanitizeOutputDirs($this->finder);
+
         $this->io->note(sprintf('Start parsing %d rst files', $this->finder->count()));
         $this->progressBar = new ProgressBar($this->output, $this->finder->count());
 
@@ -150,6 +152,52 @@ trait CommandInitializerTrait
             $this->buildContext->getSourceDir(),
             $this->buildContext->getHtmlOutputDir()
         );
+    }
+
+    /**
+     * Removes all existing html files in the output dir that should not exist
+     * because previous build in the same output directory has been executed on another version
+     */
+    private function sanitizeOutputDirs(Finder $finder)
+    {
+        if (!$this->filesystem->exists($this->buildContext->getHtmlOutputDir())) {
+            return;
+        }
+
+        $rstFiles = array_map(
+            function (string $rstFile) {
+                return str_replace([$this->buildContext->getSourceDir(), '.rst'], '', $rstFile);
+            },
+            array_keys(iterator_to_array($finder))
+        );
+
+        $this->sanitizeOutputDir($rstFiles, $this->buildContext->getHtmlOutputDir(), 'html');
+        $this->sanitizeOutputDir($rstFiles, $this->buildContext->getJsonOutputDir(), 'json');
+    }
+
+    private function sanitizeOutputDir(array $existingRstFiles, string $outputDir, string $format)
+    {
+        $htmlFinder = new Finder();
+        $htmlFinder->in($outputDir)
+            ->name('*.html');
+
+        $htmlFiles = array_map(
+            function (string $htmlFile) use ($outputDir, $format) {
+                return str_replace([$outputDir, '.'.$format], '', $htmlFile);
+            },
+            array_keys(iterator_to_array($htmlFinder))
+        );
+
+        $filesNotExistingInCurrentVersion = array_map(
+            function ($file) use ($outputDir, $format) {
+                return sprintf('%s%s.%s', $outputDir, $file, $format);
+            },
+            array_values(array_diff($htmlFiles, $existingRstFiles))
+        );
+
+        foreach ($filesNotExistingInCurrentVersion as $file) {
+            $this->filesystem->remove($file);
+        }
     }
 
     private function isCacheDisabled(): bool

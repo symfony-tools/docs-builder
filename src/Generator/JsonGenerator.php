@@ -33,6 +33,8 @@ class JsonGenerator
         $fs->remove($buildContext->getJsonOutputDir());
 
         foreach ($finder as $file) {
+
+
             $crawler = new Crawler($file->getContents());
 
             $parserFilename = $this->getParserFilename($file->getRealPath(), $buildContext->getHtmlOutputDir());
