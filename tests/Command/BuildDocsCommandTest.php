@@ -12,10 +12,14 @@ use SymfonyDocsBuilder\Command\BuildDocsCommand;
 
 class BuildDocsCommandTest extends TestCase
 {
-    public function testBuildDocs()
+    public function testBuildDocsFoo()
     {
         $buildContext = $this->createBuildContext();
         $outputDir    = sprintf('%s/tests/_output', $buildContext->getBasePath());
+
+        $filesystem = new Filesystem();
+        $filesystem->remove($outputDir);
+        $filesystem->mkdir($outputDir);
 
         $output = $this->executeCommand(
             $buildContext,
@@ -27,7 +31,6 @@ class BuildDocsCommandTest extends TestCase
 
         $this->assertContains('[OK] Parse process complete (0 files were loaded from cache)', $output);
 
-        $filesystem = new Filesystem();
         $this->assertTrue($filesystem->exists(sprintf('%s/_images/symfony-logo.png', $outputDir)));
 
         $output = $this->executeCommand(

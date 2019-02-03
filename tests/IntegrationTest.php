@@ -4,6 +4,8 @@ namespace SymfonyDocsBuilder\Tests;
 
 use Doctrine\RST\Builder;
 use Doctrine\RST\Configuration;
+use Doctrine\RST\Meta\CachedMetasLoader;
+use Doctrine\RST\Meta\Metas;
 use Doctrine\RST\Parser;
 use Gajus\Dindent\Indenter;
 use PHPUnit\Framework\TestCase;
@@ -55,15 +57,23 @@ class IntegrationTest extends TestCase
             $this->assertFileExists($actualFilename);
 
             $this->assertSame(
-            // removes odd trailing space the indenter is adding
+                // removes odd trailing space the indenter is adding
                 str_replace(" \n", "\n", $indenter->indent($expectedFile->getContents())),
                 str_replace(" \n", "\n", $indenter->indent(file_get_contents($actualFilename))),
                 sprintf('File %s is not equal', $relativePath)
             );
         }
 
-        $jsonGenerator = new JsonGenerator($buildContext);
-        $jsonGenerator->generateJson($builder->getDocuments()->getAll(), new ProgressBar(new NullOutput()));
+        /*
+         * TODO - get this from the Builder when it is exposed
+         * https://github.com/doctrine/rst-parser/pull/97
+         */
+        $metas = new Metas();
+        $cachedMetasLoader = new CachedMetasLoader();
+        $cachedMetasLoader->loadCachedMetaEntries(__DIR__.'/_output', $metas);
+
+        $jsonGenerator = new JsonGenerator($metas, $buildContext);
+        $jsonGenerator->generateJson(new ProgressBar(new NullOutput()));
 
         foreach ($finder as $htmlFile) {
             $relativePath   = $htmlFile->getRelativePathname();
