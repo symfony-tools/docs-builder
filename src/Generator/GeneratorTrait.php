@@ -82,9 +82,6 @@ trait GeneratorTrait
         return $allMetas[$parserFilename];
     }
 
-    /**
-     * @param Environment[] $environments
-     */
     private function useCacheForFile(string $parserFilename): bool
     {
         if ($this->buildContext->getDisableCache()) {
