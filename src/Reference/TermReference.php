@@ -6,6 +6,9 @@ use Doctrine\RST\Environment;
 use Doctrine\RST\References\Reference;
 use Doctrine\RST\References\ResolvedReference;
 
+/**
+ * @deprecated
+ */
 class TermReference extends Reference
 {
     public function getName(): string
