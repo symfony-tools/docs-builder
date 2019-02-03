@@ -15,6 +15,7 @@ class BuildContext
     private $htmlOutputDir;
     private $jsonOutputDir;
     private $parseSubPath;
+    private $disableCache = false;
 
     public function __construct(
         string $basePath,
@@ -30,12 +31,13 @@ class BuildContext
         $this->symfonyDocUrl  = $symfonyDocUrl;
     }
 
-    public function initializeRuntimeConfig(string $sourceDir, string $htmlOutputDir, ?string $jsonOutputDir = null, ?string $parseSubPath = null)
+    public function initializeRuntimeConfig(string $sourceDir, string $htmlOutputDir, ?string $jsonOutputDir = null, ?string $parseSubPath = null, ?bool $disableCache = false)
     {
         $this->sourceDir          = $sourceDir;
         $this->htmlOutputDir      = $htmlOutputDir;
         $this->jsonOutputDir      = $jsonOutputDir;
         $this->parseSubPath       = $parseSubPath;
+        $this->disableCache       = $disableCache;
         $this->runtimeInitialized = true;
     }
 
@@ -90,6 +92,13 @@ class BuildContext
         $this->checkThatRuntimeConfigIsInitialized();
 
         return $this->parseSubPath;
+    }
+
+    public function getDisableCache(): bool
+    {
+        $this->checkThatRuntimeConfigIsInitialized();
+
+        return $this->disableCache;
     }
 
     private function checkThatRuntimeConfigIsInitialized()

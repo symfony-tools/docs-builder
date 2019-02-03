@@ -49,6 +49,12 @@ class BuildDocsCommand extends Command
                 InputOption::VALUE_OPTIONAL,
                 'Parse only given sub directory and combine it into a single file (directory relative from source-dir)',
                 ''
+            )
+            ->addOption(
+                'disable-cache',
+                null,
+                InputOption::VALUE_NONE,
+                'If provided, caching meta will be disabled'
             );
     }
 

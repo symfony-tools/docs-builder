@@ -46,7 +46,8 @@ trait CommandInitializerTrait
             $sourceDir,
             $this->initializeHtmlOutputDir($this->filesystem, $outputDir),
             $this->initializeJsonOutputDir($outputDir),
-            $this->initializeParseSubPath($input, $sourceDir)
+            $this->initializeParseSubPath($input, $sourceDir),
+            (bool) $input->getOption('disable-cache')
         );
 
         $this->builder = new Builder(
