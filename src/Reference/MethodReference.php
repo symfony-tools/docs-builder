@@ -25,6 +25,10 @@ class MethodReference extends Reference
         $className = explode('::', $data)[0];
         $className = str_replace('\\\\', '\\', $className);
 
+        if (false === strpos($data, '::')) {
+            throw new \RuntimeException(sprintf('Malformed method reference  "%s" in file "%s"', $data, $environment->getCurrentFileName()));
+        }
+
         $methodName = explode('::', $data)[1];
 
         return new ResolvedReference(

@@ -60,6 +60,7 @@ final class KernelFactory
             new SymfonyDirectives\WarningDirective(),
             new SymfonyDirectives\VersionAddedDirective(),
             new SymfonyDirectives\BestPracticeDirective(),
+            new SymfonyDirectives\GlossaryDirective(),
         ];
     }
 
@@ -72,6 +73,10 @@ final class KernelFactory
             new SymfonyReferences\PhpFunctionReference($buildContext->getPhpDocUrl()),
             new SymfonyReferences\PhpMethodReference($buildContext->getPhpDocUrl()),
             new SymfonyReferences\PhpClassReference($buildContext->getPhpDocUrl()),
+            new SymfonyReferences\TermReference(),
+            new SymfonyReferences\LeaderReference(),
+            new SymfonyReferences\MergerReference(),
+            new SymfonyReferences\DeciderReference(),
         ];
     }
 }
