@@ -3,9 +3,7 @@
 namespace SymfonyDocsBuilder\Generator;
 
 use Doctrine\RST\Environment;
-use Doctrine\RST\Meta\CachedMetasLoader;
 use Doctrine\RST\Meta\MetaEntry;
-use Doctrine\RST\Meta\Metas;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
@@ -21,11 +19,6 @@ class JsonGenerator
     public function generateJson(array $documents, ProgressBar $progressBar)
     {
         $this->extractEnvironmentsAndCachedMetas($documents);
-
-        if (!$this->buildContext->getDisableCache()) {
-            $cachedMetasLoader = new CachedMetasLoader();
-            $cachedMetasLoader->loadCachedMetaEntries($this->buildContext->getHtmlOutputDir(), $metas = new Metas());
-        }
 
         $finder = new Finder();
         $finder->in($this->buildContext->getHtmlOutputDir())
