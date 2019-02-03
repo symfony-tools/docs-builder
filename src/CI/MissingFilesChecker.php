@@ -25,6 +25,7 @@ class MissingFilesChecker
         $this->finder->in($this->buildContext->getSourceDir())
             ->exclude(['_build', '.github', '.platform', '_images'])
             ->notName('*.rst.inc')
+            ->files()
             ->name('*.rst');
 
         foreach ($this->finder as $file) {
