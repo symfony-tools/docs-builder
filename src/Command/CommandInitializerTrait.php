@@ -70,12 +70,7 @@ trait CommandInitializerTrait
 
     private function initializeHtmlOutputDir(Filesystem $filesystem, string $path): string
     {
-        $htmlOutputDir = rtrim($this->getRealAbsolutePath($path, $filesystem), '/');
-        if ($filesystem->exists($htmlOutputDir)) {
-            $filesystem->remove($htmlOutputDir);
-        }
-
-        return $htmlOutputDir;
+        return rtrim($this->getRealAbsolutePath($path, $filesystem), '/');
     }
 
     private function initializeParseSubPath(InputInterface $input, string $sourceDir): string
