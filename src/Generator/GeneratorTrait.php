@@ -93,10 +93,6 @@ trait GeneratorTrait
 
         // if an environment exits for the given file, it means that the file has been built from the parser
         // thus it was not loaded from cache.
-        if (isset($this->environments[$parserFilename])) {
-            return false;
-        }
-
-        return true;
+        return !isset($this->environments[$parserFilename]);
     }
 }
