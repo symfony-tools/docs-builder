@@ -95,14 +95,14 @@ class BuildDocsCommand extends Command
         $this->io->note('Start exporting doc into json files');
         $this->progressBar = new ProgressBar($this->output, $this->finder->count());
 
-        $jsonGenerator = new JsonGenerator();
-        $jsonGenerator->generateJson($this->builder->getDocuments()->getAll(), $this->buildContext, $this->progressBar);
+        $jsonGenerator = new JsonGenerator($this->buildContext);
+        $jsonGenerator->generateJson($this->builder->getDocuments()->getAll(), $this->progressBar);
     }
 
     private function renderDocForPDF()
     {
-        $htmlForPdfGenerator = new HtmlForPdfGenerator();
-        $htmlForPdfGenerator->generateHtmlForPdf($this->builder->getDocuments()->getAll(), $this->buildContext);
+        $htmlForPdfGenerator = new HtmlForPdfGenerator($this->buildContext);
+        $htmlForPdfGenerator->generateHtmlForPdf($this->builder->getDocuments()->getAll());
     }
 
     public function preBuildRender()

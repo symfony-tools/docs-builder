@@ -160,10 +160,6 @@ trait CommandInitializerTrait
      */
     private function sanitizeOutputDirs(Finder $finder)
     {
-        if (!$this->filesystem->exists($this->buildContext->getHtmlOutputDir())) {
-            return;
-        }
-
         $rstFiles = array_map(
             function (string $rstFile) {
                 return str_replace([$this->buildContext->getSourceDir(), '.rst'], '', $rstFile);
@@ -177,6 +173,10 @@ trait CommandInitializerTrait
 
     private function sanitizeOutputDir(array $existingRstFiles, string $outputDir, string $format)
     {
+        if (!$this->filesystem->exists($outputDir)) {
+            return;
+        }
+
         $htmlFinder = new Finder();
         $htmlFinder->in($outputDir)
             ->name('*.html');

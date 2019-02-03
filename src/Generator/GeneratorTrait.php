@@ -3,19 +3,42 @@
 namespace SymfonyDocsBuilder\Generator;
 
 use Doctrine\RST\Environment;
+use Doctrine\RST\Meta\CachedMetasLoader;
 use Doctrine\RST\Meta\MetaEntry;
+use Doctrine\RST\Meta\Metas;
 use Doctrine\RST\Nodes\DocumentNode;
+use SymfonyDocsBuilder\BuildContext;
 
 trait GeneratorTrait
 {
-    private function extractEnvironments(array $documents): array
+    private $buildContext;
+
+    /** @var Environment[] */
+    private $environments;
+    /** @var Metas */
+    private $cachedMetas;
+
+    public function __construct(BuildContext $buildContext)
     {
-        return array_map(
+        $this->buildContext = $buildContext;
+    }
+
+    private function extractEnvironmentsAndCachedMetas(array $documents): void
+    {
+        $this->environments = array_map(
             function (DocumentNode $document) {
                 return $document->getEnvironment();
             },
             $documents
         );
+
+        if ($this->buildContext->getDisableCache()) {
+            return;
+        }
+
+        $this->cachedMetas = new Metas();
+        $cachedMetasLoader = new CachedMetasLoader();
+        $cachedMetasLoader->loadCachedMetaEntries($this->buildContext->getHtmlOutputDir(), $this->cachedMetas);
     }
 
     private function getParserFilename(string $filePath, string $inputDir): string
@@ -23,18 +46,32 @@ trait GeneratorTrait
         return $parserFilename = str_replace([$inputDir.'/', '.html'], ['', ''], $filePath);
     }
 
-    private function getEnvironment(array $environments, string $parserFilename): Environment
+    private function getEnvironment(string $parserFilename): Environment
     {
-        if (!isset($environments[$parserFilename])) {
+        if (!isset($this->environments[$parserFilename])) {
             throw new \LogicException(sprintf('Cannot find environment for file "%s"', $parserFilename));
         }
 
-        return $environments[$parserFilename];
+        return $this->environments[$parserFilename];
     }
 
-    private function getMeta(array $environments, string $parserFilename): MetaEntry
+    private function loadMetaFromCache(string $parserFilename): MetaEntry
     {
-        $environment = $this->getEnvironment($environments, $parserFilename);
+        $meta = $this->cachedMetas->get($parserFilename);
+
+        if (!$meta) {
+            throw new \LogicException(sprintf('Cannot find cached meta for file "%s"', $parserFilename));
+        }
+
+        return $meta;
+    }
+
+    private function getMeta(string $parserFilename): MetaEntry {
+        if ($this->useCacheForFile($parserFilename)) {
+            return $this->loadMetaFromCache($parserFilename);
+        }
+
+        $environment = $this->getEnvironment($parserFilename);
 
         $allMetas = $environment->getMetas()->getAll();
 
@@ -43,5 +80,23 @@ trait GeneratorTrait
         }
 
         return $allMetas[$parserFilename];
+    }
+
+    /**
+     * @param Environment[] $environments
+     */
+    private function useCacheForFile(string $parserFilename): bool
+    {
+        if ($this->buildContext->getDisableCache()) {
+            return false;
+        }
+
+        // if an environment exits for the given file, it means that the file has been built from the parser
+        // thus it was not loaded from cache.
+        if (isset($this->environments[$parserFilename])) {
+            return false;
+        }
+
+        return true;
     }
 }

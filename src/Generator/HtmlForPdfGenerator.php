@@ -11,37 +11,37 @@ class HtmlForPdfGenerator
 {
     use GeneratorTrait;
 
-    public function generateHtmlForPdf(array $documents, BuildContext $buildContext) {
-        $environments = $this->extractEnvironments($documents);
+    public function generateHtmlForPdf(array $documents) {
+        $this->extractEnvironmentsAndCachedMetas($documents);
 
         $finder = new Finder();
-        $finder->in($buildContext->getHtmlOutputDir())
+        $finder->in($this->buildContext->getHtmlOutputDir())
             ->depth(0)
-            ->notName([$buildContext->getParseSubPath(), '_images']);
+            ->notName([$this->buildContext->getParseSubPath(), '_images']);
 
         $fs = new Filesystem();
         foreach ($finder as $file) {
             $fs->remove($file->getRealPath());
         }
 
-        $basePath  = sprintf('%s/%s', $buildContext->getHtmlOutputDir(), $buildContext->getParseSubPath());
+        $basePath  = sprintf('%s/%s', $this->buildContext->getHtmlOutputDir(), $this->buildContext->getParseSubPath());
         $indexFile = sprintf('%s/%s', $basePath, 'index.html');
         if (!$fs->exists($indexFile)) {
             throw new \InvalidArgumentException(sprintf('File "%s" does not exist', $indexFile));
         }
 
         // extracting all files from index's TOC, in the right order
-        $parserFilename = $this->getParserFilename($indexFile, $buildContext->getHtmlOutputDir());
-        $meta           = $this->getMeta($environments, $parserFilename);
+        $parserFilename = $this->getParserFilename($indexFile, $this->buildContext->getHtmlOutputDir());
+        $meta           = $this->getMeta($parserFilename);
         $files          = current($meta->getTocs());
-        array_unshift($files, sprintf('%s/index', $buildContext->getParseSubPath()));
+        array_unshift($files, sprintf('%s/index', $this->buildContext->getParseSubPath()));
 
         // building one big html file with all contents
         $content = '';
-        $htmlDir = $buildContext->getHtmlOutputDir();
-        $relativeImagesPath = str_repeat('../', substr_count($buildContext->getParseSubPath(), '/'));
+        $htmlDir = $this->buildContext->getHtmlOutputDir();
+        $relativeImagesPath = str_repeat('../', substr_count($this->buildContext->getParseSubPath(), '/'));
         foreach ($files as $file) {
-            $meta = $this->getMeta($environments, $file);
+            $meta = $this->getMeta($file);
 
             $filename = sprintf('%s/%s.html', $htmlDir, $file);
             if (!$fs->exists($filename)) {
@@ -66,13 +66,13 @@ class HtmlForPdfGenerator
 
         $content = sprintf(
             '<html><head><title>%s</title></head><body>%s</body></html>',
-            $buildContext->getParseSubPath(),
+            $this->buildContext->getParseSubPath(),
             $content
         );
 
         $content = $this->cleanupContent($content);
 
-        $filename = sprintf('%s/%s.html', $htmlDir, $buildContext->getParseSubPath());
+        $filename = sprintf('%s/%s.html', $htmlDir, $this->buildContext->getParseSubPath());
         file_put_contents($filename, $content);
         $fs->remove($basePath);
     }
@@ -102,7 +102,7 @@ class HtmlForPdfGenerator
             $fileContent
         );
     }
-    
+
     private function fixInternalImages(string $fileContent, string $relativeImagesPath): string
     {
         return $fileContent = preg_replace('{src="(?:\.\./)+([^"]+?)"}', "src=\"$relativeImagesPath$1\"", $fileContent);
