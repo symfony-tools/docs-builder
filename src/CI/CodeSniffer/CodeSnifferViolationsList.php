@@ -6,9 +6,9 @@ class CodeSnifferViolationsList implements \Countable
 {
     private $violations = [];
 
-    public function add(string $code, array $reasons)
+    public function add(string $file, string $code, array $reasons)
     {
-        $this->violations[] = new CodeSnifferViolation($code, $reasons);
+        $this->violations[] = new CodeSnifferViolation($file, $code, $reasons);
     }
 
     public function count(): int
@@ -21,8 +21,8 @@ class CodeSnifferViolationsList implements \Countable
         return array_map(
             function (CodeSnifferViolation $codeSnifferViolation) {
                 return [
-                    $codeSnifferViolation->getCode(),
-                    implode("\n", $codeSnifferViolation->getReasons())
+                    'file'    => $codeSnifferViolation->getFile(),
+                    'reasons' => implode("\n", $codeSnifferViolation->getReasons()),
                 ];
             },
             $this->violations

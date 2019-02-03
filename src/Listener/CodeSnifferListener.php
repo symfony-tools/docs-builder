@@ -30,10 +30,6 @@ class CodeSnifferListener
         $this->codeSnifferViolationsList = $codeSnifferViolationsList;
     }
 
-    /**
-     * Problems:
-     *  - $environment is not reachable > we cannot inform the user where the error is coming from
-     */
     public function postNodeRender(PostNodeRenderEvent $postNodeRenderEvent)
     {
         $node = $postNodeRenderEvent->getRenderedNode()->getNode();
@@ -49,27 +45,33 @@ class CodeSnifferListener
 
         $code = $node->getValue();
 
+        if (false === strpos($code, '<?php')) {
+            $code = "<?php\n\n".$code;
+        }
+
         $tempFile = tempnam(sys_get_temp_dir(), 'symfony-docs-builder').'.php';
         file_put_contents($tempFile, $code);
 
         $input = new ArrayInput(
             [
-                'command'   => 'fix',
-                'path'      => [$tempFile],
-                '--format'  => 'json',
-                '--dry-run' => true,
-                '-vvv'      => true,
+                'command'       => 'fix',
+                'path'          => [$tempFile],
+                '--format'      => 'json',
+                '--dry-run'     => true,
+                '-vvv'          => true,
+                '--using-cache' => 'no',
+                '--config'      => '/home/niko/works/docs-builder/.php_cs',
             ]
         );
 
         $output = new BufferedOutput();
 
         $this->application->run($input, $output);
-
         $content = json_decode($output->fetch(), true);
 
-        if (count($content['files']) === 1) {
+        if (count($content['files']) > 0) {
             $this->codeSnifferViolationsList->add(
+                $postNodeRenderEvent->getRenderedNode()->getNode()->getEnvironment()->getCurrentFileName(),
                 $code,
                 array_map([$this, 'getFixerSummary'], $content['files'][0]['appliedFixers'])
             );

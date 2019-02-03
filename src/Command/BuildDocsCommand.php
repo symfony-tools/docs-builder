@@ -81,7 +81,7 @@ class BuildDocsCommand extends Command
 
         if (\count($this->codeSnifferViolationsList)) {
             $this->io->newLine(2);
-            $this->io->table(['code', 'reason(s)'], $this->codeSnifferViolationsList->getViolationsAsArray());
+            $this->io->table(['file', 'reason(s)'], $this->codeSnifferViolationsList->getViolationsAsArray());
             $this->filesystem->remove($this->buildContext->getHtmlOutputDir());
 
             $this->io->error('Code sniffer violations detected! Please fix them.');

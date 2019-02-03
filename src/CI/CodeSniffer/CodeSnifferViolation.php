@@ -4,14 +4,20 @@ namespace SymfonyDocsBuilder\CI\CodeSniffer;
 
 class CodeSnifferViolation
 {
+    private $file;
     private $code;
     private $reasons;
 
-    // information about file / line are missing
-    public function __construct(string $code, array $reasons)
+    public function __construct(string $file, string $code, array $reasons)
     {
+        $this->file    = sprintf('/%s.rst', $file);
         $this->code    = $code;
         $this->reasons = $reasons;
+    }
+
+    public function getFile(): string
+    {
+        return $this->file;
     }
 
     public function getCode(): string
