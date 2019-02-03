@@ -24,6 +24,8 @@ trait CommandInitializerTrait
     private $io;
     /** @var OutputInterface */
     private $output;
+    /** @var InputInterface */
+    private $input;
     /** @var Builder */
     private $builder;
     /** @var Filesystem */
@@ -40,6 +42,7 @@ trait CommandInitializerTrait
     private function doInitialize(InputInterface $input, OutputInterface $output, string $sourceDir, string $outputDir)
     {
         $this->io     = new SymfonyStyle($input, $output);
+        $this->input  = $input;
         $this->output = $output;
 
         $this->buildContext->initializeRuntimeConfig(
@@ -47,7 +50,7 @@ trait CommandInitializerTrait
             $this->initializeHtmlOutputDir($this->filesystem, $outputDir),
             $this->initializeJsonOutputDir($outputDir),
             $this->initializeParseSubPath($input, $sourceDir),
-            (bool) $input->getOption('disable-cache')
+            $this->isCacheDisabled()
         );
 
         $this->builder = new Builder(
@@ -71,7 +74,12 @@ trait CommandInitializerTrait
 
     private function initializeHtmlOutputDir(Filesystem $filesystem, string $path): string
     {
-        return rtrim($this->getRealAbsolutePath($path, $filesystem), '/');
+        $htmlOutputDir = rtrim($this->getRealAbsolutePath($path, $filesystem), '/');
+        if ($this->isCacheDisabled() && $filesystem->exists($htmlOutputDir)) {
+            $filesystem->remove($htmlOutputDir);
+        }
+
+        return $htmlOutputDir;
     }
 
     private function initializeParseSubPath(InputInterface $input, string $sourceDir): string
@@ -98,7 +106,7 @@ trait CommandInitializerTrait
     private function initializeJsonOutputDir(string $outputDir): string
     {
         $jsonOutputDir = $this->getRealAbsolutePath($outputDir.'/json', $this->filesystem);
-        if ($this->filesystem->exists($jsonOutputDir)) {
+        if ($this->isCacheDisabled() && $this->filesystem->exists($jsonOutputDir)) {
             $this->filesystem->remove($jsonOutputDir);
         }
 
@@ -142,6 +150,11 @@ trait CommandInitializerTrait
             $this->buildContext->getSourceDir(),
             $this->buildContext->getHtmlOutputDir()
         );
+    }
+
+    private function isCacheDisabled(): bool
+    {
+        return (bool) $this->input->getOption('disable-cache');
     }
 
     public function postParseDocument(PostParseDocumentEvent $postParseDocumentEvent): void
