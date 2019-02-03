@@ -202,7 +202,7 @@ trait CommandInitializerTrait
 
     private function isCacheDisabled(): bool
     {
-        return (bool) $this->input->getOption('disable-cache');
+        return $this->input->hasOption('disable-cache') && (bool) $this->input->getOption('disable-cache');
     }
 
     public function postParseDocument(PostParseDocumentEvent $postParseDocumentEvent): void

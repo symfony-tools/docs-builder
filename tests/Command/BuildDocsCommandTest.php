@@ -12,9 +12,9 @@ use SymfonyDocsBuilder\Command\BuildDocsCommand;
 
 class BuildDocsCommandTest extends TestCase
 {
-    public function testBuildDocs()
+    public function testBuildDocs1()
     {
-        $buildContext = $this->createParameterBag();
+        $buildContext = $this->createBuildContext();
         $outputDir    = sprintf('%s/tests/_output', $buildContext->getBasePath());
 
         $output = $this->executeCommand(
@@ -25,7 +25,6 @@ class BuildDocsCommandTest extends TestCase
             ]
         );
 
-        $this->assertEquals(1, substr_count($output, '[WARNING]'));
         $this->assertContains('[OK] Parse process complete', $output);
 
         $filesystem = new Filesystem();
@@ -34,7 +33,7 @@ class BuildDocsCommandTest extends TestCase
 
     public function testBuildDocsForPdf()
     {
-        $buildContext = $this->createParameterBag();
+        $buildContext = $this->createBuildContext();
         $outputDir    = sprintf('%s/tests/_output', $buildContext->getBasePath());
 
         $output = $this->executeCommand(
@@ -45,8 +44,6 @@ class BuildDocsCommandTest extends TestCase
                 '--parse-sub-path' => 'book',
             ]
         );
-
-        $this->assertNotContains('[WARNING]', $output);
 
         $filesystem = new Filesystem();
         $this->assertTrue($filesystem->exists(sprintf('%s/_images/symfony-logo.png', $outputDir)));
@@ -79,7 +76,7 @@ class BuildDocsCommandTest extends TestCase
         return $commandTester->getDisplay();
     }
 
-    private function createParameterBag(): BuildContext
+    private function createBuildContext(): BuildContext
     {
         $buildContext = new BuildContext(
             realpath(__DIR__.'/../..'),

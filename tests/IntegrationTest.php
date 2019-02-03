@@ -32,10 +32,10 @@ class IntegrationTest extends TestCase
         $fs = new Filesystem();
         $fs->remove(__DIR__.'/_output');
 
-        $configBag = $this->createParameterBag(sprintf('%s/fixtures/source/%s', __DIR__, $folder));
+        $buildContext = $this->createBuildContext(sprintf('%s/fixtures/source/%s', __DIR__, $folder));
 
         $builder = new Builder(
-            KernelFactory::createKernel($configBag)
+            KernelFactory::createKernel($buildContext)
         );
 
         $builder->build(
@@ -62,12 +62,8 @@ class IntegrationTest extends TestCase
             );
         }
 
-        $jsonGenerator = new JsonGenerator();
-        $jsonGenerator->generateJson(
-            $builder->getDocuments()->getAll(),
-            $configBag,
-            new ProgressBar(new NullOutput())
-        );
+        $jsonGenerator = new JsonGenerator($buildContext);
+        $jsonGenerator->generateJson($builder->getDocuments()->getAll(), new ProgressBar(new NullOutput()));
 
         foreach ($finder as $htmlFile) {
             $relativePath   = $htmlFile->getRelativePathname();
@@ -113,7 +109,7 @@ class IntegrationTest extends TestCase
         $configuration->setCustomTemplateDirs([__DIR__.'/Templates']);
 
         $parser = new Parser(
-            KernelFactory::createKernel($this->createParameterBag(sprintf('%s/fixtures/source/blocks', __DIR__)))
+            KernelFactory::createKernel($this->createBuildContext(sprintf('%s/fixtures/source/blocks', __DIR__)))
         );
 
         $sourceFile = sprintf('%s/fixtures/source/blocks/%s.rst', __DIR__, $blockName);
@@ -268,7 +264,7 @@ class IntegrationTest extends TestCase
         ];
     }
 
-    private function createParameterBag(string $sourceDir): BuildContext
+    private function createBuildContext(string $sourceDir): BuildContext
     {
         $buildContext = new BuildContext(
             realpath(__DIR__.'/..'),
