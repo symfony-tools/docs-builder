@@ -23,6 +23,7 @@ class PhpFunctionReference extends Reference
     public function resolve(Environment $environment, string $data): ResolvedReference
     {
         return new ResolvedReference(
+            $environment->getCurrentFileName(),
             $data,
             sprintf('%s/function.%s.php', $this->phpDocUrl, str_replace('_', '-', strtolower($data))),
             [],

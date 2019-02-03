@@ -25,6 +25,7 @@ class NamespaceReference extends Reference
         $className = str_replace('\\\\', '\\', $data);
 
         return new ResolvedReference(
+            $environment->getCurrentFileName(),
             substr(strrchr($className, '\\'), 1),
             sprintf('%s/%s.html', $this->symfonyApiUrl, str_replace('\\', '/', $className)),
             [],

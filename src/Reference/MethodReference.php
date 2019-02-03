@@ -28,6 +28,7 @@ class MethodReference extends Reference
         $methodName = explode('::', $data)[1];
 
         return new ResolvedReference(
+            $environment->getCurrentFileName(),
             $methodName.'()',
             sprintf('%s/%s.html#method_%s', $this->symfonyApiUrl, str_replace('\\', '/', $className), $methodName),
             [],

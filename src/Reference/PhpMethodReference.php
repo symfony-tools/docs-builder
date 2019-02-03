@@ -26,6 +26,7 @@ class PhpMethodReference extends Reference
         $method = explode('::', $data)[1];
 
         return new ResolvedReference(
+            $environment->getCurrentFileName(),
             $data.'()',
             sprintf('%s/%s.%s.php', $this->phpDocUrl, strtolower($class), strtolower($method)),
             [],

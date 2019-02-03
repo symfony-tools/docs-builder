@@ -23,6 +23,7 @@ class PhpClassReference extends Reference
     public function resolve(Environment $environment, string $data): ResolvedReference
     {
         return new ResolvedReference(
+            $environment->getCurrentFileName(),
             $data,
             sprintf('%s/class.%s.php', $this->phpDocUrl, strtolower($data)),
             [],
