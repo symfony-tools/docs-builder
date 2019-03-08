@@ -6,6 +6,7 @@ use Doctrine\Common\EventManager;
 use Doctrine\RST\Builder;
 use Doctrine\RST\Event\PostNodeRenderEvent;
 use Doctrine\RST\Event\PostParseDocumentEvent;
+use Doctrine\RST\Event\PreBuildParseEvent;
 use Doctrine\RST\Event\PreBuildRenderEvent;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -126,10 +127,19 @@ trait CommandInitializerTrait
 
     private function initializeProgressBarEventListeners(): void
     {
+        // sets up the "parsing" progress bar
+        $this->eventManager->addEventListener(
+            [PreBuildParseEvent::PRE_BUILD_PARSE],
+            $this
+        );
+
+        // advances "parsing" progress bar
         $this->eventManager->addEventListener(
             [PostParseDocumentEvent::POST_PARSE_DOCUMENT],
             $this
         );
+
+        // tries to handle progress bar for "rendering"
         $this->eventManager->addEventListener(
             [PreBuildRenderEvent::PRE_BUILD_RENDER],
             $this
@@ -144,9 +154,6 @@ trait CommandInitializerTrait
             ->name('*.rst');
 
         $this->sanitizeOutputDirs($this->finder);
-
-        $this->io->note(sprintf('Start parsing %d rst files', $this->finder->count()));
-        $this->progressBar = new ProgressBar($this->output, $this->finder->count());
 
         $this->builder->build(
             $this->buildContext->getSourceDir(),
@@ -205,6 +212,19 @@ trait CommandInitializerTrait
         return $this->input->hasOption('disable-cache') && (bool) $this->input->getOption('disable-cache');
     }
 
+    /**
+     * Called very early: used to initialize the "parsing" progress bar.
+     *
+     * @param PreBuildParseEvent $event
+     */
+    public function preBuildParse(PreBuildParseEvent $event)
+    {
+        $parseQueue = $event->getParseQueue();
+        $parseCount = count($parseQueue->getAllFilesThatRequireParsing());
+        $this->io->note(sprintf('Start parsing %d out-of-date rst files', $parseCount));
+        $this->progressBar = new ProgressBar($this->output, $parseCount);
+    }
+
     public function postParseDocument(PostParseDocumentEvent $postParseDocumentEvent): void
     {
         $file = $postParseDocumentEvent->getDocumentNode()->getEnvironment()->getCurrentFileName();
@@ -216,25 +236,10 @@ trait CommandInitializerTrait
 
     public function doPreBuildRender()
     {
-        $this->eventManager->removeEventListener(
-            [PostParseDocumentEvent::POST_PARSE_DOCUMENT],
-            $this
-        );
-
+        // finishes the "parse" progress bar
         $this->progressBar->finish();
 
-        $this->progressBar = new ProgressBar($this->output);
-
-        $this->eventManager->addEventListener(
-            [PostNodeRenderEvent::POST_NODE_RENDER],
-            $this
-        );
-
         $this->io->newLine(2);
-    }
-
-    public function postNodeRender(): void
-    {
-        $this->progressBar->advance();
+        // TODO: create a proper progress bar for rendering
     }
 }
