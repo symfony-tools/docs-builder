@@ -53,6 +53,12 @@ class BuildDocsCommand extends Command
                 ''
             )
             ->addOption(
+                'output-json',
+                null,
+                InputOption::VALUE_NONE,
+                'If provided, .fjson metadata files will be written'
+            )
+            ->addOption(
                 'disable-cache',
                 null,
                 InputOption::VALUE_NONE,
@@ -69,6 +75,11 @@ class BuildDocsCommand extends Command
 
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
+        if ($input->getOption('parse-sub-path') && $input->getOption('output-json')) {
+            throw new \InvalidArgumentException(sprintf('Cannot pass both --parse-sub-path and --output-json options.'));
+        }
+
+
         $sourceDir = $this->initializeSourceDir($input, $this->filesystem);
         $outputDir = $input->getArgument('output-dir') ?? $sourceDir.'/html';
 
@@ -103,10 +114,10 @@ class BuildDocsCommand extends Command
         }
 
         $metas = $this->getMetas();
-        if (!$this->buildContext->getParseSubPath()) {
-            $this->generateJson($metas);
-        } else {
+        if ($this->buildContext->getParseSubPath()) {
             $this->renderDocForPDF($metas);
+        } elseif ($input->getOption('--output-json')) {
+            $this->generateJson($metas);
         }
 
         $this->io->newLine(2);
