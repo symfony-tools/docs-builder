@@ -6,19 +6,20 @@ use Doctrine\RST\Environment;
 use Doctrine\RST\Meta\MetaEntry;
 use Doctrine\RST\Meta\Metas;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use SymfonyDocsBuilder\BuildContext;
 
-/**
- * Class JsonGenerator
- */
 class JsonGenerator
 {
     private $metas;
 
     private $buildContext;
+
+    /** @var SymfonyStyle|null */
+    private $output;
 
     public function __construct(Metas $metas, BuildContext $buildContext)
     {
@@ -60,6 +61,11 @@ class JsonGenerator
         $progressBar->finish();
     }
 
+    public function setOutput(SymfonyStyle $output)
+    {
+        $this->output = $output;
+    }
+
     private function generateToc(MetaEntry $metaEntry, ?array $titles): array
     {
         if (null === $titles) {
@@ -81,14 +87,21 @@ class JsonGenerator
 
     private function guessNext(string $parserFilename): ?array
     {
-        $meta       = $this->getMetaEntry($parserFilename);
+        $meta = $this->getMetaEntry($parserFilename, true);
+
         $parentFile = $meta->getParent();
 
         // if current file is an index, next is the first chapter
         if ('index' === $parentFile && \count($tocs = $meta->getTocs()) === 1 && \count($tocs[0]) > 0) {
+            $firstChapterMeta = $this->getMetaEntry($tocs[0][0]);
+
+            if (null === $firstChapterMeta) {
+                return null;
+            }
+
             return [
-                'title' => $this->getMetaEntry($tocs[0][0])->getTitle(),
-                'link'  => $this->getMetaEntry($tocs[0][0])->getUrl(),
+                'title' => $firstChapterMeta->getTitle(),
+                'link'  => $firstChapterMeta->getUrl(),
             ];
         }
 
@@ -100,15 +113,21 @@ class JsonGenerator
 
         $nextFileName = $toc[$indexCurrentFile + 1];
 
+        $nextMeta = $this->getMetaEntry($nextFileName);
+
+        if (null === $nextMeta) {
+            return null;
+        }
+
         return [
-            'title' => $this->getMetaEntry($nextFileName)->getTitle(),
-            'link'  => $this->getMetaEntry($nextFileName)->getUrl(),
+            'title' => $nextMeta->getTitle(),
+            'link'  => $nextMeta->getUrl(),
         ];
     }
 
     private function guessPrev(string $parserFilename): ?array
     {
-        $meta       = $this->getMetaEntry($parserFilename);
+        $meta = $this->getMetaEntry($parserFilename, true);
         $parentFile = $meta->getParent();
 
         // no prev if parent is an index
@@ -120,9 +139,15 @@ class JsonGenerator
 
         // if current file is the first one of the chapter, prev is the direct parent
         if (0 === $indexCurrentFile) {
+            $parentMeta = $this->getMetaEntry($parentFile);
+
+            if (null === $parentMeta) {
+                return null;
+            }
+
             return [
-                'title' => $this->getMetaEntry($parentFile)->getTitle(),
-                'link'  => $this->getMetaEntry($parentFile)->getUrl(),
+                'title' => $parentMeta->getTitle(),
+                'link'  => $parentMeta->getUrl(),
             ];
         }
 
@@ -132,15 +157,21 @@ class JsonGenerator
 
         $prevFileName = $toc[$indexCurrentFile - 1];
 
+        $prevMeta = $this->getMetaEntry($prevFileName);
+
+        if (null === $prevMeta) {
+            return null;
+        }
+
         return [
-            'title' => $this->getMetaEntry($prevFileName)->getTitle(),
-            'link'  => $this->getMetaEntry($prevFileName)->getUrl(),
+            'title' => $prevMeta->getTitle(),
+            'link'  => $prevMeta->getUrl(),
         ];
     }
 
     private function getNextPrevInformation(string $parserFilename): ?array
     {
-        $meta       = $this->getMetaEntry($parserFilename);
+        $meta       = $this->getMetaEntry($parserFilename, true);
         $parentFile = $meta->getParent();
 
         if (!$parentFile) {
@@ -149,7 +180,7 @@ class JsonGenerator
 
         $metaParent = $this->getMetaEntry($parentFile);
 
-        if (!$metaParent->getTocs() || \count($metaParent->getTocs()) !== 1) {
+        if (null === $metaParent || !$metaParent->getTocs() || \count($metaParent->getTocs()) !== 1) {
             return [null, null];
         }
 
@@ -164,12 +195,21 @@ class JsonGenerator
         return [$toc, $indexCurrentFile];
     }
 
-    private function getMetaEntry(string $parserFilename): MetaEntry
+    private function getMetaEntry(string $parserFilename, bool $throwOnMissing = false): ?MetaEntry
     {
         $metaEntry = $this->metas->get($parserFilename);
 
+        // this is possible if there are invalid references
         if (null === $metaEntry) {
-            throw new \LogicException(sprintf('Could not find MetaEntry for file "%s"', $parserFilename));
+            $message = sprintf('Could not find MetaEntry for file "%s"', $parserFilename);
+
+            if ($throwOnMissing) {
+                throw new \Exception($message);
+            }
+
+            if ($this->output) {
+                $this->output->note($message);
+            }
         }
 
         return $metaEntry;

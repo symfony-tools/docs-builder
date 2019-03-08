@@ -129,6 +129,7 @@ class BuildDocsCommand extends Command
         $this->progressBar = new ProgressBar($this->output, $this->finder->count());
 
         $jsonGenerator = new JsonGenerator($metas, $this->buildContext);
+        $jsonGenerator->setOutput($this->io);
         $jsonGenerator->generateJson($this->progressBar);
     }
 
