@@ -116,7 +116,7 @@ class BuildDocsCommand extends Command
         $metas = $this->getMetas();
         if ($this->buildContext->getParseSubPath()) {
             $this->renderDocForPDF($metas);
-        } elseif ($input->getOption('--output-json')) {
+        } elseif ($input->getOption('output-json')) {
             $this->generateJson($metas);
         }
 
