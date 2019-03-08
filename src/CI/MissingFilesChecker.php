@@ -28,6 +28,8 @@ class MissingFilesChecker
             ->files()
             ->name('*.rst');
 
+        $orphanedFiles = [];
+
         foreach ($this->finder as $file) {
             $htmlFile = str_replace(
                 [$this->buildContext->getSourceDir(), '.rst'],
@@ -37,8 +39,10 @@ class MissingFilesChecker
 
             $firstLine = fgets(fopen($file->getRealPath(), 'r'));
             if (!$this->filesystem->exists($htmlFile) && ':orphan:' !== trim($firstLine)) {
-                $io->warning(sprintf('Missing file "%s"', $htmlFile));
+                $orphanedFiles[] = $htmlFile;
             }
         }
+
+        return $orphanedFiles;
     }
 }

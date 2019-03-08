@@ -18,6 +18,7 @@ final class KernelFactory
         $configuration = new RSTParserConfiguration();
         $configuration->setCustomTemplateDirs([sprintf('%s/src/Templates', $buildContext->getBasePath())]);
         $configuration->setCacheDir(sprintf('%s/var/cache', $buildContext->getBasePath()));
+        $configuration->abortOnError(false);
 
         if ($buildContext->getDisableCache()) {
             $configuration->setUseCachedMetas(false);

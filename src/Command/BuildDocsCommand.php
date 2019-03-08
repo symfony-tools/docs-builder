@@ -57,7 +57,14 @@ class BuildDocsCommand extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'If provided, caching meta will be disabled'
-            );
+            )
+            ->addOption(
+                'save-errors',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Path where any errors should be saved'
+            )
+        ;
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
@@ -76,11 +83,24 @@ class BuildDocsCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->startBuild();
+        $buildErrors = $this->builder->getErrorManager()->getErrors();
 
-        $this->io->newLine(2);
         $this->io->success('HTML rendering complete!');
 
-        $this->missingFilesChecker->checkMissingFiles($this->io);
+        $missingFiles = $this->missingFilesChecker->getMissingFiles();
+        foreach ($missingFiles as $missingFile) {
+            $message = sprintf('Missing file "%s"', $missingFile);
+            $buildErrors[] = $message;
+            $this->io->warning($message);
+        }
+
+        if ($logPath = $input->getOption('save-errors')) {
+            if (count($buildErrors) > 0) {
+                array_unshift($buildErrors, sprintf('Build errors from "%s"', date('Y-m-d h:i:s')));
+            }
+
+            file_put_contents($logPath, implode("\n", $buildErrors));
+        }
 
         $metas = $this->getMetas();
         if (!$this->buildContext->getParseSubPath()) {
