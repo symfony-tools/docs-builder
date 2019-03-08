@@ -147,14 +147,6 @@ class BuildDocsCommand extends Command
 
     private function getMetas(): Metas
     {
-        /*
-         * TODO - get this from the Builder when it is exposed
-         * https://github.com/doctrine/rst-parser/pull/97
-         */
-        $metas = new Metas();
-        $cachedMetasLoader = new CachedMetasLoader();
-        $cachedMetasLoader->loadCachedMetaEntries($this->buildContext->getHtmlOutputDir(), $metas);
-
-        return $metas;
+        return $this->builder->getMetas();
     }
 }
