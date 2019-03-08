@@ -49,7 +49,6 @@ trait CommandInitializerTrait
         $this->buildContext->initializeRuntimeConfig(
             $sourceDir,
             $this->initializeHtmlOutputDir($this->filesystem, $outputDir),
-            $this->initializeJsonOutputDir($outputDir),
             $this->initializeParseSubPath($input, $sourceDir),
             $this->isCacheDisabled()
         );
@@ -104,16 +103,6 @@ trait CommandInitializerTrait
         return $parseSubPath;
     }
 
-    private function initializeJsonOutputDir(string $outputDir): string
-    {
-        $jsonOutputDir = $this->getRealAbsolutePath($outputDir.'/_json', $this->filesystem);
-        if ($this->isCacheDisabled() && $this->filesystem->exists($jsonOutputDir)) {
-            $this->filesystem->remove($jsonOutputDir);
-        }
-
-        return $jsonOutputDir;
-    }
-
     private function getRealAbsolutePath(string $path, Filesystem $filesystem): string
     {
         return sprintf(
@@ -157,7 +146,7 @@ trait CommandInitializerTrait
 
         $this->builder->build(
             $this->buildContext->getSourceDir(),
-            $this->buildContext->getHtmlOutputDir()
+            $this->buildContext->getOutputDir()
         );
     }
 
@@ -174,8 +163,8 @@ trait CommandInitializerTrait
             array_keys(iterator_to_array($finder))
         );
 
-        $this->sanitizeOutputDir($rstFiles, $this->buildContext->getHtmlOutputDir(), 'html');
-        $this->sanitizeOutputDir($rstFiles, $this->buildContext->getJsonOutputDir(), 'json');
+        $this->sanitizeOutputDir($rstFiles, $this->buildContext->getOutputDir(), 'html');
+        $this->sanitizeOutputDir($rstFiles, $this->buildContext->getOutputDir(), 'fjson');
     }
 
     private function sanitizeOutputDir(array $existingRstFiles, string $outputDir, string $format)

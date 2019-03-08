@@ -33,7 +33,7 @@ class MissingFilesChecker
         foreach ($this->finder as $file) {
             $htmlFile = str_replace(
                 [$this->buildContext->getSourceDir(), '.rst'],
-                [$this->buildContext->getHtmlOutputDir(), '.html'],
+                [$this->buildContext->getOutputDir(), '.html'],
                 $file->getRealPath()
             );
 

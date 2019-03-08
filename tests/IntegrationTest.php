@@ -77,7 +77,7 @@ class IntegrationTest extends TestCase
 
         foreach ($finder as $htmlFile) {
             $relativePath   = $htmlFile->getRelativePathname();
-            $actualFilename = __DIR__.'/_outputJson/'.str_replace('.html', '.json', $relativePath);
+            $actualFilename = __DIR__.'/_output/'.str_replace('.html', '.fjson', $relativePath);
             $this->assertFileExists($actualFilename);
 
             $jsonData = json_decode(file_get_contents($actualFilename), true);
@@ -286,7 +286,6 @@ class IntegrationTest extends TestCase
         $buildContext->initializeRuntimeConfig(
             $sourceDir,
             __DIR__.'/_output',
-            __DIR__.'/_outputJson',
             null
         );
 

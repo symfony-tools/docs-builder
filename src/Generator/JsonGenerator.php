@@ -33,12 +33,11 @@ class JsonGenerator
 
         foreach ($this->metas->getAll() as $filename => $metaEntry) {
             $parserFilename = $filename;
-            $jsonFilename   = $this->buildContext->getJsonOutputDir().'/'.$filename.'.json';
+            $jsonFilename   = $this->buildContext->getOutputDir().'/'.$filename.'.fjson';
 
-            $crawler = new Crawler(file_get_contents($this->buildContext->getHtmlOutputDir().'/'.$filename.'.html'));
+            $crawler = new Crawler(file_get_contents($this->buildContext->getOutputDir().'/'.$filename.'.html'));
 
             $data = [
-                'body'              => $crawler->filter('body')->html(),
                 'title'             => $metaEntry->getTitle(),
                 'current_page_name' => $parserFilename,
                 'toc'               => $this->generateToc($metaEntry, current($metaEntry->getTitles())[1]),
@@ -48,6 +47,7 @@ class JsonGenerator
                     $this->guessNext($parserFilename),
                     $this->guessPrev($parserFilename),
                 ],
+                'body'              => $crawler->filter('body')->html(),
             ];
 
             $fs->dumpFile(

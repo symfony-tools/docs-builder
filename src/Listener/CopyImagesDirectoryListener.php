@@ -18,7 +18,7 @@ class CopyImagesDirectoryListener
     {
         $fs = new Filesystem();
         if ($fs->exists($imageDir = sprintf('%s/_images', $this->buildContext->getSourceDir()))) {
-            $fs->mirror($imageDir, sprintf('%s/_images', $this->buildContext->getHtmlOutputDir()));
+            $fs->mirror($imageDir, sprintf('%s/_images', $this->buildContext->getOutputDir()));
         }
     }
 }

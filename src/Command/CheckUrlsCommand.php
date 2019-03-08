@@ -61,7 +61,7 @@ class CheckUrlsCommand extends Command
             $this->io->success('All urls in the docs are valid!');
         }
 
-        $this->filesystem->remove($this->buildContext->getHtmlOutputDir());
+        $this->filesystem->remove($this->buildContext->getOutputDir());
     }
 
     public function preBuildRender()
