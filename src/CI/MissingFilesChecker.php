@@ -20,7 +20,7 @@ class MissingFilesChecker
         $this->buildContext = $buildContext;
     }
 
-    public function checkMissingFiles(SymfonyStyle $io)
+    public function getMissingFiles(): array
     {
         $this->finder->in($this->buildContext->getSourceDir())
             ->exclude(['_build', '.github', '.platform', '_images'])

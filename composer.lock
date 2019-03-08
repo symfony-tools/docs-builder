@@ -86,12 +86,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/rst-parser.git",
-                "reference": "dc3a8f1a7a119824f99c6d05484d00a8df4bf19a"
+                "reference": "ea0a03c3eeeae85951981785b83e87958892c7d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/rst-parser/zipball/dc3a8f1a7a119824f99c6d05484d00a8df4bf19a",
-                "reference": "dc3a8f1a7a119824f99c6d05484d00a8df4bf19a",
+                "url": "https://api.github.com/repos/doctrine/rst-parser/zipball/ea0a03c3eeeae85951981785b83e87958892c7d0",
+                "reference": "ea0a03c3eeeae85951981785b83e87958892c7d0",
                 "shasum": ""
             },
             "require": {
@@ -141,7 +141,7 @@
                 "reStructuredText",
                 "rst"
             ],
-            "time": "2019-02-02T14:29:00+00:00"
+            "time": "2019-03-08T16:51:39+00:00"
         },
         {
             "name": "scrivo/highlight.php",
