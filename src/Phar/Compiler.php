@@ -62,7 +62,6 @@ class Compiler
             ->notName('Compiler.php')
             ->in(__DIR__.'/..')
         ;
-
         foreach ($finder as $file) {
             $this->addFile($phar, $file);
         }
@@ -85,6 +84,18 @@ class Compiler
             $this->addFile($phar, $file);
         }
 
+        $finder = new Finder();
+        $finder->files()
+            ->ignoreVCS(true)
+            ->in([
+                __DIR__.'/../Templates',
+                __DIR__.'/../../vendor/doctrine/rst-parser/lib/Templates',
+                __DIR__.'/../../vendor/scrivo/highlight.php/Highlight/languages',
+            ])
+        ;
+        foreach ($finder as $file) {
+            $this->addFile($phar, $file);
+        }
 
         $this->addFile($phar, new \SplFileInfo(__DIR__.'/../../vendor/autoload.php'));
         $this->addFile($phar, new \SplFileInfo(__DIR__.'/../../vendor/composer/autoload_namespaces.php'));
