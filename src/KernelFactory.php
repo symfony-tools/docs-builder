@@ -44,8 +44,8 @@ final class KernelFactory
             );
         }
 
-        $twig = $configuration->getTemplateRenderer()->getTwigEnvironment();
-        $twig->addExtension(new AssetsExtension($buildContext->getHtmlOutputDir()));
+        $twig = $configuration->getTemplateEngine();
+        $twig->addExtension(new AssetsExtension($buildContext->getOutputDir()));
 
         return new Kernel(
             $configuration,

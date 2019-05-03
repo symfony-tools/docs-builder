@@ -3,14 +3,11 @@
 namespace SymfonyDocsBuilder\Listener;
 
 use Doctrine\Common\EventManager;
-use Doctrine\RST\Event\PostBuildRenderEvent;
 use Doctrine\RST\Event\PostParseDocumentEvent;
 use Doctrine\RST\Event\PreBuildParseEvent;
 use Doctrine\RST\Event\PreBuildRenderEvent;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Filesystem\Filesystem;
-use SymfonyDocsBuilder\BuildContext;
 
 class BuildProgressListener
 {

@@ -121,8 +121,6 @@ class BuildDocsCommand extends Command
 
         $buildErrors = $builder->getErrorManager()->getErrors();
 
-        $this->io->success('HTML rendering complete!');
-
         $missingFiles = $this->missingFilesChecker->getMissingFiles();
         foreach ($missingFiles as $missingFile) {
             $message = sprintf('Missing file "%s"', $missingFile);
@@ -147,7 +145,7 @@ class BuildDocsCommand extends Command
 
         $this->io->newLine(2);
 
-        $successMessage = 'Parse process complete';
+        $successMessage = 'Build complete!';
         $this->io->success($successMessage);
     }
 
