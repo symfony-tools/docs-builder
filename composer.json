@@ -12,16 +12,17 @@
         "ext-json": "*",
         "ext-curl": "*",
         "doctrine/rst-parser": "dev-master",
+        "guzzlehttp/guzzle": "~6.0",
         "scrivo/highlight.php": "v9.12.0.5",
-        "symfony/phpunit-bridge": "^4.1",
         "symfony/filesystem": "^4.1",
+        "symfony/finder": "^4.1",
         "symfony/dom-crawler": "^4.1",
         "symfony/css-selector": "^4.1",
         "symfony/console": "^4.1"
     },
     "require-dev": {
         "gajus/dindent": "^2.0",
-        "symfony/finder": "^4.1",
-        "guzzlehttp/guzzle": "~6.0"
+        "symfony/phpunit-bridge": "^4.1",
+        "symfony/process": "^4.2"
     }
 }
