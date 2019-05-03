@@ -1,4 +1,5 @@
 /vendor/
 /tests/_output
+/tests/_cache
 /var/
 /docs.phar

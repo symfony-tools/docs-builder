@@ -24,7 +24,7 @@ class BuildDocsCommandTest extends TestCase
         $output = $this->executeCommand(
             $buildContext,
             [
-                'source-dir' => __DIR__.'/../tests/fixtures/source/main',
+                'source-dir' => __DIR__.'/../fixtures/source/main',
                 'output-dir' => $outputDir,
             ]
         );
@@ -36,7 +36,7 @@ class BuildDocsCommandTest extends TestCase
         $output = $this->executeCommand(
             $buildContext,
             [
-                'source-dir' => __DIR__.'/../tests/fixtures/source/main',
+                'source-dir' => __DIR__.'/../fixtures/source/main',
                 'output-dir' => $outputDir,
             ]
         );

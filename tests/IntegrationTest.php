@@ -277,7 +277,6 @@ class IntegrationTest extends TestCase
     private function createBuildContext(string $sourceDir): BuildContext
     {
         $buildContext = new BuildContext(
-            realpath(__DIR__.'/..'),
             '4.0',
             'https://api.symfony.com/4.0',
             'https://secure.php.net/manual/en',
@@ -288,6 +287,7 @@ class IntegrationTest extends TestCase
             __DIR__.'/_output',
             null
         );
+        $buildContext->setCacheDirectory(__DIR__.'/_cache');
 
         return $buildContext;
     }

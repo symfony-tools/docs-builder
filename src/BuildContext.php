@@ -14,6 +14,7 @@ class BuildContext
     private $outputDir;
     private $parseSubPath;
     private $disableCache = false;
+    private $cacheDirectory;
 
     public function __construct(
         string $symfonyVersion,
@@ -86,7 +87,12 @@ class BuildContext
 
     public function getCacheDir(): string
     {
-        return $this->getSourceDir().'/.cache';
+        return $this->cacheDirectory ?: $this->getOutputDir().'/.cache';
+    }
+
+    public function setCacheDirectory(string $cacheDirectory)
+    {
+        $this->cacheDirectory = $cacheDirectory;
     }
 
     private function checkThatRuntimeConfigIsInitialized()
