@@ -123,14 +123,6 @@ class BuildDocsCommand extends Command
         $this->io->newLine(2);
 
         $successMessage = 'Parse process complete';
-
-        if (!$this->buildContext->getDisableCache()) {
-            $successMessage = sprintf(
-                '%s (%d files were loaded from cache)',
-                $successMessage,
-                $this->finder->count() - count($this->builder->getDocuments()->getAll())
-            );
-        }
         $this->io->success($successMessage);
     }
 

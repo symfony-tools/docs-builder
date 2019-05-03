@@ -29,7 +29,7 @@ class BuildDocsCommandTest extends TestCase
             ]
         );
 
-        $this->assertContains('[OK] Parse process complete (0 files were loaded from cache)', $output);
+        $this->assertContains('[OK] Parse process complete', $output);
 
         $this->assertTrue($filesystem->exists(sprintf('%s/_images/symfony-logo.png', $outputDir)));
 
@@ -40,7 +40,7 @@ class BuildDocsCommandTest extends TestCase
                 'output-dir' => $outputDir,
             ]
         );
-        $this->assertContains('[OK] Parse process complete (3 files were loaded from cache)', $output);
+        $this->assertContains('[OK] Parse process complete', $output);
     }
 
     public function testBuildDocsForPdf()
