@@ -2,39 +2,39 @@
 
 namespace SymfonyDocsBuilder\Command;
 
+use Doctrine\Common\EventManager;
+use Doctrine\RST\Builder;
 use Doctrine\RST\Event\PostBuildRenderEvent;
-use Doctrine\RST\Meta\CachedMetasLoader;
 use Doctrine\RST\Meta\Metas;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
 use SymfonyDocsBuilder\BuildContext;
 use SymfonyDocsBuilder\CI\MissingFilesChecker;
 use SymfonyDocsBuilder\Generator\HtmlForPdfGenerator;
 use SymfonyDocsBuilder\Generator\JsonGenerator;
+use SymfonyDocsBuilder\KernelFactory;
+use SymfonyDocsBuilder\Listener\BuildProgressListener;
 use SymfonyDocsBuilder\Listener\CopyImagesDirectoryListener;
 
 class BuildDocsCommand extends Command
 {
-    use CommandInitializerTrait;
-
     protected static $defaultName = 'build:docs';
 
+    private $buildContext;
     private $missingFilesChecker;
+    /** @var SymfonyStyle */
+    private $io;
 
     public function __construct(BuildContext $buildContext)
     {
         parent::__construct(self::$defaultName);
 
-        $this->filesystem   = new Filesystem();
-        $this->finder       = new Finder();
         $this->buildContext = $buildContext;
-
         $this->missingFilesChecker = new MissingFilesChecker($buildContext);
     }
 
@@ -75,26 +75,50 @@ class BuildDocsCommand extends Command
 
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        if ($input->getOption('parse-sub-path') && $input->getOption('output-json')) {
-            throw new \InvalidArgumentException(sprintf('Cannot pass both --parse-sub-path and --output-json options.'));
+        $this->io = new SymfonyStyle($input, $output);
+
+        $sourceDir = $input->getArgument('source-dir');
+        if (!file_exists($sourceDir)) {
+            throw new \InvalidArgumentException(sprintf('RST source directory "%s" does not exist', $sourceDir));
         }
 
+        $filesystem = new Filesystem();
+        $htmlOutputDir = $input->getArgument('output-dir') ?? $sourceDir.'/html';
+        if ($input->getOption('disable-cache') && $filesystem->exists($htmlOutputDir)) {
+            $filesystem->remove($htmlOutputDir);
+        }
 
-        $sourceDir = $this->initializeSourceDir($input, $this->filesystem);
-        $outputDir = $input->getArgument('output-dir') ?? $sourceDir.'/html';
+        $parseSubPath = $input->getOption('parse-sub-path');
+        if ($parseSubPath && $input->getOption('output-json')) {
+            throw new \InvalidArgumentException('Cannot pass both --parse-sub-path and --output-json options.');
+        }
 
-        $this->doInitialize($input, $output, $sourceDir, $outputDir);
+        if (!file_exists($sourceDir.'/'.$parseSubPath)) {
+            throw new \InvalidArgumentException(sprintf('Given "parse-sub-path" directory "%s" does not exist', $parseSubPath));
+        }
 
-        $this->builder->getConfiguration()->getEventManager()->addEventListener(
-            PostBuildRenderEvent::POST_BUILD_RENDER,
-            new CopyImagesDirectoryListener($this->buildContext)
+        $this->buildContext->initializeRuntimeConfig(
+            $sourceDir,
+            $htmlOutputDir,
+            $parseSubPath,
+            $input->getOption('disable-cache')
         );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->startBuild();
-        $buildErrors = $this->builder->getErrorManager()->getErrors();
+        $builder = new Builder(
+            KernelFactory::createKernel($this->buildContext, $this->urlChecker ?? null)
+        );
+
+        $this->initializeListeners($builder->getConfiguration()->getEventManager());
+
+        $builder->build(
+            $this->buildContext->getSourceDir(),
+            $this->buildContext->getOutputDir()
+        );
+
+        $buildErrors = $builder->getErrorManager()->getErrors();
 
         $this->io->success('HTML rendering complete!');
 
@@ -113,7 +137,7 @@ class BuildDocsCommand extends Command
             file_put_contents($logPath, implode("\n", $buildErrors));
         }
 
-        $metas = $this->getMetas();
+        $metas = $builder->getMetas();
         if ($this->buildContext->getParseSubPath()) {
             $this->renderDocForPDF($metas);
         } elseif ($input->getOption('output-json')) {
@@ -129,11 +153,9 @@ class BuildDocsCommand extends Command
     private function generateJson(Metas $metas)
     {
         $this->io->note('Start exporting doc into json files');
-        $this->progressBar = new ProgressBar($this->output, $this->finder->count());
 
         $jsonGenerator = new JsonGenerator($metas, $this->buildContext);
         $jsonGenerator->setOutput($this->io);
-        $jsonGenerator->generateJson($this->progressBar);
     }
 
     private function renderDocForPDF(Metas $metas)
@@ -142,15 +164,14 @@ class BuildDocsCommand extends Command
         $htmlForPdfGenerator->generateHtmlForPdf();
     }
 
-    public function preBuildRender()
+    private function initializeListeners(EventManager $eventManager)
     {
-        $this->doPreBuildRender();
+        $eventManager->addEventListener(
+            PostBuildRenderEvent::POST_BUILD_RENDER,
+            new CopyImagesDirectoryListener($this->buildContext)
+        );
 
-        $this->io->note('Start rendering in HTML...');
-    }
-
-    private function getMetas(): Metas
-    {
-        return $this->builder->getMetas();
+        $progressListener = new BuildProgressListener($this->io);
+        $progressListener->attachListeners($eventManager);
     }
 }

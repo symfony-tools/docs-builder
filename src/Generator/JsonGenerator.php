@@ -6,6 +6,7 @@ use Doctrine\RST\Environment;
 use Doctrine\RST\Meta\MetaEntry;
 use Doctrine\RST\Meta\Metas;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
@@ -27,9 +28,12 @@ class JsonGenerator
         $this->buildContext = $buildContext;
     }
 
-    public function generateJson(ProgressBar $progressBar)
+    public function generateJson()
     {
         $fs = new Filesystem();
+
+        $progressBar = new ProgressBar($this->output ?: new NullOutput());
+        $progressBar->setMaxSteps(count($this->metas->getAll()));
 
         foreach ($this->metas->getAll() as $filename => $metaEntry) {
             $parserFilename = $filename;

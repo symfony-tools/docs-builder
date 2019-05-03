@@ -21,12 +21,6 @@ trait CommandInitializerTrait
 {
     /** @var BuildContext */
     private $buildContext;
-    /** @var SymfonyStyle */
-    private $io;
-    /** @var OutputInterface */
-    private $output;
-    /** @var InputInterface */
-    private $input;
     /** @var Builder */
     private $builder;
     /** @var Filesystem */
@@ -42,91 +36,14 @@ trait CommandInitializerTrait
 
     private function doInitialize(InputInterface $input, OutputInterface $output, string $sourceDir, string $outputDir)
     {
-        $this->io     = new SymfonyStyle($input, $output);
-        $this->input  = $input;
-        $this->output = $output;
-
-        $this->buildContext->initializeRuntimeConfig(
-            $sourceDir,
-            $this->initializeHtmlOutputDir($this->filesystem, $outputDir),
-            $this->initializeParseSubPath($input, $sourceDir),
-            $this->isCacheDisabled()
-        );
-
-        $this->builder = new Builder(
-            KernelFactory::createKernel($this->buildContext, $this->urlChecker ?? null)
-        );
-
         $this->eventManager = $this->builder->getConfiguration()->getEventManager();
 
         $this->initializeProgressBarEventListeners();
     }
 
-    private function initializeSourceDir(InputInterface $input, Filesystem $filesystem): string
-    {
-        $sourceDir = rtrim($this->getRealAbsolutePath($input->getArgument('source-dir'), $filesystem), '/');
-        if (!$filesystem->exists($sourceDir)) {
-            throw new \InvalidArgumentException(sprintf('RST source directory "%s" does not exist', $sourceDir));
-        }
-
-        return $sourceDir;
-    }
-
-    private function initializeHtmlOutputDir(Filesystem $filesystem, string $path): string
-    {
-        $htmlOutputDir = rtrim($this->getRealAbsolutePath($path, $filesystem), '/');
-        if ($this->isCacheDisabled() && $filesystem->exists($htmlOutputDir)) {
-            $filesystem->remove($htmlOutputDir);
-        }
-
-        return $htmlOutputDir;
-    }
-
-    private function initializeParseSubPath(InputInterface $input, string $sourceDir): string
-    {
-        if (!$input->hasOption('parse-sub-path')) {
-            return '';
-        }
-
-        if ($parseSubPath = trim($input->getOption('parse-sub-path'), '/')) {
-            $absoluteParseSubPath = sprintf(
-                '%s/%s',
-                $sourceDir,
-                $parseSubPath
-            );
-
-            if (!$this->filesystem->exists($absoluteParseSubPath) || !is_dir($absoluteParseSubPath)) {
-                throw new \InvalidArgumentException(sprintf('Given "parse-sub-path" directory "%s" does not exist', $parseSubPath));
-            }
-        }
-
-        return $parseSubPath;
-    }
-
-    private function getRealAbsolutePath(string $path, Filesystem $filesystem): string
-    {
-        return sprintf(
-            '/%s',
-            rtrim(
-                $filesystem->makePathRelative($path, '/'),
-                '/'
-            )
-        );
-    }
-
     private function initializeProgressBarEventListeners(): void
     {
-        // sets up the "parsing" progress bar
-        $this->eventManager->addEventListener(
-            [PreBuildParseEvent::PRE_BUILD_PARSE],
-            $this
-        );
 
-        // advances "parsing" progress bar
-        $this->eventManager->addEventListener(
-            [PostParseDocumentEvent::POST_PARSE_DOCUMENT],
-            $this
-        );
 
         // tries to handle progress bar for "rendering"
         $this->eventManager->addEventListener(
@@ -194,11 +111,6 @@ trait CommandInitializerTrait
         foreach ($filesNotExistingInCurrentVersion as $file) {
             $this->filesystem->remove($file);
         }
-    }
-
-    private function isCacheDisabled(): bool
-    {
-        return $this->input->hasOption('disable-cache') && (bool) $this->input->getOption('disable-cache');
     }
 
     /**
