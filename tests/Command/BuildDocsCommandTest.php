@@ -15,7 +15,7 @@ class BuildDocsCommandTest extends TestCase
     public function testBuildDocsFoo()
     {
         $buildContext = $this->createBuildContext();
-        $outputDir    = sprintf('%s/tests/_output', $buildContext->getBasePath());
+        $outputDir    = __DIR__.'/../_output';
 
         $filesystem = new Filesystem();
         $filesystem->remove($outputDir);
@@ -24,7 +24,7 @@ class BuildDocsCommandTest extends TestCase
         $output = $this->executeCommand(
             $buildContext,
             [
-                'source-dir' => sprintf('%s/tests/fixtures/source/main', $buildContext->getBasePath()),
+                'source-dir' => __DIR__.'/../tests/fixtures/source/main',
                 'output-dir' => $outputDir,
             ]
         );
@@ -36,7 +36,7 @@ class BuildDocsCommandTest extends TestCase
         $output = $this->executeCommand(
             $buildContext,
             [
-                'source-dir' => sprintf('%s/tests/fixtures/source/main', $buildContext->getBasePath()),
+                'source-dir' => __DIR__.'/../tests/fixtures/source/main',
                 'output-dir' => $outputDir,
             ]
         );
@@ -46,7 +46,7 @@ class BuildDocsCommandTest extends TestCase
     public function testBuildDocsForPdf()
     {
         $buildContext = $this->createBuildContext();
-        $outputDir    = sprintf('%s/tests/_output', $buildContext->getBasePath());
+        $outputDir    = __DIR__.'/../_output';
 
         $fs = new Filesystem();
         if ($fs->exists($outputDir)) {
@@ -56,7 +56,7 @@ class BuildDocsCommandTest extends TestCase
         $output = $this->executeCommand(
             $buildContext,
             [
-                'source-dir'       => sprintf('%s/tests/fixtures/source/build-pdf', $buildContext->getBasePath()),
+                'source-dir'       => __DIR__.'/../fixtures/source/build-pdf',
                 'output-dir'       => $outputDir,
                 '--parse-sub-path' => 'book',
             ]
@@ -93,7 +93,6 @@ class BuildDocsCommandTest extends TestCase
     private function createBuildContext(): BuildContext
     {
         $buildContext = new BuildContext(
-            realpath(__DIR__.'/../..'),
             '4.0',
             'https://api.symfony.com/4.0',
             'https://secure.php.net/manual/en',

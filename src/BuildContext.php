@@ -4,7 +4,6 @@ namespace SymfonyDocsBuilder;
 
 class BuildContext
 {
-    private $basePath;
     private $symfonyVersion;
     private $symfonyApiUrl;
     private $phpDocUrl;
@@ -17,13 +16,11 @@ class BuildContext
     private $disableCache = false;
 
     public function __construct(
-        string $basePath,
         string $symfonyVersion,
         string $symfonyApiUrl,
         string $phpDocUrl,
         string $symfonyDocUrl
     ) {
-        $this->basePath       = $basePath;
         $this->symfonyVersion = $symfonyVersion;
         $this->symfonyApiUrl  = $symfonyApiUrl;
         $this->phpDocUrl      = $phpDocUrl;
@@ -37,11 +34,6 @@ class BuildContext
         $this->parseSubPath       = $parseSubPath;
         $this->disableCache       = $disableCache;
         $this->runtimeInitialized = true;
-    }
-
-    public function getBasePath(): string
-    {
-        return $this->basePath;
     }
 
     public function getSymfonyVersion(): string
@@ -90,6 +82,11 @@ class BuildContext
         $this->checkThatRuntimeConfigIsInitialized();
 
         return $this->disableCache;
+    }
+
+    public function getCacheDir(): string
+    {
+        return $this->getSourceDir().'/.cache';
     }
 
     private function checkThatRuntimeConfigIsInitialized()

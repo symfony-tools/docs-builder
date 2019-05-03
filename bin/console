@@ -19,5 +19,9 @@ use SymfonyDocsBuilder\Application;
 $input       = new ArgvInput();
 $version = $input->getParameterOption(['--symfony-version'], false === getenv('SYMFONY_VERSION') ? 'master' : getenv('SYMFONY_VERSION'));
 
+if (!$version) {
+    throw new \Exception('Please pass a --symfony-version= flag or set a SYMFONY_VERSION environment variable to 4.0, master, etc.');
+}
+
 $application = new Application($version);
 $application->run($input);

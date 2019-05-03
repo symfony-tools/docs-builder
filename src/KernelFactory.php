@@ -16,8 +16,8 @@ final class KernelFactory
     public static function createKernel(BuildContext $buildContext, ?UrlChecker $urlChecker = null): Kernel
     {
         $configuration = new RSTParserConfiguration();
-        $configuration->setCustomTemplateDirs([sprintf('%s/src/Templates', $buildContext->getBasePath())]);
-        $configuration->setCacheDir(sprintf('%s/var/cache', $buildContext->getBasePath()));
+        $configuration->setCustomTemplateDirs([__DIR__.'/Templates']);
+        $configuration->setCacheDir(sprintf('%s/var/cache', $buildContext->getCacheDir()));
         $configuration->abortOnError(false);
 
         if ($buildContext->getDisableCache()) {
@@ -55,6 +55,7 @@ final class KernelFactory
             new SymfonyDirectives\CautionDirective(),
             new SymfonyDirectives\CodeBlockDirective(),
             new SymfonyDirectives\ConfigurationBlockDirective(),
+            new SymfonyDirectives\DeprecatedDirective(),
             new SymfonyDirectives\IndexDirective(),
             new SymfonyDirectives\RoleDirective(),
             new SymfonyDirectives\NoteDirective(),

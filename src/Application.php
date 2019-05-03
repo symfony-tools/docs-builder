@@ -17,9 +17,12 @@ class Application
     {
         $this->application = new BaseApplication();
 
-        $configuration   = $this->getSymfonyDocConfiguration($basePath = getcwd());
+        $configuration   = [
+            'symfony_api_url' => "https://api.symfony.com/%s",
+            'php_doc_url' => "https://secure.php.net/manual/en",
+            'symfony_doc_url' => "https://symfony.com/doc/%s",
+        ];
         $this->buildContext = new BuildContext(
-            $basePath,
             $symfonyVersion,
             sprintf($configuration['symfony_api_url'], $symfonyVersion),
             $configuration['php_doc_url'],
@@ -38,13 +41,7 @@ class Application
         );
         $this->application->getDefinition()->addOption($inputOption);
         $this->application->add(new BuildDocsCommand($this->buildContext));
-        $this->application->add(new CheckUrlsCommand($this->buildContext));
 
         return $this->application->run($input);
-    }
-
-    private function getSymfonyDocConfiguration(string $basePath): array
-    {
-        return json_decode(file_get_contents(sprintf('%s/conf.json', $basePath)), true);
     }
 }
