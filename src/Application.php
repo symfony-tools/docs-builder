@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace SymfonyDocsBuilder;
 
@@ -17,7 +17,7 @@ class Application
     {
         $this->application = new BaseApplication();
 
-        $configuration   = $this->getSymfonyDocConfiguration($basePath = realpath(__DIR__.'/..'));
+        $configuration   = $this->getSymfonyDocConfiguration($basePath = getcwd());
         $this->buildContext = new BuildContext(
             $basePath,
             $symfonyVersion,
