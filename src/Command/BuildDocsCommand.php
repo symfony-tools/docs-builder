@@ -155,6 +155,7 @@ class BuildDocsCommand extends Command
 
         $jsonGenerator = new JsonGenerator($metas, $this->buildContext);
         $jsonGenerator->setOutput($this->io);
+        $jsonGenerator->generateJson();
     }
 
     private function renderDocForPDF(Metas $metas)
