@@ -133,7 +133,8 @@ class BuildDocsCommand extends Command
                 array_unshift($buildErrors, sprintf('Build errors from "%s"', date('Y-m-d h:i:s')));
             }
 
-            file_put_contents($logPath, implode("\n", $buildErrors));
+            $filesystem = new Filesystem();
+            $filesystem->dumpFile($logPath, implode("\n", $buildErrors));
         }
 
         $metas = $builder->getMetas();
