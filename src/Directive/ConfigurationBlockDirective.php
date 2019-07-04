@@ -26,7 +26,7 @@ class ConfigurationBlockDirective extends SubDirective
             $language = $node->getLanguage() ?? 'Unknown';
 
             $blocks[] = [
-                'language' => strtoupper($language),
+                'language' => $this->formatLanguageTab($language),
                 'code'     => $node->render(),
             ];
         }
@@ -39,5 +39,22 @@ class ConfigurationBlockDirective extends SubDirective
         );
 
         return $parser->getNodeFactory()->createWrapperNode(null, $wrapperDiv, '</div>');
+    }
+
+    /**
+     * A hack to print exactly what we want in the tab of a configuration block
+     */
+    private function formatLanguageTab(string $language): string
+    {
+        switch ($language) {
+            case 'php-annotations':
+                return 'Annotations';
+            case 'xml':
+            case 'yaml':
+            case 'php':
+                return strtoupper($language);
+            default:
+                return $language;
+        }
     }
 }
