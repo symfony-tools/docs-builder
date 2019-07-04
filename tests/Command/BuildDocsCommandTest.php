@@ -12,7 +12,7 @@ use SymfonyDocsBuilder\Command\BuildDocsCommand;
 
 class BuildDocsCommandTest extends TestCase
 {
-    public function testBuildDocsFoo()
+    public function testBuildDocsDefault()
     {
         $buildContext = $this->createBuildContext();
         $outputDir    = __DIR__.'/../_output';
@@ -29,7 +29,7 @@ class BuildDocsCommandTest extends TestCase
             ]
         );
 
-        $this->assertContains('[OK] Parse process complete', $output);
+        $this->assertContains('[OK] Build complete', $output);
 
         $this->assertTrue($filesystem->exists(sprintf('%s/_images/symfony-logo.png', $outputDir)));
 
@@ -40,7 +40,7 @@ class BuildDocsCommandTest extends TestCase
                 'output-dir' => $outputDir,
             ]
         );
-        $this->assertContains('[OK] Parse process complete', $output);
+        $this->assertContains('[OK] Build complete', $output);
     }
 
     public function testBuildDocsForPdf()
@@ -78,7 +78,7 @@ class BuildDocsCommandTest extends TestCase
             $indenter->indent(file_get_contents(sprintf('%s/book.html', $outputDir)))
         );
 
-        $this->assertContains('[OK] Parse process complete', $output);
+        $this->assertContains('[OK] Build complete', $output);
     }
 
     private function executeCommand(BuildContext $buildContext, array $input): string
