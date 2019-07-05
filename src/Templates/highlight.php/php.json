@@ -108,14 +108,16 @@
             "$ref": "#contains.1.contains.0"
         },
         {
-            "className": "keyword",
+            "className": "variable",
             "begin": "\\$this\\b"
         },
         {
+            "className": "variable",
             "begin": "\\$+[a-zA-Z_-ÿ][a-zA-Z0-9_-ÿ]*"
         },
         {
-            "begin": "(::|->)+[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*"
+            "className": "operator",
+            "begin": "(::|->)"
         },
         {
             "className": "function",
