@@ -59,6 +59,7 @@ class CodeNodeRenderer implements NodeRenderer
 
         if ('text' !== $language) {
             $highLighter = new Highlighter();
+            Highlighter::registerLanguage('php', __DIR__.'/../Templates/highlight.php/pjp.json', true);
             $code        = $highLighter->highlight(self::LANGUAGES_MAPPING[$language] ?? $language, $code)->value;
         }
 
