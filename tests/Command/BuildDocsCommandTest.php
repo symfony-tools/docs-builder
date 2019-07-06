@@ -83,6 +83,7 @@ class BuildDocsCommandTest extends TestCase
 
     private function executeCommand(BuildContext $buildContext, array $input): string
     {
+        $input['--no-theme'] = true;
         $command       = new BuildDocsCommand($buildContext);
         $commandTester = new CommandTester($command);
         $commandTester->execute($input);

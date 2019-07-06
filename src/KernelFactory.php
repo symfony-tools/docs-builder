@@ -20,6 +20,7 @@ final class KernelFactory
     {
         $configuration = new RSTParserConfiguration();
         $configuration->setCustomTemplateDirs([__DIR__.'/Templates']);
+        $configuration->setTheme($buildContext->getTheme());
         $configuration->setCacheDir(sprintf('%s/var/cache', $buildContext->getCacheDir()));
         $configuration->abortOnError(false);
 

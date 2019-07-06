@@ -2,6 +2,8 @@
 
 namespace SymfonyDocsBuilder;
 
+use Doctrine\RST\Configuration;
+
 class BuildContext
 {
     private $symfonyVersion;
@@ -14,6 +16,7 @@ class BuildContext
     private $outputDir;
     private $parseSubPath;
     private $disableCache = false;
+    private $theme;
     private $cacheDirectory;
 
     public function __construct(
@@ -28,12 +31,13 @@ class BuildContext
         $this->symfonyDocUrl  = $symfonyDocUrl;
     }
 
-    public function initializeRuntimeConfig(string $sourceDir, string $outputDir, ?string $parseSubPath = null, bool $disableCache = false)
+    public function initializeRuntimeConfig(string $sourceDir, string $outputDir, ?string $parseSubPath = null, bool $disableCache = false, string $theme = Configuration::THEME_DEFAULT)
     {
         $this->sourceDir          = $sourceDir;
         $this->outputDir          = $outputDir;
         $this->parseSubPath       = $parseSubPath;
         $this->disableCache       = $disableCache;
+        $this->theme              = $theme;
         $this->runtimeInitialized = true;
     }
 
@@ -83,6 +87,13 @@ class BuildContext
         $this->checkThatRuntimeConfigIsInitialized();
 
         return $this->disableCache;
+    }
+
+    public function getTheme(): string
+    {
+        $this->checkThatRuntimeConfigIsInitialized();
+
+        return $this->theme;
     }
 
     public function getCacheDir(): string

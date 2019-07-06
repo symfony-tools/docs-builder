@@ -4,6 +4,7 @@ namespace SymfonyDocsBuilder\Command;
 
 use Doctrine\Common\EventManager;
 use Doctrine\RST\Builder;
+use Doctrine\RST\Configuration;
 use Doctrine\RST\Event\PostBuildRenderEvent;
 use Doctrine\RST\Meta\Metas;
 use Symfony\Component\Console\Command\Command;
@@ -71,6 +72,12 @@ class BuildDocsCommand extends Command
                 InputOption::VALUE_REQUIRED,
                 'Path where any errors should be saved'
             )
+            ->addOption(
+                'no-theme',
+                null,
+                InputOption::VALUE_NONE,
+                'Use the default theme instead of the styled one'
+            )
         ;
     }
 
@@ -102,7 +109,8 @@ class BuildDocsCommand extends Command
             $sourceDir,
             $htmlOutputDir,
             $parseSubPath,
-            $input->getOption('disable-cache')
+            $input->getOption('disable-cache'),
+            $input->getOption('no-theme') ? Configuration::THEME_DEFAULT : 'rtd'
         );
     }
 

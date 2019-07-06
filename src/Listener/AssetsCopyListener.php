@@ -18,7 +18,7 @@ final class AssetsCopyListener
     {
         $fs = new Filesystem();
         $fs->mirror(
-            sprintf('%s/../Templates/default/assets', __DIR__),
+            sprintf('%s/../Templates/rtd/assets', __DIR__),
             sprintf('%s/assets', $this->targetDir)
         );
     }
