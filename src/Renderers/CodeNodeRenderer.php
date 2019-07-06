@@ -11,6 +11,8 @@ use Highlight\Highlighter;
 
 class CodeNodeRenderer implements NodeRenderer
 {
+    private static $isHighlighterConfigured = false;
+
     private const LANGUAGES_MAPPING = [
         'html+jinja'      => 'twig',
         'html+twig'       => 'twig',
@@ -41,6 +43,8 @@ class CodeNodeRenderer implements NodeRenderer
 
     public function render(): string
     {
+        $this->configureHighlighter();
+
         $value = $this->codeNode->getValue();
 
         if ($this->codeNode->isRaw()) {
@@ -59,7 +63,6 @@ class CodeNodeRenderer implements NodeRenderer
 
         if ('text' !== $language) {
             $highLighter = new Highlighter();
-            Highlighter::registerLanguage('php', __DIR__.'/../Templates/highlight.php/pjp.json', true);
             $code        = $highLighter->highlight(self::LANGUAGES_MAPPING[$language] ?? $language, $code)->value;
         }
 
@@ -102,5 +105,15 @@ class CodeNodeRenderer implements NodeRenderer
         }
 
         return array_reverse($reversedLines);
+    }
+
+    private function configureHighlighter()
+    {
+        if (false === self::$isHighlighterConfigured) {
+            Highlighter::registerLanguage('php', __DIR__.'/../Templates/highlight.php/php.json', true);
+            Highlighter::registerLanguage('twig', __DIR__.'/../Templates/highlight.php/twig.json', true);
+        }
+
+        self::$isHighlighterConfigured = true;
     }
 }
