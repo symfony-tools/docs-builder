@@ -1,0 +1,20 @@
+<span class="hljs-comment">// src/Controller/BlogController.php</span>
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">App</span>\<span class="hljs-title">Controller</span>;
+
+<span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Bundle</span>\<span class="hljs-title">FrameworkBundle</span>\<span class="hljs-title">Controller</span>\<span class="hljs-title">AbstractController</span>;
+<span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">Routing</span>\<span class="hljs-title">Annotation</span>\<span class="hljs-title">Route</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BlogController</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractController</span>
+</span>{
+    <span class="hljs-comment">/**
+     * Matches /blog exactly
+     *
+     * <span class="hljs-doctag">@Route</span>("/blog/{slug}", name="blog_list")
+     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">list</span><span class="hljs-params">(UrlGeneratorInterface <span class="hljs-variable">$urlGenerator</span>, string <span class="hljs-variable">$slug</span>)</span>
+    </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-variable">$this</span><span class="hljs-operator">-&gt;</span>render(<span class="hljs-string">'foo/bar.html.twig'</span>, [
+            <span class="hljs-string">'key'</span> =&gt; <span class="hljs-variable">$value</span>
+        ]
+    }
+}
