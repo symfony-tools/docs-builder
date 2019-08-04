@@ -117,7 +117,9 @@
         },
         {
             "className": "operator",
-            "begin": "(::|->)"
+            "begin": "(::|->)",
+            "end": "[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*",
+            "excludeEnd": true
         },
         {
             "className": "function",

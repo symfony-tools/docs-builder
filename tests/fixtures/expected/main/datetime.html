@@ -113,7 +113,7 @@ it will be used as the <strong>blank value</strong> of all select boxes:</p>
                 </td>
                 <td class="code">
                     <div class="highlight">
-                         <pre class="hljs php"><span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">Form</span>\<span class="hljs-title">Extension</span>\<span class="hljs-title">Core</span>\<span class="hljs-title">Type</span>\<span class="hljs-title">DateTimeType</span>; $builder-&gt;add(<span class="hljs-string">'startDateTime'</span>, DateTimeType::class, <span class="hljs-keyword">array</span>( <span class="hljs-string">'placeholder'</span> =&gt; <span class="hljs-string">'Select a value'</span>,
+                         <pre class="hljs php"><span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">Form</span>\<span class="hljs-title">Extension</span>\<span class="hljs-title">Core</span>\<span class="hljs-title">Type</span>\<span class="hljs-title">DateTimeType</span>; <span class="hljs-variable">$builder</span><span class="hljs-operator">-&gt;</span>add(<span class="hljs-string">'startDateTime'</span>, DateTimeType<span class="hljs-operator">::</span>class, <span class="hljs-keyword">array</span>( <span class="hljs-string">'placeholder'</span> =&gt; <span class="hljs-string">'Select a value'</span>,
 ));</pre>
                     </div>
                 </td>
@@ -307,7 +307,7 @@ with the <a href="datetime.html#date-widget" class="reference internal">date_wid
                             <td class="code">
                                 <div class="highlight">
                                     <pre class="hljs php"><span class="hljs-comment">// app/config/config.php</span>
-$container-&gt;loadFromExtension(<span class="hljs-string">'framework'</span>, <span class="hljs-keyword">array</span>( <span class="hljs-string">'secret'</span> =&gt; <span class="hljs-string">'%secret%'</span>, <span class="hljs-string">'router'</span> =&gt; <span class="hljs-keyword">array</span>( <span class="hljs-string">'resource'</span> =&gt; <span class="hljs-string">'%kernel.root_dir%/config/routing.php'</span>, ), <span class="hljs-comment">// ...</span>
+                                        <span class="hljs-variable">$container</span><span class="hljs-operator">-&gt;</span>loadFromExtension(<span class="hljs-string">'framework'</span>, <span class="hljs-keyword">array</span>( <span class="hljs-string">'secret'</span> =&gt; <span class="hljs-string">'%secret%'</span>, <span class="hljs-string">'router'</span> =&gt; <span class="hljs-keyword">array</span>( <span class="hljs-string">'resource'</span> =&gt; <span class="hljs-string">'%kernel.root_dir%/config/routing.php'</span>, ), <span class="hljs-comment">// ...</span>
 )); <span class="hljs-comment">// ...</span></pre>
                                 </div>
                             </td>

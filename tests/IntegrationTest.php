@@ -50,7 +50,7 @@ class IntegrationTest extends TestCase
             ->files()
             ->depth('>=0');
 
-        $indenter = new Indenter();
+        $indenter = $this->createIndenter();
         foreach ($finder as $expectedFile) {
             $relativePath   = $expectedFile->getRelativePathname();
             $actualFilename = __DIR__.'/_output/'.$relativePath;
@@ -126,7 +126,7 @@ class IntegrationTest extends TestCase
 
         $document = $parser->parseFile($sourceFile)->renderDocument();
 
-        $indenter = new Indenter();
+        $indenter = $this->createIndenter();
 
         $expectedFile = sprintf('%s/fixtures/expected/blocks/%s.html', __DIR__, $blockName);
         $this->assertSame(
@@ -290,5 +290,14 @@ class IntegrationTest extends TestCase
         $buildContext->setCacheDirectory(__DIR__.'/_cache');
 
         return $buildContext;
+    }
+
+    private function createIndenter(): Indenter
+    {
+        $indenter = new Indenter();
+        // indent spans - easier to debug failures
+        $indenter->setElementType('span', Indenter::ELEMENT_TYPE_BLOCK);
+
+        return $indenter;
     }
 }
