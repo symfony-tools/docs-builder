@@ -59,7 +59,7 @@ class Compiler
         $finder->files()
             ->ignoreVCS(true)
             ->name('*.php')
-            ->notName('Compiler.php')
+            ->exclude(['Release', 'Phar'])
             ->in(__DIR__.'/..')
         ;
         foreach ($finder as $file) {
