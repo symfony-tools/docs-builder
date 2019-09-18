@@ -3,6 +3,7 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
+use SymfonyDocsBuilder\Phar\Compiler;
 use SymfonyDocsBuilder\Release\GithubApiHttpClientFactory;
 use SymfonyDocsBuilder\Release\Releaser;
 
@@ -10,7 +11,7 @@ error_reporting(-1);
 ini_set('display_errors', 1);
 
 try {
-    $releaser = new Releaser(new GithubApiHttpClientFactory());
+    $releaser = new Releaser((new GithubApiHttpClientFactory())->createHttpClient(), new Compiler());
 
     if ($argc === 1) {
         throw new RuntimeException('Not enough arguments. usage: "./bin/release tag [release_name [release_description]]"');
@@ -18,7 +19,7 @@ try {
 
     array_shift($argv);
 
-    $releaser->doRelease(...$argv);
+    $releaser->createRelease(...$argv);
 } catch (Exception $e) {
     echo 'Failed to create a new release: ['.get_class($e).'] '.$e->getMessage().' at '.$e->getFile().':'.$e->getLine()."\n";
     exit(1);

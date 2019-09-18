@@ -2,10 +2,8 @@
 
 namespace SymfonyDocsBuilder\Release;
 
-use Symfony\Component\HttpClient\Exception\ClientException;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use SymfonyDocsBuilder\Phar\Compiler;
 
 class Releaser
 {
@@ -15,32 +13,25 @@ class Releaser
 
     /** @var HttpClientInterface */
     private $client;
+    private $compiler;
 
-    public function __construct(GithubApiHttpClientFactory $githubApiHttpClientFactory)
+    public function __construct(HttpClientInterface $client, Compiler $compiler)
     {
-        $this->client = $githubApiHttpClientFactory->createHttpClient();
+        $this->client   = $client;
+        $this->compiler = $compiler;
     }
 
-    public function doRelease(string $tag, string $name = 'Symfony docs builder %s', string $description = 'Symfony docs builder %s')
+    public function createRelease(string $tag, string $name = 'Symfony docs builder %s', string $description = 'Symfony docs builder %s')
     {
         if (!preg_match('/^v\d+\.\d+\.\d+$/', $tag)) {
             throw new \RuntimeException(sprintf('"%s" is not a valid tag.', $tag));
         }
 
-        $this->compilePhar();
+        $this->compiler->compile();
 
         $this->addAssetToRelease($releaseId = $this->createDraftRelease($tag, $name, $description));
 
         $this->publishRelease($releaseId);
-    }
-
-    /**
-     * @throws ProcessFailedException
-     */
-    private function compilePhar(): void
-    {
-        $process = Process::fromShellCommandline('./bin/compile', __DIR__.'/../..');
-        $process->mustRun();
     }
 
     private function createDraftRelease(string $tag, string $name, string $description): int
@@ -62,14 +53,15 @@ class Releaser
             );
 
             return (int) $response->toArray()['id'];
-        } catch (ClientException $exception) {
+        } catch (\RuntimeException $exception) {
             if (401 === $exception->getCode()) {
-                $message = 'Invalid token';
+                $message = 'Error while trying to create release: Invalid token.';
             } else {
-                $message = 'Maybe the tag name already exists?';
+                $message = 'Error while trying to create release.';
             }
 
-            throw new \RuntimeException(sprintf('Error while trying to create release: %s.', $message), 0, $exception);
+            // todo: create new exception which can be exploited in ./bin/create_release
+            throw new \RuntimeException($message, 0, $exception);
         }
     }
 
@@ -89,7 +81,7 @@ class Releaser
                     'body'    => file_get_contents(__DIR__.'/../../docs.phar'),
                 ]
             );
-        } catch (ClientException $exception) {
+        } catch (\RuntimeException $exception) {
             $this->deleteRelease($releaseId);
             throw new \RuntimeException('Error while adding asset to release.', 0, $exception);
         }
@@ -107,9 +99,9 @@ class Releaser
                     ],
                 ]
             );
-        } catch (ClientException $exception) {
+        } catch (\RuntimeException $exception) {
             $this->deleteRelease($releaseId);
-            throw new \RuntimeException('Error while publishing release.', 0, $exception);
+            throw new \RuntimeException('Error while publishing release. Maybe the tag name already exists?', 0, $exception);
         }
     }
 
@@ -120,7 +112,7 @@ class Releaser
                 'DELETE',
                 sprintf('https://api.github.com/repos/%s/%s/releases/%s', self::GITHUB_USER, self::GITHUB_REPO, $releaseId)
             );
-        } catch (ClientException $exception) {
+        } catch (\RuntimeException $exception) {
             throw new \RuntimeException('Error while deleting release.', 0, $exception);
         }
     }
