@@ -2,8 +2,10 @@
 
 namespace SymfonyDocsBuilder\Release;
 
+use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use SymfonyDocsBuilder\Phar\Compiler;
+use SymfonyDocsBuilder\Release\Exception\ReleaseFailed;
 
 class Releaser
 {
@@ -21,7 +23,7 @@ class Releaser
         $this->compiler = $compiler;
     }
 
-    public function createRelease(string $tag, string $name = 'Symfony docs builder %s', string $description = 'Symfony docs builder %s')
+    public function createRelease(string $tag, string $name = 'Symfony docs builder %s', string $description = 'Symfony docs builder %s'): void
     {
         if (!preg_match('/^v\d+\.\d+\.\d+$/', $tag)) {
             throw new \RuntimeException(sprintf('"%s" is not a valid tag.', $tag));
@@ -53,15 +55,8 @@ class Releaser
             );
 
             return (int) $response->toArray()['id'];
-        } catch (\RuntimeException $exception) {
-            if (401 === $exception->getCode()) {
-                $message = 'Error while trying to create release: Invalid token.';
-            } else {
-                $message = 'Error while trying to create release.';
-            }
-
-            // todo: create new exception which can be exploited in ./bin/create_release
-            throw new \RuntimeException($message, 0, $exception);
+        } catch (HttpExceptionInterface $exception) {
+            throw ReleaseFailed::whileCreatingDraft($exception);
         }
     }
 
@@ -81,9 +76,8 @@ class Releaser
                     'body'    => file_get_contents(__DIR__.'/../../docs.phar'),
                 ]
             );
-        } catch (\RuntimeException $exception) {
-            $this->deleteRelease($releaseId);
-            throw new \RuntimeException('Error while adding asset to release.', 0, $exception);
+        } catch (HttpExceptionInterface $exception) {
+            $this->deleteRelease($releaseId, ReleaseFailed::whileAttachingAssetToRelease($exception));
         }
     }
 
@@ -99,21 +93,22 @@ class Releaser
                     ],
                 ]
             );
-        } catch (\RuntimeException $exception) {
-            $this->deleteRelease($releaseId);
-            throw new \RuntimeException('Error while publishing release. Maybe the tag name already exists?', 0, $exception);
+        } catch (HttpExceptionInterface $exception) {
+            $this->deleteRelease($releaseId, ReleaseFailed::whilePublishingRelease($exception));
         }
     }
 
-    private function deleteRelease(int $releaseId): void
+    private function deleteRelease(int $releaseId, ReleaseFailed $previous): void
     {
         try {
             $this->client->request(
                 'DELETE',
                 sprintf('https://api.github.com/repos/%s/%s/releases/%s', self::GITHUB_USER, self::GITHUB_REPO, $releaseId)
             );
-        } catch (\RuntimeException $exception) {
-            throw new \RuntimeException('Error while deleting release.', 0, $exception);
+        } catch (HttpExceptionInterface $exception) {
+            throw new DeleteReleaseFailed($previous, $exception);
         }
+
+        throw $previous;
     }
 }

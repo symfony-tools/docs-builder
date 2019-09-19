@@ -4,6 +4,7 @@
 require __DIR__.'/../vendor/autoload.php';
 
 use SymfonyDocsBuilder\Phar\Compiler;
+use SymfonyDocsBuilder\Release\Exception\ReleaseFailed;
 use SymfonyDocsBuilder\Release\GithubApiHttpClientFactory;
 use SymfonyDocsBuilder\Release\Releaser;
 
@@ -21,6 +22,11 @@ try {
 
     $releaser->createRelease(...$argv);
 } catch (Exception $e) {
-    echo 'Failed to create a new release: ['.get_class($e).'] '.$e->getMessage().' at '.$e->getFile().':'.$e->getLine()."\n";
+    if ($e instanceof ReleaseFailed) {
+        echo $e->toString();
+    } else {
+        echo 'Failed to create a new release: ['.get_class($e).'] '.$e->getMessage().' at '.$e->getFile().':'.$e->getLine()."\n";
+    }
+
     exit(1);
 }

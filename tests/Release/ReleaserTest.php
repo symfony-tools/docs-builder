@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use SymfonyDocsBuilder\Phar\Compiler;
+use SymfonyDocsBuilder\Release\Exception\ReleaseFailed;
 use SymfonyDocsBuilder\Release\Releaser;
 
 class ReleaserTest extends TestCase
@@ -63,7 +64,7 @@ class ReleaserTest extends TestCase
     {
         $releaser = new Releaser(new MockHttpClient([new MockResponse('', ['http_code' => 401])]), $this->createMock(Compiler::class));
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(ReleaseFailed::class);
         $this->expectExceptionMessage('Error while trying to create release: Invalid token.');
 
         $releaser->createRelease('v1.0.0');
@@ -87,7 +88,7 @@ class ReleaserTest extends TestCase
             self::fail(sprintf("Unexpected request:\n- method: %s\n- url: %s", $method, $url));
         };
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(ReleaseFailed::class);
         $this->expectExceptionMessage('Error while adding asset to release.');
 
         $releaser = new Releaser(new MockHttpClient($callback), $this->createMock(Compiler::class));
