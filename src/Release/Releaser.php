@@ -9,9 +9,8 @@ use SymfonyDocsBuilder\Release\Exception\ReleaseFailed;
 
 class Releaser
 {
-    // todo change repo
-    private const GITHUB_USER = 'nikophil';
-    private const GITHUB_REPO = 'test';
+    private const GITHUB_USER = 'weaverryan';
+    private const GITHUB_REPO = 'docs-builder';
 
     /** @var HttpClientInterface */
     private $client;

@@ -41,12 +41,12 @@ class ReleaserTest extends TestCase
         $callback = static function ($method, $url) {
             switch (true) {
                 case 'POST' === $method
-                    && 'https://api.github.com/repos/nikophil/test/releases' === $url:
+                    && 'https://api.github.com/repos/weaverryan/docs-builder/releases' === $url:
                     return new MockResponse('{"id":1}');
                 case 'POST' === $method
-                    && 'https://uploads.github.com/repos/nikophil/test/releases/1/assets?name=docs.phar' === $url:
+                    && 'https://uploads.github.com/repos/weaverryan/docs-builder/releases/1/assets?name=docs.phar' === $url:
                 case 'PATCH' === $method
-                    && 'https://api.github.com/repos/nikophil/test/releases/1' === $url:
+                    && 'https://api.github.com/repos/weaverryan/docs-builder/releases/1' === $url:
                     return new MockResponse();
             }
 
@@ -75,13 +75,13 @@ class ReleaserTest extends TestCase
         $callback = static function ($method, $url) {
             switch (true) {
                 case 'POST' === $method
-                    && 'https://api.github.com/repos/nikophil/test/releases' === $url:
+                    && 'https://api.github.com/repos/weaverryan/docs-builder/releases' === $url:
                     return new MockResponse('{"id":1}');
                 case 'POST' === $method
-                    && 'https://uploads.github.com/repos/nikophil/test/releases/1/assets?name=docs.phar' === $url:
+                    && 'https://uploads.github.com/repos/weaverryan/docs-builder/releases/1/assets?name=docs.phar' === $url:
                     return new MockResponse('', ['http_code' => 500]);
                 case 'DELETE' === $method
-                    && 'https://api.github.com/repos/nikophil/test/releases/1' === $url:
+                    && 'https://api.github.com/repos/weaverryan/docs-builder/releases/1' === $url:
                     return new MockResponse();
             }
 
