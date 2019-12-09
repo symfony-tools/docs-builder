@@ -156,6 +156,8 @@ class BuildDocsCommand extends Command
 
         $successMessage = 'Build complete!';
         $this->io->success($successMessage);
+
+        return 0;
     }
 
     private function generateJson(Metas $metas)

@@ -20,7 +20,7 @@ use SymfonyDocsBuilder\KernelFactory;
 
 class IntegrationTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $fs = new Filesystem();
         $fs->remove(__DIR__.'/../var');

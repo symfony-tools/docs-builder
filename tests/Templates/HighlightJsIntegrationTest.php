@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class HighlightJsIntegrationTest extends TestCase
 {
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         Highlighter::registerLanguage('php', __DIR__.'/../../src/Templates/highlight.php/php.json', true);
         Highlighter::registerLanguage('twig', __DIR__.'/../../src/Templates/highlight.php/twig.json', true);
