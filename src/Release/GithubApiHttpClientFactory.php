@@ -2,7 +2,6 @@
 
 namespace SymfonyDocsBuilder\Release;
 
-use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -12,11 +11,8 @@ class GithubApiHttpClientFactory
 
     public function __construct()
     {
-        $dotenv = new Dotenv();
-        $dotenv->load(__DIR__.'/../../.env');
-
-        if (empty($_SERVER['GITHUB_API_TOKEN'])) {
-            throw new \RuntimeException('Please fill "GITHUB_API_TOKEN" in file "[PROJECT_DIR]/.env"');
+        if (!isset($_SERVER['GITHUB_API_TOKEN'])) {
+            throw new \RuntimeException('Missing "GITHUB_API_TOKEN" environment variable');
         }
 
         $this->githubApiToken = $_SERVER['GITHUB_API_TOKEN'];

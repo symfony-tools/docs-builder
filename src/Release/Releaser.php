@@ -5,6 +5,7 @@ namespace SymfonyDocsBuilder\Release;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use SymfonyDocsBuilder\Phar\Compiler;
+use SymfonyDocsBuilder\Release\Exception\DeleteReleaseFailed;
 use SymfonyDocsBuilder\Release\Exception\ReleaseFailed;
 
 class Releaser

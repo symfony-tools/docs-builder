@@ -25,7 +25,6 @@
     "require-dev": {
         "gajus/dindent": "^2.0",
         "symfony/phpunit-bridge": "^4.1",
-        "symfony/process": "^4.2",
-        "symfony/dotenv": "^4.3"
+        "symfony/process": "^4.2"
     }
 }
