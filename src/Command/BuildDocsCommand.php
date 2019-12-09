@@ -91,7 +91,7 @@ class BuildDocsCommand extends Command
         }
 
         $filesystem = new Filesystem();
-        $htmlOutputDir = $input->getArgument('output-dir') ?? $sourceDir.'/html';
+        $htmlOutputDir = $input->getArgument('output-dir') ?? rtrim(getcwd(), '/').'/html';
         if ($input->getOption('disable-cache') && $filesystem->exists($htmlOutputDir)) {
             $filesystem->remove($htmlOutputDir);
         }
