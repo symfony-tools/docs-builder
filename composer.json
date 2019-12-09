@@ -19,11 +19,13 @@
         "symfony/dom-crawler": "^4.1",
         "symfony/css-selector": "^4.1",
         "symfony/console": "^4.1",
-        "twig/twig": "^2.7.3"
+        "twig/twig": "^2.7.3",
+        "symfony/http-client": "^4.3"
     },
     "require-dev": {
         "gajus/dindent": "^2.0",
         "symfony/phpunit-bridge": "^4.1",
-        "symfony/process": "^4.2"
+        "symfony/process": "^4.2",
+        "symfony/dotenv": "^4.3"
     }
 }

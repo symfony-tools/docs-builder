@@ -3,3 +3,4 @@
 /tests/_cache
 /var/
 /docs.phar
+/.env
