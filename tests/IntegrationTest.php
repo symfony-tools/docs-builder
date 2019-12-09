@@ -33,6 +33,7 @@ class IntegrationTest extends TestCase
     {
         $fs = new Filesystem();
         $fs->remove(__DIR__.'/_output');
+        $fs->mkdir(__DIR__.'/_output');
 
         $buildContext = $this->createBuildContext(sprintf('%s/fixtures/source/%s', __DIR__, $folder));
 

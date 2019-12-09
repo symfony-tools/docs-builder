@@ -33,8 +33,16 @@ class BuildContext
 
     public function initializeRuntimeConfig(string $sourceDir, string $outputDir, ?string $parseSubPath = null, bool $disableCache = false, string $theme = Configuration::THEME_DEFAULT)
     {
-        $this->sourceDir          = $sourceDir;
-        $this->outputDir          = $outputDir;
+        if (!file_exists($sourceDir)) {
+            throw new \Exception(sprintf('Source directory "%s" does not exist', $sourceDir));
+        }
+
+        if (!file_exists($outputDir)) {
+            throw new \Exception(sprintf('Output directory "%s" does not exist', $outputDir));
+        }
+
+        $this->sourceDir          = realpath($sourceDir);
+        $this->outputDir          = realpath($outputDir);
         $this->parseSubPath       = $parseSubPath;
         $this->disableCache       = $disableCache;
         $this->theme              = $theme;

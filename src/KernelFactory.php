@@ -48,10 +48,11 @@ final class KernelFactory
         $twig = $configuration->getTemplateEngine();
         $twig->addExtension(new AssetsExtension($buildContext->getOutputDir()));
 
-        return new Kernel(
+        return new DocsKernel(
             $configuration,
             self::getDirectives(),
-            self::getReferences($buildContext)
+            self::getReferences($buildContext),
+            $buildContext
         );
     }
 

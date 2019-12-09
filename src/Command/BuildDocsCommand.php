@@ -5,7 +5,9 @@ namespace SymfonyDocsBuilder\Command;
 use Doctrine\Common\EventManager;
 use Doctrine\RST\Builder;
 use Doctrine\RST\Configuration;
+use Doctrine\RST\ErrorManager;
 use Doctrine\RST\Event\PostBuildRenderEvent;
+use Doctrine\RST\Event\PreNodeRenderEvent;
 use Doctrine\RST\Meta\Metas;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -21,7 +23,7 @@ use SymfonyDocsBuilder\Generator\JsonGenerator;
 use SymfonyDocsBuilder\KernelFactory;
 use SymfonyDocsBuilder\Listener\AssetsCopyListener;
 use SymfonyDocsBuilder\Listener\BuildProgressListener;
-use SymfonyDocsBuilder\Listener\CopyImagesDirectoryListener;
+use SymfonyDocsBuilder\Listener\CopyImagesListener;
 
 class BuildDocsCommand extends Command
 {
@@ -96,6 +98,8 @@ class BuildDocsCommand extends Command
             $filesystem->remove($htmlOutputDir);
         }
 
+        $filesystem->mkdir($htmlOutputDir);
+
         $parseSubPath = $input->getOption('parse-sub-path');
         if ($parseSubPath && $input->getOption('output-json')) {
             throw new \InvalidArgumentException('Cannot pass both --parse-sub-path and --output-json options.');
@@ -120,7 +124,7 @@ class BuildDocsCommand extends Command
             KernelFactory::createKernel($this->buildContext, $this->urlChecker ?? null)
         );
 
-        $this->initializeListeners($builder->getConfiguration()->getEventManager());
+        $this->addProgressListener($builder->getConfiguration()->getEventManager());
 
         $builder->build(
             $this->buildContext->getSourceDir(),
@@ -175,20 +179,8 @@ class BuildDocsCommand extends Command
         $htmlForPdfGenerator->generateHtmlForPdf();
     }
 
-    private function initializeListeners(EventManager $eventManager)
+    private function addProgressListener(EventManager $eventManager)
     {
-        $eventManager->addEventListener(
-            PostBuildRenderEvent::POST_BUILD_RENDER,
-            new CopyImagesDirectoryListener($this->buildContext)
-        );
-
-        if (!$this->buildContext->getParseSubPath()) {
-            $eventManager->addEventListener(
-                [PostBuildRenderEvent::POST_BUILD_RENDER],
-                new AssetsCopyListener($this->buildContext->getOutputDir())
-            );
-        }
-
         $progressListener = new BuildProgressListener($this->io);
         $progressListener->attachListeners($eventManager);
     }
