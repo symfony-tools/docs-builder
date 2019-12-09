@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * This file is part of the Docs Builder package.
+ * (c) Ryan Weaver <ryan@symfonycasts.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SymfonyDocsBuilder\Phar;
 
 use Symfony\Component\Finder\Finder;
@@ -20,10 +27,11 @@ class Compiler
     private $versionDate;
 
     /**
-     * Compiles composer into a single phar file
+     * Compiles composer into a single phar file.
      *
      * @throws \RuntimeException
-     * @param  string            $pharFile The full path to the file to create
+     *
+     * @param string $pharFile The full path to the file to create
      */
     public function compile($pharFile = 'docs.phar')
     {
@@ -32,13 +40,13 @@ class Compiler
         }
 
         $process = new Process('git log --pretty="%H" -n1 HEAD', __DIR__);
-        if ($process->run() != 0) {
+        if (0 != $process->run()) {
             throw new \RuntimeException('Can\'t run git log.');
         }
         $this->version = trim($process->getOutput());
 
         $process = new Process('git log -n1 --pretty=%ci HEAD', __DIR__);
-        if ($process->run() != 0) {
+        if (0 != $process->run()) {
             throw new \RuntimeException('Can\'t run git log.');
         }
         $date = new \DateTime(trim($process->getOutput()));
@@ -46,7 +54,7 @@ class Compiler
         $this->versionDate = $date->format('Y-m-d H:i:s');
 
         $process = new Process('git describe --tags HEAD');
-        if ($process->run() == 0) {
+        if (0 == $process->run()) {
             $this->version = trim($process->getOutput());
         }
 
@@ -125,7 +133,7 @@ class Compiler
 
     private function addFile($phar, $file, $strip = true)
     {
-        $path = strtr(str_replace(dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR, '', $file->getRealPath()), '\\', '/');
+        $path = strtr(str_replace(\dirname(\dirname(__DIR__)).\DIRECTORY_SEPARATOR, '', $file->getRealPath()), '\\', '/');
 
         $content = file_get_contents($file);
         if ($strip) {
@@ -145,20 +153,21 @@ class Compiler
     /**
      * Removes whitespace from a PHP source string while preserving line numbers.
      *
-     * @param  string $source A PHP string
+     * @param string $source A PHP string
+     *
      * @return string The PHP string with the whitespace removed
      */
     private function stripWhitespace($source)
     {
-        if (!function_exists('token_get_all')) {
+        if (!\function_exists('token_get_all')) {
             return $source;
         }
 
         $output = '';
         foreach (token_get_all($source) as $token) {
-            if (is_string($token)) {
+            if (\is_string($token)) {
                 $output .= $token;
-            } elseif (in_array($token[0], array(T_COMMENT, T_DOC_COMMENT))) {
+            } elseif (\in_array($token[0], [T_COMMENT, T_DOC_COMMENT])) {
                 $output .= str_repeat("\n", substr_count($token[1], "\n"));
             } elseif (T_WHITESPACE === $token[0]) {
                 // reduce wide spaces
@@ -192,7 +201,7 @@ Phar::mapPhar('docs.phar');
 
 EOF;
 
-        return $stub . <<<'EOF'
+        return $stub.<<<'EOF'
 require 'phar://docs.phar/bin/console';
 
 __HALT_COMPILER();

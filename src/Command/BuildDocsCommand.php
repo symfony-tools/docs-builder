@@ -1,13 +1,19 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the Docs Builder package.
+ * (c) Ryan Weaver <ryan@symfonycasts.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace SymfonyDocsBuilder\Command;
 
 use Doctrine\Common\EventManager;
 use Doctrine\RST\Builder;
 use Doctrine\RST\Configuration;
-use Doctrine\RST\ErrorManager;
-use Doctrine\RST\Event\PostBuildRenderEvent;
-use Doctrine\RST\Event\PreNodeRenderEvent;
 use Doctrine\RST\Meta\Metas;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -21,9 +27,7 @@ use SymfonyDocsBuilder\CI\MissingFilesChecker;
 use SymfonyDocsBuilder\Generator\HtmlForPdfGenerator;
 use SymfonyDocsBuilder\Generator\JsonGenerator;
 use SymfonyDocsBuilder\KernelFactory;
-use SymfonyDocsBuilder\Listener\AssetsCopyListener;
 use SymfonyDocsBuilder\Listener\BuildProgressListener;
-use SymfonyDocsBuilder\Listener\CopyImagesListener;
 
 class BuildDocsCommand extends Command
 {
@@ -141,7 +145,7 @@ class BuildDocsCommand extends Command
         }
 
         if ($logPath = $input->getOption('save-errors')) {
-            if (count($buildErrors) > 0) {
+            if (\count($buildErrors) > 0) {
                 array_unshift($buildErrors, sprintf('Build errors from "%s"', date('Y-m-d h:i:s')));
             }
 

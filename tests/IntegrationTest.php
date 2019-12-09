@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * This file is part of the Docs Builder package.
+ * (c) Ryan Weaver <ryan@symfonycasts.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SymfonyDocsBuilder\Tests;
 
 use Doctrine\RST\Builder;
@@ -53,7 +60,7 @@ class IntegrationTest extends TestCase
 
         $indenter = $this->createIndenter();
         foreach ($finder as $expectedFile) {
-            $relativePath   = $expectedFile->getRelativePathname();
+            $relativePath = $expectedFile->getRelativePathname();
             $actualFilename = __DIR__.'/_output/'.$relativePath;
             $this->assertFileExists($actualFilename);
 
@@ -77,12 +84,12 @@ class IntegrationTest extends TestCase
         $jsonGenerator->generateJson(new ProgressBar(new NullOutput()));
 
         foreach ($finder as $htmlFile) {
-            $relativePath   = $htmlFile->getRelativePathname();
+            $relativePath = $htmlFile->getRelativePathname();
             $actualFilename = __DIR__.'/_output/'.str_replace('.html', '.fjson', $relativePath);
             $this->assertFileExists($actualFilename);
 
             $jsonData = json_decode(file_get_contents($actualFilename), true);
-            $crawler  = new Crawler($htmlFile->getContents());
+            $crawler = new Crawler($htmlFile->getContents());
 
             $this->assertSame(
                 str_replace(" \n", "\n", $indenter->indent($crawler->filter('body')->html())),

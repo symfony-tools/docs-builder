@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * This file is part of the Docs Builder package.
+ * (c) Ryan Weaver <ryan@symfonycasts.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SymfonyDocsBuilder;
 
 use Doctrine\Common\EventManager;
@@ -32,17 +39,17 @@ class DocsKernel extends Kernel
     }
 
     private function initializeListeners(EventManager $eventManager, ErrorManager $errorManager)
-   {
-       $eventManager->addEventListener(
+    {
+        $eventManager->addEventListener(
            PreNodeRenderEvent::PRE_NODE_RENDER,
            new CopyImagesListener($this->buildContext, $errorManager)
        );
 
-       if (!$this->buildContext->getParseSubPath()) {
-           $eventManager->addEventListener(
+        if (!$this->buildContext->getParseSubPath()) {
+            $eventManager->addEventListener(
                [PostBuildRenderEvent::POST_BUILD_RENDER],
                new AssetsCopyListener($this->buildContext->getOutputDir())
            );
-       }
-   }
+        }
+    }
 }

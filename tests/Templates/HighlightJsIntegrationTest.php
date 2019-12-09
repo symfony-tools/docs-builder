@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * This file is part of the Docs Builder package.
+ * (c) Ryan Weaver <ryan@symfonycasts.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SymfonyDocsBuilder\Tests\Templates;
 
 use Highlight\Highlighter;
@@ -32,13 +39,13 @@ class HighlightJsIntegrationTest extends TestCase
         yield 'php' => [
             'php',
             'php.input.txt',
-            'php.output.html'
+            'php.output.html',
         ];
 
         yield 'twig' => [
             'twig',
             'twig.input.txt',
-            'twig.output.html'
+            'twig.output.html',
         ];
     }
 }

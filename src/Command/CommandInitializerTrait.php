@@ -1,21 +1,27 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the Docs Builder package.
+ * (c) Ryan Weaver <ryan@symfonycasts.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace SymfonyDocsBuilder\Command;
 
 use Doctrine\Common\EventManager;
 use Doctrine\RST\Builder;
-use Doctrine\RST\Event\PostNodeRenderEvent;
 use Doctrine\RST\Event\PostParseDocumentEvent;
 use Doctrine\RST\Event\PreBuildParseEvent;
 use Doctrine\RST\Event\PreBuildRenderEvent;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use SymfonyDocsBuilder\BuildContext;
-use SymfonyDocsBuilder\KernelFactory;
 
 trait CommandInitializerTrait
 {
@@ -43,8 +49,6 @@ trait CommandInitializerTrait
 
     private function initializeProgressBarEventListeners(): void
     {
-
-
         // tries to handle progress bar for "rendering"
         $this->eventManager->addEventListener(
             [PreBuildRenderEvent::PRE_BUILD_RENDER],
@@ -69,7 +73,7 @@ trait CommandInitializerTrait
 
     /**
      * Removes all existing html files in the output dir that should not exist
-     * because previous build in the same output directory has been executed on another version
+     * because previous build in the same output directory has been executed on another version.
      */
     private function sanitizeOutputDirs(Finder $finder)
     {
@@ -121,7 +125,7 @@ trait CommandInitializerTrait
     public function preBuildParse(PreBuildParseEvent $event)
     {
         $parseQueue = $event->getParseQueue();
-        $parseCount = count($parseQueue->getAllFilesThatRequireParsing());
+        $parseCount = \count($parseQueue->getAllFilesThatRequireParsing());
         $this->io->note(sprintf('Start parsing %d out-of-date rst files', $parseCount));
         $this->progressBar = new ProgressBar($this->output, $parseCount);
     }

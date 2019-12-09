@@ -1,4 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the Docs Builder package.
+ * (c) Ryan Weaver <ryan@symfonycasts.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace SymfonyDocsBuilder\Generator;
 
@@ -21,8 +30,8 @@ class HtmlForPdfGenerator
         $this->buildContext = $buildContext;
     }
 
-    public function generateHtmlForPdf() {
-
+    public function generateHtmlForPdf()
+    {
         $finder = new Finder();
         $finder->in($this->buildContext->getOutputDir())
             ->depth(0)
@@ -33,7 +42,7 @@ class HtmlForPdfGenerator
             $fs->remove($file->getRealPath());
         }
 
-        $basePath  = sprintf('%s/%s', $this->buildContext->getOutputDir(), $this->buildContext->getParseSubPath());
+        $basePath = sprintf('%s/%s', $this->buildContext->getOutputDir(), $this->buildContext->getParseSubPath());
         $indexFile = sprintf('%s/%s', $basePath, 'index.html');
         if (!$fs->exists($indexFile)) {
             throw new \InvalidArgumentException(sprintf('File "%s" does not exist', $indexFile));
@@ -41,8 +50,8 @@ class HtmlForPdfGenerator
 
         // extracting all files from index's TOC, in the right order
         $parserFilename = $this->getParserFilename($indexFile, $this->buildContext->getOutputDir());
-        $meta           = $this->getMetaEntry($parserFilename);
-        $files          = current($meta->getTocs());
+        $meta = $this->getMetaEntry($parserFilename);
+        $files = current($meta->getTocs());
         array_unshift($files, sprintf('%s/index', $this->buildContext->getParseSubPath()));
 
         // building one big html file with all contents
@@ -58,10 +67,10 @@ class HtmlForPdfGenerator
             }
 
             // extract <body> content
-            $crawler     = new Crawler(file_get_contents($filename));
+            $crawler = new Crawler(file_get_contents($filename));
             $fileContent = $crawler->filter('body')->html();
 
-            $dir = dirname($meta->getFile());
+            $dir = \dirname($meta->getFile());
             $fileContent = $this->fixInternalUrls($fileContent, $dir);
 
             $fileContent = $this->fixInternalImages($fileContent, $relativeImagesPath);

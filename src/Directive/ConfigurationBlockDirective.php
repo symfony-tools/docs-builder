@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * This file is part of the Docs Builder package.
+ * (c) Ryan Weaver <ryan@symfonycasts.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SymfonyDocsBuilder\Directive;
 
 use Doctrine\RST\Directives\SubDirective;
@@ -27,7 +34,7 @@ class ConfigurationBlockDirective extends SubDirective
 
             $blocks[] = [
                 'language' => $this->formatLanguageTab($language),
-                'code'     => $node->render(),
+                'code' => $node->render(),
             ];
         }
 
@@ -42,7 +49,7 @@ class ConfigurationBlockDirective extends SubDirective
     }
 
     /**
-     * A hack to print exactly what we want in the tab of a configuration block
+     * A hack to print exactly what we want in the tab of a configuration block.
      */
     private function formatLanguageTab(string $language): string
     {

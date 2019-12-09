@@ -1,4 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the Docs Builder package.
+ * (c) Ryan Weaver <ryan@symfonycasts.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace App\Tests\Command;
 
@@ -15,7 +24,7 @@ class BuildDocsCommandTest extends TestCase
     public function testBuildDocsDefault()
     {
         $buildContext = $this->createBuildContext();
-        $outputDir    = __DIR__.'/../_output';
+        $outputDir = __DIR__.'/../_output';
 
         $filesystem = new Filesystem();
         $filesystem->remove($outputDir);
@@ -46,7 +55,7 @@ class BuildDocsCommandTest extends TestCase
     public function testBuildDocsForPdf()
     {
         $buildContext = $this->createBuildContext();
-        $outputDir    = __DIR__.'/../_output';
+        $outputDir = __DIR__.'/../_output';
 
         $fs = new Filesystem();
         if ($fs->exists($outputDir)) {
@@ -56,8 +65,8 @@ class BuildDocsCommandTest extends TestCase
         $output = $this->executeCommand(
             $buildContext,
             [
-                'source-dir'       => __DIR__.'/../fixtures/source/build-pdf',
-                'output-dir'       => $outputDir,
+                'source-dir' => __DIR__.'/../fixtures/source/build-pdf',
+                'output-dir' => $outputDir,
                 '--parse-sub-path' => 'book',
             ]
         );
@@ -84,7 +93,7 @@ class BuildDocsCommandTest extends TestCase
     private function executeCommand(BuildContext $buildContext, array $input): string
     {
         $input['--no-theme'] = true;
-        $command       = new BuildDocsCommand($buildContext);
+        $command = new BuildDocsCommand($buildContext);
         $commandTester = new CommandTester($command);
         $commandTester->execute($input);
 

@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * This file is part of the Docs Builder package.
+ * (c) Ryan Weaver <ryan@symfonycasts.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SymfonyDocsBuilder\Reference;
 
 use Doctrine\RST\Environment;
@@ -22,7 +29,7 @@ class PhpMethodReference extends Reference
 
     public function resolve(Environment $environment, string $data): ResolvedReference
     {
-        $class  = explode('::', $data)[0];
+        $class = explode('::', $data)[0];
         $method = explode('::', $data)[1];
 
         return new ResolvedReference(

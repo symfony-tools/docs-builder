@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * This file is part of the Docs Builder package.
+ * (c) Ryan Weaver <ryan@symfonycasts.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SymfonyDocsBuilder;
 
 use Doctrine\RST\Configuration;
@@ -26,9 +33,9 @@ class BuildContext
         string $symfonyDocUrl
     ) {
         $this->symfonyVersion = $symfonyVersion;
-        $this->symfonyApiUrl  = $symfonyApiUrl;
-        $this->phpDocUrl      = $phpDocUrl;
-        $this->symfonyDocUrl  = $symfonyDocUrl;
+        $this->symfonyApiUrl = $symfonyApiUrl;
+        $this->phpDocUrl = $phpDocUrl;
+        $this->symfonyDocUrl = $symfonyDocUrl;
     }
 
     public function initializeRuntimeConfig(string $sourceDir, string $outputDir, ?string $parseSubPath = null, bool $disableCache = false, string $theme = Configuration::THEME_DEFAULT)
@@ -41,11 +48,11 @@ class BuildContext
             throw new \Exception(sprintf('Output directory "%s" does not exist', $outputDir));
         }
 
-        $this->sourceDir          = realpath($sourceDir);
-        $this->outputDir          = realpath($outputDir);
-        $this->parseSubPath       = $parseSubPath;
-        $this->disableCache       = $disableCache;
-        $this->theme              = $theme;
+        $this->sourceDir = realpath($sourceDir);
+        $this->outputDir = realpath($outputDir);
+        $this->parseSubPath = $parseSubPath;
+        $this->disableCache = $disableCache;
+        $this->theme = $theme;
         $this->runtimeInitialized = true;
     }
 

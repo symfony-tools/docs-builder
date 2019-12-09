@@ -1,8 +1,16 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the Docs Builder package.
+ * (c) Ryan Weaver <ryan@symfonycasts.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace SymfonyDocsBuilder\CI;
 
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use SymfonyDocsBuilder\BuildContext;
@@ -15,8 +23,8 @@ class MissingFilesChecker
 
     public function __construct(BuildContext $buildContext)
     {
-        $this->finder       = new Finder();
-        $this->filesystem   = new Filesystem();
+        $this->finder = new Finder();
+        $this->filesystem = new Filesystem();
         $this->buildContext = $buildContext;
     }
 
@@ -31,12 +39,12 @@ class MissingFilesChecker
         $orphanedFiles = [];
 
         foreach ($this->finder as $file) {
-            $sourcePath = ltrim(substr($file->getPathname(), strlen($this->buildContext->getSourceDir())), '/');
+            $sourcePath = ltrim(substr($file->getPathname(), \strlen($this->buildContext->getSourceDir())), '/');
 
             $htmlFile = sprintf(
                 '%s/%s.html',
                 $this->buildContext->getOutputDir(),
-                substr($sourcePath, 0, strlen($sourcePath) - 4)
+                substr($sourcePath, 0, \strlen($sourcePath) - 4)
             );
 
             $firstLine = fgets(fopen($file->getRealPath(), 'r'));

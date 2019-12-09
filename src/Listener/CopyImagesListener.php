@@ -1,4 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the Docs Builder package.
+ * (c) Ryan Weaver <ryan@symfonycasts.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace SymfonyDocsBuilder\Listener;
 
@@ -47,7 +56,7 @@ class CopyImagesListener
         $fs->copy($sourceImage, $this->buildContext->getOutputDir().$newPath, true);
 
         $node->setValue($node->getEnvironment()->relativeUrl(
-            '/_images/' . $fileInfo->getFilename()
+            '/_images/'.$fileInfo->getFilename()
         ));
     }
 }

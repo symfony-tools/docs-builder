@@ -1,12 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Docs Builder package.
+ * (c) Ryan Weaver <ryan@symfonycasts.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SymfonyDocsBuilder;
 
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use SymfonyDocsBuilder\Command\BuildDocsCommand;
-use SymfonyDocsBuilder\Command\CheckUrlsCommand;
 use SymfonyDocsBuilder\Command\GithubReleaseCommand;
 
 class Application
@@ -18,10 +24,10 @@ class Application
     {
         $this->application = new BaseApplication();
 
-        $configuration   = [
-            'symfony_api_url' => "https://api.symfony.com/%s",
-            'php_doc_url' => "https://secure.php.net/manual/en",
-            'symfony_doc_url' => "https://symfony.com/doc/%s",
+        $configuration = [
+            'symfony_api_url' => 'https://api.symfony.com/%s',
+            'php_doc_url' => 'https://secure.php.net/manual/en',
+            'symfony_doc_url' => 'https://symfony.com/doc/%s',
         ];
         $this->buildContext = new BuildContext(
             $symfonyVersion,

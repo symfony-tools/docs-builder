@@ -1,4 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the Docs Builder package.
+ * (c) Ryan Weaver <ryan@symfonycasts.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace SymfonyDocsBuilder\Listener;
 
@@ -50,7 +59,7 @@ class BuildProgressListener
     public function preBuildParse(PreBuildParseEvent $event)
     {
         $parseQueue = $event->getParseQueue();
-        $parseCount = count($parseQueue->getAllFilesThatRequireParsing());
+        $parseCount = \count($parseQueue->getAllFilesThatRequireParsing());
         $this->io->note(sprintf('Start parsing %d out-of-date rst files', $parseCount));
         $this->progressBar->setMaxSteps($parseCount);
     }

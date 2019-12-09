@@ -1,18 +1,25 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the Docs Builder package.
+ * (c) Ryan Weaver <ryan@symfonycasts.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace SymfonyDocsBuilder;
 
 use Doctrine\RST\Configuration as RSTParserConfiguration;
-use Doctrine\RST\Event\PostBuildRenderEvent;
 use Doctrine\RST\Kernel;
 use SymfonyDocsBuilder\CI\UrlChecker;
 use SymfonyDocsBuilder\Directive as SymfonyDirectives;
 use SymfonyDocsBuilder\Reference as SymfonyReferences;
-use SymfonyDocsBuilder\Listener\AssetsCopyListener;
 use SymfonyDocsBuilder\Twig\AssetsExtension;
 
 /**
- * Class KernelFactory
+ * Class KernelFactory.
  */
 final class KernelFactory
 {
@@ -39,8 +46,8 @@ final class KernelFactory
         if ($parseSubPath = $buildContext->getParseSubPath()) {
             $configuration->setBaseUrl($buildContext->getSymfonyDocUrl());
             $configuration->setBaseUrlEnabledCallable(
-                static function (string $path) use ($parseSubPath) : bool {
-                    return strpos($path, $parseSubPath) !== 0;
+                static function (string $path) use ($parseSubPath): bool {
+                    return 0 !== strpos($path, $parseSubPath);
                 }
             );
         }

@@ -1,4 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the Docs Builder package.
+ * (c) Ryan Weaver <ryan@symfonycasts.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace SymfonyDocsBuilder\Release;
 
@@ -19,7 +28,7 @@ class Releaser
 
     public function __construct(HttpClientInterface $client, Compiler $compiler)
     {
-        $this->client   = $client;
+        $this->client = $client;
         $this->compiler = $compiler;
     }
 
@@ -44,12 +53,12 @@ class Releaser
                 sprintf('https://api.github.com/repos/%s/%s/releases', self::GITHUB_USER, self::GITHUB_REPO),
                 [
                     'json' => [
-                        'tag_name'         => $tag,
+                        'tag_name' => $tag,
                         'target_commitish' => 'master',
-                        'name'             => sprintf($name, $tag),
-                        'description'      => sprintf($description, $tag),
-                        'draft'            => true,
-                        'prerelease'       => false,
+                        'name' => sprintf($name, $tag),
+                        'description' => sprintf($description, $tag),
+                        'draft' => true,
+                        'prerelease' => false,
                     ],
                 ]
             );
@@ -73,7 +82,7 @@ class Releaser
                 ),
                 [
                     'headers' => ['Content-Type' => 'application/octet-stream'],
-                    'body'    => file_get_contents(__DIR__.'/../../docs.phar'),
+                    'body' => file_get_contents(__DIR__.'/../../docs.phar'),
                 ]
             );
         } catch (HttpExceptionInterface $exception) {

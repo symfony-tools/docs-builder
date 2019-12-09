@@ -2,6 +2,13 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of the Docs Builder package.
+ * (c) Ryan Weaver <ryan@symfonycasts.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SymfonyDocsBuilder\Renderers;
 
 use Doctrine\RST\Environment;
@@ -26,7 +33,7 @@ class SpanNodeRenderer extends BaseSpanNodeRenderer
         parent::__construct($environment, $span, $templateRenderer);
 
         $this->templateRenderer = $templateRenderer;
-        $this->urlChecker       = $urlChecker;
+        $this->urlChecker = $urlChecker;
     }
 
     /**
@@ -48,8 +55,8 @@ class SpanNodeRenderer extends BaseSpanNodeRenderer
         return $this->templateRenderer->render(
             'link.html.twig',
             [
-                'url'        => $this->environment->generateUrl($url),
-                'title'      => $title,
+                'url' => $this->environment->generateUrl($url),
+                'title' => $title,
                 'attributes' => $attributes,
             ]
         );
@@ -57,6 +64,6 @@ class SpanNodeRenderer extends BaseSpanNodeRenderer
 
     public function isExternalUrl($url): bool
     {
-        return strpos($url, '://') !== false;
+        return false !== strpos($url, '://');
     }
 }
