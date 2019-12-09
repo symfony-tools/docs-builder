@@ -13,7 +13,6 @@ use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use SymfonyDocsBuilder\Command\BuildDocsCommand;
-use SymfonyDocsBuilder\Command\GithubReleaseCommand;
 
 class Application
 {
@@ -48,7 +47,6 @@ class Application
         );
         $this->application->getDefinition()->addOption($inputOption);
         $this->application->add(new BuildDocsCommand($this->buildContext));
-        $this->application->add(new GithubReleaseCommand());
 
         return $this->application->run($input);
     }
