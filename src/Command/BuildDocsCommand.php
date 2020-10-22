@@ -24,6 +24,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use SymfonyDocsBuilder\BuildContext;
 use SymfonyDocsBuilder\CI\MissingFilesChecker;
+use SymfonyDocsBuilder\ConfigFileParser;
 use SymfonyDocsBuilder\Generator\HtmlForPdfGenerator;
 use SymfonyDocsBuilder\Generator\JsonGenerator;
 use SymfonyDocsBuilder\KernelFactory;
@@ -120,6 +121,9 @@ class BuildDocsCommand extends Command
             $input->getOption('disable-cache'),
             $input->getOption('no-theme') ? Configuration::THEME_DEFAULT : 'rtd'
         );
+
+        $configFileParser = new ConfigFileParser($this->buildContext, $output);
+        $configFileParser->processConfigFile($sourceDir);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

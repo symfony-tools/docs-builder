@@ -36,6 +36,8 @@ class DocsKernel extends Kernel
             $builder->getConfiguration()->getEventManager(),
             $builder->getErrorManager()
         );
+
+        $builder->setScannerFinder($this->buildContext->createFileFinder());
     }
 
     private function initializeListeners(EventManager $eventManager, ErrorManager $errorManager)

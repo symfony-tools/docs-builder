@@ -10,6 +10,7 @@
 namespace SymfonyDocsBuilder;
 
 use Doctrine\RST\Configuration;
+use Symfony\Component\Finder\Finder;
 
 class BuildContext
 {
@@ -25,6 +26,8 @@ class BuildContext
     private $disableCache = false;
     private $theme;
     private $cacheDirectory;
+    private $excludedPaths = [];
+    private $fileFinder;
 
     public function __construct(
         string $symfonyVersion,
@@ -119,6 +122,32 @@ class BuildContext
     public function setCacheDirectory(string $cacheDirectory)
     {
         $this->cacheDirectory = $cacheDirectory;
+    }
+
+    public function setExcludedPaths(array $excludedPaths)
+    {
+        if (null !== $this->fileFinder) {
+            throw new \LogicException('setExcludePaths() cannot be called after getFileFinder() (because the Finder has been initialized).');
+        }
+
+        $this->excludedPaths = $excludedPaths;
+    }
+
+    public function createFileFinder(): Finder
+    {
+        if (null === $this->fileFinder) {
+            $this->fileFinder = new Finder();
+            $this->fileFinder
+                ->in($this->getSourceDir())
+                // TODO - read this from the rst-parser Configuration
+                ->name('*.rst')
+                ->notName('*.rst.inc')
+                ->files()
+                ->exclude($this->excludedPaths);
+        }
+
+        // clone to get a fresh instance and not share state
+        return clone $this->fileFinder;
     }
 
     private function checkThatRuntimeConfigIsInitialized()
