@@ -29,7 +29,7 @@ class CodeBlockDirective extends Directive
         }
 
         if (!CodeNodeRenderer::isLanguageSupported($data)) {
-            throw new \Exception(sprintf('Unsupported code block language "%s"', $data));
+            throw new \Exception(sprintf('Unsupported code block language "%s". Added it in %s', $data, CodeNodeRenderer::class));
         }
 
         $node->setLanguage($data);
