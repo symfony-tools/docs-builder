@@ -74,6 +74,7 @@ final class KernelFactory
             new SymfonyDirectives\IndexDirective(),
             new SymfonyDirectives\RoleDirective(),
             new SymfonyDirectives\NoteDirective(),
+            new SymfonyDirectives\RstClassDirective(),
             new SymfonyDirectives\SeeAlsoDirective(),
             new SymfonyDirectives\SidebarDirective(),
             new SymfonyDirectives\TipDirective(),
