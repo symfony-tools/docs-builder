@@ -79,7 +79,7 @@ class BuildProgressListener
         $this->progressBar->finish();
 
         $this->io->newLine(2);
-        $this->io->note('Start rendering in HTML...');
+        $this->io->note('Rendering the HTML files...');
         // TODO: create a proper progress bar for rendering
     }
 }
