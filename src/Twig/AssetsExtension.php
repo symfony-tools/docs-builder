@@ -14,14 +14,6 @@ use Twig\TwigFunction;
 
 class AssetsExtension extends AbstractExtension
 {
-    /** @var string */
-    private $htmlOutputDir;
-
-    public function __construct(string $htmlOutputDir)
-    {
-        $this->htmlOutputDir = $htmlOutputDir;
-    }
-
     public function getFunctions(): array
     {
         return [
@@ -31,6 +23,6 @@ class AssetsExtension extends AbstractExtension
 
     public function asset($path)
     {
-        return sprintf('%s/assets/%s', $this->htmlOutputDir, $path);
+        return sprintf('assets/%s', $path);
     }
 }
