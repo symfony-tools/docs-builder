@@ -53,7 +53,7 @@ final class KernelFactory
         }
 
         $twig = $configuration->getTemplateEngine();
-        $twig->addExtension(new AssetsExtension($buildContext->getOutputDir()));
+        $twig->addExtension(new AssetsExtension());
 
         return new DocsKernel(
             $configuration,
