@@ -85,6 +85,12 @@ class BuildDocsCommand extends Command
                 InputOption::VALUE_NONE,
                 'Use the default theme instead of the styled one'
             )
+            ->addOption(
+                'fail-on-errors',
+                null,
+                InputOption::VALUE_NONE,
+                'Return a non-zero code if there are errors/warnings'
+            )
         ;
     }
 
@@ -166,8 +172,15 @@ class BuildDocsCommand extends Command
 
         $this->io->newLine(2);
 
-        $successMessage = 'Build complete!';
-        $this->io->success($successMessage);
+        if (\count($buildErrors) > 0) {
+            $this->io->success('Build completed with warnings');
+
+            if ($input->getOption('fail-on-errors')) {
+                return 1;
+            }
+        } else {
+            $this->io->success('Build completed successfully!');
+        }
 
         return 0;
     }
