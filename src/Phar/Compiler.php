@@ -84,7 +84,6 @@ class Compiler
             ->in(__DIR__.'/../../vendor/scrivo/')
             ->in(__DIR__.'/../../vendor/symfony/')
             ->in(__DIR__.'/../../vendor/twig/')
-            ->in(__DIR__.'/../../vendor/guzzlehttp/')
             ->in(__DIR__.'/../../vendor/ralouphie/')
         ;
 
