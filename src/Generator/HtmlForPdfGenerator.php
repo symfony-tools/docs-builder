@@ -145,7 +145,7 @@ class HtmlForPdfGenerator
         // convert links to footnote
         $content = preg_replace_callback(
             '#<a href="(.*?)" class="reference external"(?:[^>]*)>(.*?)</a>#',
-            static function ($matches) {
+            static function ($matches): string {
                 if (0 === strpos($matches[2], 'http')) {
                     return sprintf('<em><a href="%s">%s</a></em>', $matches[2], $matches[2]);
                 }
