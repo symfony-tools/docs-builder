@@ -67,7 +67,7 @@ class BuildProgressListener
     public function postParseDocument(PostParseDocumentEvent $postParseDocumentEvent): void
     {
         $file = $postParseDocumentEvent->getDocumentNode()->getEnvironment()->getCurrentFileName();
-        if (!\in_array($file, $this->parsedFiles)) {
+        if (!\in_array($file, $this->parsedFiles, true)) {
             $this->parsedFiles[] = $file;
             $this->progressBar->advance();
         }

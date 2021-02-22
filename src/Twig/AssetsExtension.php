@@ -21,7 +21,7 @@ class AssetsExtension extends AbstractExtension
         ];
     }
 
-    public function asset($path)
+    public function asset($path): string
     {
         return sprintf('assets/%s', $path);
     }

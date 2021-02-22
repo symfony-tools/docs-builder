@@ -99,14 +99,14 @@ class HtmlForPdfGenerator
     {
         return preg_replace_callback(
             '/href="([^"]+?)"/',
-            function ($matches) use ($dir) {
+            static function ($matches) use ($dir) {
                 if ('http' === substr($matches[1], 0, 4) || '#' === substr($matches[1], 0, 1)) {
                     return $matches[0];
                 }
 
                 $path = [];
                 foreach (explode('/', $dir.'/'.str_replace(['.html', '#'], ['', '-'], $matches[1])) as $part) {
-                    if ('..' == $part) {
+                    if ('..' === $part) {
                         array_pop($path);
                     } else {
                         $path[] = $part;
@@ -130,7 +130,7 @@ class HtmlForPdfGenerator
     {
         return preg_replace_callback(
             '/id="([^"]+)"/',
-            function ($matches) use ($uid) {
+            static function ($matches) use ($uid) {
                 return sprintf('id="%s-%s"', $uid, $matches[1]);
             },
             $fileContent
@@ -145,7 +145,7 @@ class HtmlForPdfGenerator
         // convert links to footnote
         $content = preg_replace_callback(
             '#<a href="(.*?)" class="reference external"(?:[^>]*)>(.*?)</a>#',
-            function ($matches) {
+            static function ($matches) {
                 if (0 === strpos($matches[2], 'http')) {
                     return sprintf('<em><a href="%s">%s</a></em>', $matches[2], $matches[2]);
                 }

@@ -117,7 +117,7 @@ class JsonGenerator
             ];
         }
 
-        list($toc, $indexCurrentFile) = $this->getNextPrevInformation($parserFilename);
+        [$toc, $indexCurrentFile] = $this->getNextPrevInformation($parserFilename);
 
         if (!isset($toc[$indexCurrentFile + 1])) {
             return null;
@@ -147,7 +147,7 @@ class JsonGenerator
             return null;
         }
 
-        list($toc, $indexCurrentFile) = $this->getNextPrevInformation($parserFilename);
+        [$toc, $indexCurrentFile] = $this->getNextPrevInformation($parserFilename);
 
         // if current file is the first one of the chapter, prev is the direct parent
         if (0 === $indexCurrentFile) {
