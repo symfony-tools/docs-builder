@@ -28,6 +28,7 @@ class CodeNodeRenderer implements NodeRenderer
         'html+php' => 'html',
         'xml+php' => 'xml',
         'php-annotations' => 'php',
+        'php-attributes' => 'php',
         'terminal' => 'bash',
         'rst' => 'markdown',
         'php-standalone' => 'php',
