@@ -11,21 +11,21 @@ declare(strict_types=1);
 
 namespace SymfonyDocsBuilder\CI;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 
 final class UrlChecker
 {
     private $invalidUrls = [];
 
-    public function checkUrl(string $url)
+    public function checkUrl(string $url): void
     {
-        $httpClient = new Client(['timeout' => 10]);
+        $httpClient = HttpClient::create(['timeout' => 10]);
 
         try {
-            $response = $httpClient->get($url, ['http_errors' => false]);
+            $response = $httpClient->request('GET', $url);
             $statusCode = $response->getStatusCode();
-        } catch (GuzzleException $exception) {
+        } catch (HttpExceptionInterface $e) {
             $statusCode = 0;
         }
 
