@@ -132,7 +132,7 @@ class BuildDocsCommand extends Command
         $configFileParser->processConfigFile($sourceDir);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $builder = new Builder(
             KernelFactory::createKernel($this->buildContext, $this->urlChecker ?? null)
@@ -182,7 +182,7 @@ class BuildDocsCommand extends Command
             $this->io->success('Build completed successfully!');
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function generateJson(Metas $metas)

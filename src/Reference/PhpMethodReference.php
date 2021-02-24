@@ -29,8 +29,7 @@ class PhpMethodReference extends Reference
 
     public function resolve(Environment $environment, string $data): ResolvedReference
     {
-        $class = explode('::', $data)[0];
-        $method = explode('::', $data)[1];
+        [$class, $method] = explode('::', $data, 2);
 
         return new ResolvedReference(
             $environment->getCurrentFileName(),

@@ -91,12 +91,12 @@ class CodeNodeRenderer implements NodeRenderer
         $highlighter = new Highlighter();
         $supportedLanguages = array_merge(
             array_keys(self::LANGUAGES_MAPPING),
-            $highlighter->listLanguages(true),
+            $highlighter->listRegisteredLanguages(true),
             // not highlighted, but valid
             ['text']
         );
 
-        return \in_array($lang, $supportedLanguages);
+        return \in_array($lang, $supportedLanguages, true);
     }
 
     private function getLines(string $code): array
