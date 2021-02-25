@@ -24,7 +24,7 @@ class AdmonitionDirective extends SubDirective
                 // had a class of 'admonition-"
                 'name' => '',
                 'text' => $data,
-                'class' => isset($options['class']) ? $options['class'] : null,
+                'class' => $options['class'] ?? null,
             ]
         );
 

@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace SymfonyDocsBuilder\CI;
 
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
 use SymfonyDocsBuilder\BuildContext;
 
 class MissingFilesChecker
@@ -38,10 +37,10 @@ class MissingFilesChecker
             $htmlFile = sprintf(
                 '%s/%s.html',
                 $this->buildContext->getOutputDir(),
-                substr($sourcePath, 0, \strlen($sourcePath) - 4)
+                substr($sourcePath, 0, -4)
             );
 
-            $firstLine = fgets(fopen($file->getRealPath(), 'r'));
+            $firstLine = fgets(fopen($file->getRealPath(), 'rb'));
             if (!$this->filesystem->exists($htmlFile) && ':orphan:' !== trim($firstLine)) {
                 $orphanedFiles[] = $htmlFile;
             }
