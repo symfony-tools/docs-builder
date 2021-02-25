@@ -15,6 +15,7 @@ use Doctrine\RST\Nodes\CodeNode;
 use Doctrine\RST\Renderers\NodeRenderer;
 use Doctrine\RST\Templates\TemplateRenderer;
 use Highlight\Highlighter;
+use function Symfony\Component\String\u;
 
 class CodeNodeRenderer implements NodeRenderer
 {
@@ -65,7 +66,7 @@ class CodeNodeRenderer implements NodeRenderer
 
         $lineNumbers = '';
         for ($i = 1; $i <= \count($lines); ++$i) {
-            $lineNumbers .= str_pad((string) $i, 2, ' ', STR_PAD_LEFT)."\n";
+            $lineNumbers .= u((string) $i)->padStart(2, ' ')."\n";
         }
 
         $language = $this->codeNode->getLanguage() ?? 'php';

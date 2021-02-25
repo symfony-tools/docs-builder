@@ -17,6 +17,7 @@ use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use SymfonyDocsBuilder\BuildContext;
+use function Symfony\Component\String\u;
 
 class HtmlForPdfGenerator
 {
@@ -100,12 +101,13 @@ class HtmlForPdfGenerator
         return preg_replace_callback(
             '/href="([^"]+?)"/',
             static function ($matches) use ($dir) {
-                if ('http' === substr($matches[1], 0, 4) || '#' === substr($matches[1], 0, 1)) {
+                if (u($matches[1])->startsWith(['http', '#'])) {
                     return $matches[0];
                 }
 
                 $path = [];
-                foreach (explode('/', $dir.'/'.str_replace(['.html', '#'], ['', '-'], $matches[1])) as $part) {
+                foreach (u($matches[1])->replace('.html', '')->replace('#', '-')->split('/') as $urlPart) {
+                    $part = $urlPart->toString();
                     if ('..' === $part) {
                         array_pop($path);
                     } else {
@@ -146,7 +148,7 @@ class HtmlForPdfGenerator
         $content = preg_replace_callback(
             '#<a href="(.*?)" class="reference external"(?:[^>]*)>(.*?)</a>#',
             static function ($matches): string {
-                if (0 === strpos($matches[2], 'http')) {
+                if (u($matches[2])->startsWith('http')) {
                     return sprintf('<em><a href="%s">%s</a></em>', $matches[2], $matches[2]);
                 }
 
