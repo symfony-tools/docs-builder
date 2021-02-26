@@ -33,7 +33,7 @@ class MissingFilesChecker
         $orphanedFiles = [];
 
         foreach ($finder as $file) {
-            $sourcePath = u($file->getPathname())->after($this->buildContext->getSourceDir())->trimEnd('/');
+            $sourcePath = u($file->getPathname())->after($this->buildContext->getSourceDir())->trimStart('/');
             $htmlFile = sprintf('%s/%s.html', $this->buildContext->getOutputDir(), $sourcePath->slice(0, -4));
 
             $firstLine = fgets(fopen($file->getRealPath(), 'rb'));
