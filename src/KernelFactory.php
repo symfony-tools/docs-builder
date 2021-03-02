@@ -17,6 +17,7 @@ use SymfonyDocsBuilder\CI\UrlChecker;
 use SymfonyDocsBuilder\Directive as SymfonyDirectives;
 use SymfonyDocsBuilder\Reference as SymfonyReferences;
 use SymfonyDocsBuilder\Twig\AssetsExtension;
+use function Symfony\Component\String\u;
 
 /**
  * Class KernelFactory.
@@ -47,7 +48,7 @@ final class KernelFactory
             $configuration->setBaseUrl($buildContext->getSymfonyDocUrl());
             $configuration->setBaseUrlEnabledCallable(
                 static function (string $path) use ($parseSubPath): bool {
-                    return 0 !== strpos($path, $parseSubPath);
+                    return u($path)->containsAny($parseSubPath);
                 }
             );
         }

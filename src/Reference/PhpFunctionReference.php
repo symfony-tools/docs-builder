@@ -12,6 +12,7 @@ namespace SymfonyDocsBuilder\Reference;
 use Doctrine\RST\Environment;
 use Doctrine\RST\References\Reference;
 use Doctrine\RST\References\ResolvedReference;
+use function Symfony\Component\String\u;
 
 class PhpFunctionReference extends Reference
 {
@@ -32,7 +33,7 @@ class PhpFunctionReference extends Reference
         return new ResolvedReference(
             $environment->getCurrentFileName(),
             $data,
-            sprintf('%s/function.%s.php', $this->phpDocUrl, str_replace('_', '-', strtolower($data))),
+            sprintf('%s/function.%s.php', $this->phpDocUrl, u($data)->replace('_', '-')->lower()),
             [],
             [
                 'title' => $data,

@@ -12,6 +12,7 @@ namespace SymfonyDocsBuilder\Reference;
 use Doctrine\RST\Environment;
 use Doctrine\RST\References\Reference;
 use Doctrine\RST\References\ResolvedReference;
+use function Symfony\Component\String\u;
 
 class ClassReference extends Reference
 {
@@ -29,12 +30,12 @@ class ClassReference extends Reference
 
     public function resolve(Environment $environment, string $data): ResolvedReference
     {
-        $className = str_replace('\\\\', '\\', $data);
+        $className = u($data)->replace('\\\\', '\\');
 
         return new ResolvedReference(
             $environment->getCurrentFileName(),
-            substr(strrchr($className, '\\'), 1),
-            sprintf('%s/%s.html', $this->symfonyApiUrl, str_replace('\\', '/', $className)),
+            $className->afterLast('\\'),
+            sprintf('%s/%s.html', $this->symfonyApiUrl, $className->replace('\\', '/')),
             [],
             [
                 'title' => $className,

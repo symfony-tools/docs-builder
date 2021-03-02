@@ -13,6 +13,7 @@ namespace SymfonyDocsBuilder\CI;
 
 use Symfony\Component\Filesystem\Filesystem;
 use SymfonyDocsBuilder\BuildContext;
+use function Symfony\Component\String\u;
 
 class MissingFilesChecker
 {
@@ -32,13 +33,8 @@ class MissingFilesChecker
         $orphanedFiles = [];
 
         foreach ($finder as $file) {
-            $sourcePath = ltrim(substr($file->getPathname(), \strlen($this->buildContext->getSourceDir())), '/');
-
-            $htmlFile = sprintf(
-                '%s/%s.html',
-                $this->buildContext->getOutputDir(),
-                substr($sourcePath, 0, -4)
-            );
+            $sourcePath = u($file->getPathname())->after($this->buildContext->getSourceDir())->trimStart('/');
+            $htmlFile = sprintf('%s/%s.html', $this->buildContext->getOutputDir(), $sourcePath->slice(0, -4));
 
             $firstLine = fgets(fopen($file->getRealPath(), 'rb'));
             if (!$this->filesystem->exists($htmlFile) && ':orphan:' !== trim($firstLine)) {
