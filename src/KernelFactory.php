@@ -56,10 +56,10 @@ final class KernelFactory
         $twig->addExtension(new AssetsExtension());
 
         return new DocsKernel(
+            $buildContext,
             $configuration,
             self::getDirectives(),
-            self::getReferences($buildContext),
-            $buildContext
+            self::getReferences($buildContext)
         );
     }
 

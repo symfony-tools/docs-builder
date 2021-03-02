@@ -23,7 +23,7 @@ class DocsKernel extends Kernel
 {
     private $buildContext;
 
-    public function __construct(?Configuration $configuration = null, $directives = [], $references = [], BuildContext $buildContext)
+    public function __construct(BuildContext $buildContext, ?Configuration $configuration = null, $directives = [], $references = [])
     {
         parent::__construct($configuration, $directives, $references);
 
