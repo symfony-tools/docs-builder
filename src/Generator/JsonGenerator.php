@@ -89,6 +89,8 @@ class JsonGenerator
         foreach ($titles as $title) {
             $tocTree[] = [
                 'url' => sprintf('%s#%s', $metaEntry->getUrl(), Environment::slugify($title[0])),
+                'page' => u($metaEntry->getUrl())->beforeLast('.html'),
+                'fragment' => Environment::slugify($title[0]),
                 'title' => $title[0],
                 'children' => $this->generateToc($metaEntry, $title[1]),
             ];
