@@ -86,7 +86,7 @@ class CodeNodeRenderer implements NodeRenderer
                 // this is the number of digits of the codeblock lines-of-code
                 // e.g. LOC = 5, digits = 1; LOC = 18, digits = 2
                 // this is useful to tweak the code listings according to their length
-                'numLocDigits' => (int) floor(log10(\count($lines))) + 1,
+                'numLocDigits' => strlen((string) \count($lines)),
             ]
         );
     }
