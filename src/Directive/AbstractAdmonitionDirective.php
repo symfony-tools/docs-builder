@@ -38,7 +38,7 @@ abstract class AbstractAdmonitionDirective extends SubDirective
             ]
         );
 
-        return $parser->getNodeFactory()->createWrapperNode($document, $wrapperDiv, '</div></div>');
+        return $parser->getNodeFactory()->createWrapperNode($document, $wrapperDiv, '</div>');
     }
 
     final public function getName(): string
