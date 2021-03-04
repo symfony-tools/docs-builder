@@ -68,10 +68,15 @@ final class KernelFactory
     {
         return [
             new SymfonyDirectives\AdmonitionDirective(),
+            new SymfonyDirectives\AttentionDirective(),
             new SymfonyDirectives\CautionDirective(),
             new SymfonyDirectives\CodeBlockDirective(),
             new SymfonyDirectives\ConfigurationBlockDirective(),
+            new SymfonyDirectives\DangerDirective(),
             new SymfonyDirectives\DeprecatedDirective(),
+            new SymfonyDirectives\ErrorDirective(),
+            new SymfonyDirectives\HintDirective(),
+            new SymfonyDirectives\ImportantDirective(),
             new SymfonyDirectives\IndexDirective(),
             new SymfonyDirectives\RoleDirective(),
             new SymfonyDirectives\NoteDirective(),
