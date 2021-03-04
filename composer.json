@@ -18,7 +18,7 @@
         "symfony/dom-crawler": "^5.2",
         "symfony/css-selector": "^5.2",
         "symfony/console": "^5.2",
-        "twig/twig": "^2.14",
+        "twig/twig": "^2.14 || ^3.3",
         "symfony/http-client": "^5.2"
     },
     "require-dev": {
