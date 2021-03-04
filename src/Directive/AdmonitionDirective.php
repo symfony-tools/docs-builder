@@ -28,7 +28,7 @@ class AdmonitionDirective extends SubDirective
             ]
         );
 
-        return $parser->getNodeFactory()->createWrapperNode($document, $wrapperDiv, '</div></div>');
+        return $parser->getNodeFactory()->createWrapperNode($document, $wrapperDiv, '</div>');
     }
 
     public function getName(): string
