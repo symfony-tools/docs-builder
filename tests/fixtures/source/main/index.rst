@@ -10,7 +10,7 @@ Some Test Docs!
 
 .. _reference-forms-type-date-format:
 
-A header
---------
+A header with ``a code literal``
+--------------------------------
 
 Some info...
