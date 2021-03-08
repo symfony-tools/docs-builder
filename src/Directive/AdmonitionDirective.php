@@ -20,9 +20,7 @@ class AdmonitionDirective extends SubDirective
         $wrapperDiv = $parser->renderTemplate(
             'directives/admonition.html.twig',
             [
-                // a bit strange, but on the old markup we literally
-                // had a class of 'admonition-"
-                'name' => '',
+                'name' => 'default',
                 'text' => $data,
                 'class' => $options['class'] ?? null,
             ]
