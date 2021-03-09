@@ -95,7 +95,7 @@ class IntegrationTest extends TestCase
                 str_replace(" \n", "\n", $indenter->indent($crawler->filter('body')->html())),
                 str_replace(" \n", "\n", $indenter->indent($jsonData['body']))
             );
-            $this->assertSame($crawler->filter('h1')->first()->text(), $jsonData['title'].'¶');
+            $this->assertSame($crawler->filter('h1')->first()->text(), $jsonData['title']);
         }
     }
 

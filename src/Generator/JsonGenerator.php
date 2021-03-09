@@ -20,6 +20,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 use SymfonyDocsBuilder\BuildContext;
+use function Symfony\Component\String\u;
 
 class JsonGenerator
 {

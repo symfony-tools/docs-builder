@@ -4,3 +4,4 @@
 /var/
 /docs.phar
 /.env
+/.phpunit.result.cache

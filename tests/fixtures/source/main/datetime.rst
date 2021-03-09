@@ -54,8 +54,7 @@ Date widget!
 
 .. note::
 
-    Sometimes we add notes. But not too often because they interrupt
-    the flow.
+    Sometimes we add notes. But not too often because they interrupt the flow.
     :ref:`internal-reference`
 
 .. include:: /_includes/date_widget.rst.inc
