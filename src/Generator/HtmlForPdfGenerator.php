@@ -139,10 +139,10 @@ class HtmlForPdfGenerator
         );
     }
 
-    private function cleanupContent($content)
+    private function cleanupContent(string $content): string
     {
         // remove internal anchors
-        $content = preg_replace('#<a class="headerlink"([^>]+)>¶</a>#', '', $content);
+        $content = preg_replace('#<a class="headerlink"([^>]+)>(.*)</a>#', '$2', $content);
 
         // convert links to footnote
         $content = preg_replace_callback(
