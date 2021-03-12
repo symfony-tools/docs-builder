@@ -3,7 +3,8 @@
 
     {% if tocItem.children|length %}
         {% include "toc-level.html.twig" with {
-            tocItems:tocItem.children
+            tocItems: tocItem.children,
+            toc_deep_level: toc_deep_level + 1
         } %}
     {% endif %}
 </li>
