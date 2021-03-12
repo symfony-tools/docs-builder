@@ -53,43 +53,39 @@ class CodeNodeRenderer implements NodeRenderer
 
     public function render(): string
     {
-        $this->configureHighlighter();
-
-        $value = $this->codeNode->getValue();
-
+        $code = $this->codeNode->getValue();
         if ($this->codeNode->isRaw()) {
-            return $value;
-        }
-
-        $lines = $this->getLines($value);
-        $code = implode("\n", $lines);
-
-        $lineNumbers = '';
-        for ($i = 1; $i <= \count($lines); ++$i) {
-            $lineNumbers .= u((string) $i)->padStart(2, ' ')."\n";
+            return $code;
         }
 
         $language = $this->codeNode->getLanguage() ?? 'php';
+        $languageMapping = self::LANGUAGES_MAPPING[$language] ?? $language;
+        $languages = array_unique([$language, $languageMapping]);
 
-        if ('text' !== $language) {
+        if ('text' === $language) {
+            $highlightedCode = $code;
+        } else {
+            $this->configureHighlighter();
+
             $highLighter = new Highlighter();
-            $code = $highLighter->highlight(self::LANGUAGES_MAPPING[$language] ?? $language, $code)->value;
+            $highlightedCode = $highLighter->highlight($languageMapping, $code)->value;
 
             // this allows to highlight the $ in PHP variable names
-            $code = str_replace('<span class="hljs-variable">$', '<span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>', $code);
+            $highlightedCode = str_replace('<span class="hljs-variable">$', '<span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>', $highlightedCode);
         }
+
+        $numOfLines = \count(preg_split('/\r\n|\r|\n/', $highlightedCode));
 
         return $this->templateRenderer->render(
             'code.html.twig',
             [
-                'language' => $language,
-                'languageMapping' => self::LANGUAGES_MAPPING[$language] ?? $language,
-                'code' => $code,
-                'lineNumbers' => rtrim($lineNumbers),
+                'languages' => $languages,
+                'lines' => range(1, $numOfLines - 1),
+                'code' => $highlightedCode,
                 // this is the number of digits of the codeblock lines-of-code
                 // e.g. LOC = 5, digits = 1; LOC = 18, digits = 2
                 // this is useful to tweak the code listings according to their length
-                'numLocDigits' => strlen((string) \count($lines)),
+                'numLocDigits' => strlen((string) $numOfLines),
             ]
         );
     }
