@@ -50,13 +50,10 @@ class CopyImagesListener
         $fileInfo = new \SplFileInfo($sourceImage);
         $fs = new Filesystem();
 
-        // the /_images path is currently hardcoded here and respected
-        // in the overridden image node template
-        $newPath = '/_images/'.$fileInfo->getFilename();
-        $fs->copy($sourceImage, $this->buildContext->getOutputDir().$newPath, true);
+        $newAbsoluteFilePath = $this->buildContext->getPublicImagesDir().'/'.$fileInfo->getFilename();
+        $newUrlPath = $this->buildContext->getPublicImagesPrefix().'/'.$fileInfo->getFilename();
 
-        $node->setValue($node->getEnvironment()->relativeUrl(
-            '/_images/'.$fileInfo->getFilename()
-        ));
+        $fs->copy($sourceImage, $newAbsoluteFilePath, true);
+        $node->setValue($newUrlPath);
     }
 }

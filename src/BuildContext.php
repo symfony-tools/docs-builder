@@ -41,7 +41,7 @@ class BuildContext
         $this->symfonyDocUrl = $symfonyDocUrl;
     }
 
-    public function initializeRuntimeConfig(string $sourceDir, string $outputDir, ?string $parseSubPath = null, bool $disableCache = false, string $theme = Configuration::THEME_DEFAULT)
+    public function initializeRuntimeConfig(string $sourceDir, string $outputDir, string $publicImagesDir, string $publicImagesPrefix, ?string $parseSubPath = null, bool $disableCache = false, string $theme = Configuration::THEME_DEFAULT)
     {
         if (!file_exists($sourceDir)) {
             throw new \Exception(sprintf('Source directory "%s" does not exist', $sourceDir));
@@ -51,8 +51,14 @@ class BuildContext
             throw new \Exception(sprintf('Output directory "%s" does not exist', $outputDir));
         }
 
+        if (!file_exists($publicImagesDir)) {
+            throw new \Exception(sprintf('Public images directory "%s" does not exist', $publicImagesDir));
+        }
+
         $this->sourceDir = realpath($sourceDir);
         $this->outputDir = realpath($outputDir);
+        $this->publicImagesDir = realpath($publicImagesDir);
+        $this->publicImagesPrefix = $publicImagesPrefix;
         $this->parseSubPath = $parseSubPath;
         $this->disableCache = $disableCache;
         $this->theme = $theme;
@@ -91,6 +97,20 @@ class BuildContext
         $this->checkThatRuntimeConfigIsInitialized();
 
         return $this->outputDir;
+    }
+
+    public function getPublicImagesDir(): string
+    {
+        $this->checkThatRuntimeConfigIsInitialized();
+
+        return $this->publicImagesDir;
+    }
+
+    public function getPublicImagesPrefix(): string
+    {
+        $this->checkThatRuntimeConfigIsInitialized();
+
+        return $this->publicImagesPrefix;
     }
 
     public function getParseSubPath(): ?string
