@@ -25,8 +25,11 @@
                         <pre class="hljs php">
                                     <span class="hljs-comment">// config/routes.php</span>
 <span class="hljs-keyword">namespace</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">Routing</span>\<span class="hljs-title">Loader</span>\<span class="hljs-title">Configurator</span>; <span class="hljs-keyword">return</span>
-                                    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(RoutingConfigurator <span class="hljs-variable">$routes</span>)</span> </span>
-                                    { <span class="hljs-variable">$routes</span><span class="hljs-operator">-&gt;</span>add(<span class="hljs-string">'about_us'</span>, [<span class="hljs-string">'nl'</span> =&gt; <span class="hljs-string">'/over-ons'</span>, <span class="hljs-string">'en'</span> =&gt; <span class="hljs-string">'/about-us'</span>]) <span class="hljs-operator">-&gt;</span>controller(<span class="hljs-string">'App\Controller\CompanyController::about'</span>);
+                                    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(RoutingConfigurator <span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>routes</span>)</span> </span>
+                                    {                                    <span class="hljs-variable">
+                                        <span class="hljs-variable-other-marker">$</span>
+                                        routes
+                                    </span><span class="hljs-operator">-&gt;</span>add(<span class="hljs-string">'about_us'</span>, [<span class="hljs-string">'nl'</span> =&gt; <span class="hljs-string">'/over-ons'</span>, <span class="hljs-string">'en'</span> =&gt; <span class="hljs-string">'/about-us'</span>]) <span class="hljs-operator">-&gt;</span>controller(<span class="hljs-string">'App\Controller\CompanyController::about'</span>);
 };</pre>
                     </div>
                 </td>
