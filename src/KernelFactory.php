@@ -24,15 +24,15 @@ use function Symfony\Component\String\u;
  */
 final class KernelFactory
 {
-    public static function createKernel(BuildContext $buildContext, ?UrlChecker $urlChecker = null): Kernel
+    public static function createKernel(BuildConfig $buildConfig, ?UrlChecker $urlChecker = null): Kernel
     {
         $configuration = new RSTParserConfiguration();
         $configuration->setCustomTemplateDirs([__DIR__.'/Templates']);
-        $configuration->setTheme($buildContext->getTheme());
-        $configuration->setCacheDir(sprintf('%s/var/cache', $buildContext->getCacheDir()));
+        $configuration->setTheme($buildConfig->getTheme());
+        $configuration->setCacheDir(sprintf('%s/var/cache', $buildConfig->getCacheDir()));
         $configuration->abortOnError(false);
 
-        if ($buildContext->getDisableCache()) {
+        if (!$buildConfig->isBuildCacheEnabled()) {
             $configuration->setUseCachedMetas(false);
         }
 
@@ -44,8 +44,8 @@ final class KernelFactory
             )
         );
 
-        if ($parseSubPath = $buildContext->getParseSubPath()) {
-            $configuration->setBaseUrl($buildContext->getSymfonyDocUrl());
+        if ($parseSubPath = $buildConfig->getSubdirectoryToBuild()) {
+            $configuration->setBaseUrl($buildConfig->getSymfonyDocUrl());
             $configuration->setBaseUrlEnabledCallable(
                 static function (string $path) use ($parseSubPath): bool {
                     return u($path)->containsAny($parseSubPath);
@@ -57,10 +57,10 @@ final class KernelFactory
         $twig->addExtension(new AssetsExtension());
 
         return new DocsKernel(
-            $buildContext,
+            $buildConfig,
             $configuration,
             self::getDirectives(),
-            self::getReferences($buildContext)
+            self::getReferences($buildConfig)
         );
     }
 
@@ -92,15 +92,15 @@ final class KernelFactory
         ];
     }
 
-    private static function getReferences(BuildContext $buildContext): array
+    private static function getReferences(BuildConfig $buildConfig): array
     {
         return [
-            new SymfonyReferences\ClassReference($buildContext->getSymfonyApiUrl()),
-            new SymfonyReferences\MethodReference($buildContext->getSymfonyApiUrl()),
-            new SymfonyReferences\NamespaceReference($buildContext->getSymfonyApiUrl()),
-            new SymfonyReferences\PhpFunctionReference($buildContext->getPhpDocUrl()),
-            new SymfonyReferences\PhpMethodReference($buildContext->getPhpDocUrl()),
-            new SymfonyReferences\PhpClassReference($buildContext->getPhpDocUrl()),
+            new SymfonyReferences\ClassReference($buildConfig->getSymfonyApiUrl()),
+            new SymfonyReferences\MethodReference($buildConfig->getSymfonyApiUrl()),
+            new SymfonyReferences\NamespaceReference($buildConfig->getSymfonyApiUrl()),
+            new SymfonyReferences\PhpFunctionReference($buildConfig->getPhpDocUrl()),
+            new SymfonyReferences\PhpMethodReference($buildConfig->getPhpDocUrl()),
+            new SymfonyReferences\PhpClassReference($buildConfig->getPhpDocUrl()),
             new SymfonyReferences\TermReference(),
             new SymfonyReferences\LeaderReference(),
             new SymfonyReferences\MergerReference(),

@@ -17,23 +17,12 @@ use SymfonyDocsBuilder\Command\BuildDocsCommand;
 class Application
 {
     private $application;
-    private $buildContext;
+    private $buildConfig;
 
     public function __construct(string $symfonyVersion)
     {
         $this->application = new BaseApplication();
-
-        $configuration = [
-            'symfony_api_url' => 'https://api.symfony.com/%s',
-            'php_doc_url' => 'https://secure.php.net/manual/en',
-            'symfony_doc_url' => 'https://symfony.com/doc/%s',
-        ];
-        $this->buildContext = new BuildContext(
-            $symfonyVersion,
-            sprintf($configuration['symfony_api_url'], $symfonyVersion),
-            $configuration['php_doc_url'],
-            sprintf($configuration['symfony_doc_url'], $symfonyVersion)
-        );
+        $this->buildConfig = new BuildConfig();
     }
 
     public function run(InputInterface $input): int
@@ -46,7 +35,7 @@ class Application
             false === getenv('SYMFONY_VERSION') ? 'master' : getenv('SYMFONY_VERSION')
         );
         $this->application->getDefinition()->addOption($inputOption);
-        $this->application->add(new BuildDocsCommand($this->buildContext));
+        $this->application->add(new BuildDocsCommand($this->buildConfig));
 
         return $this->application->run($input);
     }

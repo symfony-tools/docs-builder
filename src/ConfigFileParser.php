@@ -9,12 +9,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ConfigFileParser
 {
-    private $buildContext;
+    private $buildConfig;
     private $output;
 
-    public function __construct(BuildContext $buildContext, OutputInterface $output)
+    public function __construct(BuildConfig $buildConfig, OutputInterface $output)
     {
-        $this->buildContext = $buildContext;
+        $this->buildConfig = $buildConfig;
         $this->output = $output;
     }
 
@@ -31,7 +31,7 @@ class ConfigFileParser
         $configData = json_decode(file_get_contents($configPath), true);
 
         $exclude = $configData['exclude'] ?? [];
-        $this->buildContext->setExcludedPaths($exclude);
+        $this->buildConfig->setExcludedPaths($exclude);
         unset($configData['exclude']);
 
         if (count($configData) > 0) {

@@ -16,49 +16,49 @@ use Doctrine\RST\Meta\Metas;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use SymfonyDocsBuilder\BuildContext;
+use SymfonyDocsBuilder\BuildConfig;
 use function Symfony\Component\String\u;
 
 class HtmlForPdfGenerator
 {
     private $metas;
 
-    private $buildContext;
+    private $buildConfig;
 
-    public function __construct(Metas $metas, BuildContext $buildContext)
+    public function __construct(Metas $metas, BuildConfig $buildConfig)
     {
         $this->metas = $metas;
-        $this->buildContext = $buildContext;
+        $this->buildConfig = $buildConfig;
     }
 
     public function generateHtmlForPdf()
     {
         $finder = new Finder();
-        $finder->in($this->buildContext->getOutputDir())
+        $finder->in($this->buildConfig->getOutputDir())
             ->depth(0)
-            ->notName([$this->buildContext->getParseSubPath(), '_images']);
+            ->notName([$this->buildConfig->getSubdirectoryToBuild(), '_images']);
 
         $fs = new Filesystem();
         foreach ($finder as $file) {
             $fs->remove($file->getRealPath());
         }
 
-        $basePath = sprintf('%s/%s', $this->buildContext->getOutputDir(), $this->buildContext->getParseSubPath());
+        $basePath = sprintf('%s/%s', $this->buildConfig->getOutputDir(), $this->buildConfig->getSubdirectoryToBuild());
         $indexFile = sprintf('%s/%s', $basePath, 'index.html');
         if (!$fs->exists($indexFile)) {
             throw new \InvalidArgumentException(sprintf('File "%s" does not exist', $indexFile));
         }
 
         // extracting all files from index's TOC, in the right order
-        $parserFilename = $this->getParserFilename($indexFile, $this->buildContext->getOutputDir());
+        $parserFilename = $this->getParserFilename($indexFile, $this->buildConfig->getOutputDir());
         $meta = $this->getMetaEntry($parserFilename);
         $files = current($meta->getTocs());
-        array_unshift($files, sprintf('%s/index', $this->buildContext->getParseSubPath()));
+        array_unshift($files, sprintf('%s/index', $this->buildConfig->getSubdirectoryToBuild()));
 
         // building one big html file with all contents
         $content = '';
-        $htmlDir = $this->buildContext->getOutputDir();
-        $relativeImagesPath = str_repeat('../', substr_count($this->buildContext->getParseSubPath(), '/'));
+        $htmlDir = $this->buildConfig->getOutputDir();
+        $relativeImagesPath = str_repeat('../', substr_count($this->buildConfig->getSubdirectoryToBuild(), '/'));
         foreach ($files as $file) {
             $meta = $this->getMetaEntry($file);
 
@@ -85,13 +85,13 @@ class HtmlForPdfGenerator
 
         $content = sprintf(
             '<html><head><title>%s</title></head><body>%s</body></html>',
-            $this->buildContext->getParseSubPath(),
+            $this->buildConfig->getSubdirectoryToBuild(),
             $content
         );
 
         $content = $this->cleanupContent($content);
 
-        $filename = sprintf('%s/%s.html', $htmlDir, $this->buildContext->getParseSubPath());
+        $filename = sprintf('%s/%s.html', $htmlDir, $this->buildConfig->getSubdirectoryToBuild());
         file_put_contents($filename, $content);
         $fs->remove($basePath);
     }

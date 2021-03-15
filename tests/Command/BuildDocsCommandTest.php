@@ -16,14 +16,14 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use SymfonyDocsBuilder\BuildContext;
+use SymfonyDocsBuilder\BuildConfig;
 use SymfonyDocsBuilder\Command\BuildDocsCommand;
 
 class BuildDocsCommandTest extends TestCase
 {
     public function testBuildDocsDefault()
     {
-        $buildContext = $this->createBuildContext();
+        $buildConfig = $this->createBuildConfig();
         $outputDir = __DIR__.'/../_output';
 
         $filesystem = new Filesystem();
@@ -31,7 +31,7 @@ class BuildDocsCommandTest extends TestCase
         $filesystem->mkdir($outputDir);
 
         $output = $this->executeCommand(
-            $buildContext,
+            $buildConfig,
             [
                 'source-dir' => __DIR__.'/../fixtures/source/main',
                 'output-dir' => $outputDir,
@@ -43,7 +43,7 @@ class BuildDocsCommandTest extends TestCase
         $this->assertTrue($filesystem->exists(sprintf('%s/_images/symfony-logo.png', $outputDir)));
 
         $output = $this->executeCommand(
-            $buildContext,
+            $buildConfig,
             [
                 'source-dir' => __DIR__.'/../fixtures/source/main',
                 'output-dir' => $outputDir,
@@ -54,29 +54,29 @@ class BuildDocsCommandTest extends TestCase
 
     public function testBuildDocsForPdf()
     {
-        $buildContext = $this->createBuildContext();
-        $outputDir = __DIR__.'/../_output';
+        $buildConfig = $this->createBuildConfig();
 
         $fs = new Filesystem();
-        if ($fs->exists($outputDir)) {
-            $fs->remove($outputDir);
+        if ($fs->exists($buildConfig->getOutputDir())) {
+            $fs->remove($buildConfig->getOutputDir());
+            $fs->mkdir($buildConfig->getOutputDir());
         }
 
         $output = $this->executeCommand(
-            $buildContext,
+            $buildConfig,
             [
                 'source-dir' => __DIR__.'/../fixtures/source/build-pdf',
-                'output-dir' => $outputDir,
+                'output-dir' => $buildConfig->getOutputDir(),
                 '--parse-sub-path' => 'book',
             ]
         );
 
         $filesystem = new Filesystem();
-        $this->assertTrue($filesystem->exists(sprintf('%s/_images/symfony-logo.png', $outputDir)));
-        $this->assertTrue($filesystem->exists(sprintf('%s/book.html', $outputDir)));
+        $this->assertTrue($filesystem->exists(sprintf('%s/_images/symfony-logo.png', $buildConfig->getOutputDir())));
+        $this->assertTrue($filesystem->exists(sprintf('%s/book.html', $buildConfig->getOutputDir())));
 
         $finder = new Finder();
-        $finder->in($outputDir)
+        $finder->in($buildConfig->getOutputDir())
             ->files()
             ->name('*.html');
         $this->assertCount(1, $finder);
@@ -84,31 +84,26 @@ class BuildDocsCommandTest extends TestCase
         $indenter = new Indenter();
         $this->assertSame(
             $indenter->indent(file_get_contents(sprintf('%s/../fixtures/expected/build-pdf/book.html', __DIR__))),
-            $indenter->indent(file_get_contents(sprintf('%s/book.html', $outputDir)))
+            $indenter->indent(file_get_contents(sprintf('%s/book.html', $buildConfig->getOutputDir())))
         );
 
         $this->assertStringContainsString('[OK] Build complete', $output);
     }
 
-    private function executeCommand(BuildContext $buildContext, array $input): string
+    private function executeCommand(BuildConfig $buildConfig, array $input): string
     {
         $input['--no-theme'] = true;
-        $command = new BuildDocsCommand($buildContext);
+        $command = new BuildDocsCommand($buildConfig);
         $commandTester = new CommandTester($command);
         $commandTester->execute($input);
 
         return $commandTester->getDisplay();
     }
 
-    private function createBuildContext(): BuildContext
+    private function createBuildConfig(): BuildConfig
     {
-        $buildContext = new BuildContext(
-            '4.0',
-            'https://api.symfony.com/4.0',
-            'https://secure.php.net/manual/en',
-            'https://symfony.com/doc/4.0'
-        );
-
-        return $buildContext;
+        return (new BuildConfig())
+            ->setSymfonyVersion('4.0')
+            ->setOutputDir(__DIR__.'/../_output');
     }
 }

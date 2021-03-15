@@ -5,7 +5,7 @@ namespace SymfonyDocsBuilder;
 use Doctrine\RST\Builder;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Filesystem\Filesystem;
-use SymfonyDocsBuilder\BuildContext;
+use SymfonyDocsBuilder\BuildConfig;
 use SymfonyDocsBuilder\CI\MissingFilesChecker;
 use SymfonyDocsBuilder\ConfigFileParser;
 use SymfonyDocsBuilder\Generator\HtmlForPdfGenerator;
