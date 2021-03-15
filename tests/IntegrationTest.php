@@ -39,8 +39,8 @@ class IntegrationTest extends TestCase
     public function testIntegration(string $folder)
     {
         $fs = new Filesystem();
-        $fs->remove(__DIR__.'/_output');
-        $fs->mkdir(__DIR__.'/_output');
+        $fs->remove([__DIR__.'/_output', __DIR__.'/_cache']);
+        $fs->mkdir([__DIR__.'/_output', __DIR__.'/_cache']);
 
         $buildConfig = $this->createBuildConfig(sprintf('%s/fixtures/source/%s', __DIR__, $folder));
 

@@ -59,8 +59,8 @@ class BuildDocsCommandTest extends TestCase
         $fs = new Filesystem();
         if ($fs->exists($buildConfig->getOutputDir())) {
             $fs->remove($buildConfig->getOutputDir());
-            $fs->mkdir($buildConfig->getOutputDir());
         }
+        $fs->mkdir($buildConfig->getOutputDir());
 
         $output = $this->executeCommand(
             $buildConfig,
