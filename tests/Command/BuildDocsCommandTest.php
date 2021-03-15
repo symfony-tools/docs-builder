@@ -54,13 +54,13 @@ class BuildDocsCommandTest extends TestCase
 
     public function testBuildDocsForPdf()
     {
-        $buildConfig = $this->createBuildConfig();
-
         $fs = new Filesystem();
         if ($fs->exists($buildConfig->getOutputDir())) {
             $fs->remove($buildConfig->getOutputDir());
         }
         $fs->mkdir($buildConfig->getOutputDir());
+        
+        $buildConfig = $this->createBuildConfig();
 
         $output = $this->executeCommand(
             $buildConfig,
