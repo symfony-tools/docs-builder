@@ -10,6 +10,7 @@
 namespace SymfonyDocsBuilder;
 
 use Doctrine\RST\Configuration;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
 class BuildConfig
@@ -161,6 +162,7 @@ class BuildConfig
 
     public function setOutputDir(string $outputDir): self
     {
+        (new Filesystem())->mkdir($outputDir);
         if (!file_exists($outputDir)) {
             throw new \InvalidArgumentException(sprintf('Doc builder output directory "%s" does not exist', $outputDir));
         }
@@ -172,6 +174,7 @@ class BuildConfig
 
     public function setCacheDir(string $cacheDir): self
     {
+        (new Filesystem())->mkdir($cacheDir);
         if (!file_exists($cacheDir)) {
             throw new \InvalidArgumentException(sprintf('Doc builder cache directory "%s" does not exist', $cacheDir));
         }
@@ -187,6 +190,7 @@ class BuildConfig
      */
     public function setImagesDir(string $imagesDir): self
     {
+        (new Filesystem())->mkdir($imagesDir);
         if (!file_exists($imagesDir)) {
             throw new \InvalidArgumentException(sprintf('Doc builder images directory "%s" does not exist', $imagesDir));
         }
