@@ -75,12 +75,13 @@ class CodeNodeRenderer implements NodeRenderer
         }
 
         $numOfLines = \count(preg_split('/\r\n|\r|\n/', $highlightedCode));
+        $lines = implode("\n", range(1, $numOfLines - 1));
 
         return $this->templateRenderer->render(
             'code.html.twig',
             [
                 'languages' => $languages,
-                'lines' => range(1, $numOfLines - 1),
+                'lines' => $lines,
                 'code' => $highlightedCode,
                 // this is the number of digits of the codeblock lines-of-code
                 // e.g. LOC = 5, digits = 1; LOC = 18, digits = 2
