@@ -145,11 +145,6 @@ class JsonGenerator
         $meta = $this->getMetaEntry($parserFilename, true);
         $parentFile = $meta->getParent();
 
-        // no prev if parent is an index
-        if ('index' === $parentFile) {
-            return null;
-        }
-
         [$toc, $indexCurrentFile] = $this->getNextPrevInformation($parserFilename);
 
         // if current file is the first one of the chapter, prev is the direct parent
