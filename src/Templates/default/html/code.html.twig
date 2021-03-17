@@ -1,18 +1,6 @@
-<div translate="no" class="notranslate literal-block loc-{{ numLocDigits }}">
-    <div class="highlight-{{ language }}">
-        <table class="highlighttable">
-            <tr>
-                <td class="linenos">
-                    <div class="linenodiv">
-                        <pre>{{ lineNumbers }}</pre>
-                    </div>
-                </td>
-                <td class="code">
-                    <div class="highlight">
-                        <pre class="hljs {{ languageMapping }}">{{ code|raw }}</pre>
-                    </div>
-                </td>
-            </tr>
-        </table>
+<div translate="no" class="notranslate codeblock codeblock-loc-{{ numLocDigits }} {{ languages|map(language => "codeblock-#{language}")|join(' ') }}">
+    <div class="codeblock-scroll">
+        <pre class="codeblock-lines">{{ lines }}</pre>
+        <pre class="codeblock-code"><code>{{ code|raw }}</code></pre>
     </div>
 </div>
