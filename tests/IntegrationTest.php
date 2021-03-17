@@ -27,12 +27,6 @@ use SymfonyDocsBuilder\KernelFactory;
 
 class IntegrationTest extends TestCase
 {
-    public function setUp(): void
-    {
-        $fs = new Filesystem();
-        $fs->remove(__DIR__.'/../var');
-    }
-
     /**
      * @dataProvider integrationProvider
      */
@@ -72,16 +66,9 @@ class IntegrationTest extends TestCase
             );
         }
 
-        /*
-         * TODO - get this from the Builder when it is exposed
-         * https://github.com/doctrine/rst-parser/pull/97
-         */
-        $metas = new Metas();
-        $cachedMetasLoader = new CachedMetasLoader();
-        $cachedMetasLoader->loadCachedMetaEntries(__DIR__.'/_output', $metas);
-
+        $metas = $builder->getMetas();
         $jsonGenerator = new JsonGenerator($metas, $buildConfig);
-        $jsonGenerator->generateJson(new ProgressBar(new NullOutput()));
+        $jsonGenerator->generateJson();
 
         foreach ($finder as $htmlFile) {
             $relativePath = $htmlFile->getRelativePathname();
@@ -287,8 +274,9 @@ class IntegrationTest extends TestCase
         return (new BuildConfig())
             ->setSymfonyVersion('4.0')
             ->setContentDir($sourceDir)
+            ->disableBuildCache()
             ->setOutputDir(__DIR__.'/_output')
-            ->setCacheDir(__DIR__.'/_cache');
+        ;
     }
 
     private function createIndenter(): Indenter
