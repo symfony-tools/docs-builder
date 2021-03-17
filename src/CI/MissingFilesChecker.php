@@ -12,29 +12,29 @@ declare(strict_types=1);
 namespace SymfonyDocsBuilder\CI;
 
 use Symfony\Component\Filesystem\Filesystem;
-use SymfonyDocsBuilder\BuildContext;
+use SymfonyDocsBuilder\BuildConfig;
 use function Symfony\Component\String\u;
 
 class MissingFilesChecker
 {
     private $filesystem;
-    private $buildContext;
+    private $buildConfig;
 
-    public function __construct(BuildContext $buildContext)
+    public function __construct(BuildConfig $buildConfig)
     {
         $this->filesystem = new Filesystem();
-        $this->buildContext = $buildContext;
+        $this->buildConfig = $buildConfig;
     }
 
     public function getMissingFiles(): array
     {
-        $finder = $this->buildContext->createFileFinder();
+        $finder = $this->buildConfig->createFileFinder();
 
         $orphanedFiles = [];
 
         foreach ($finder as $file) {
-            $sourcePath = u($file->getPathname())->after($this->buildContext->getSourceDir())->trimStart('/');
-            $htmlFile = sprintf('%s/%s.html', $this->buildContext->getOutputDir(), $sourcePath->slice(0, -4));
+            $sourcePath = u($file->getPathname())->after($this->buildConfig->getContentDir())->trimStart('/');
+            $htmlFile = sprintf('%s/%s.html', $this->buildConfig->getOutputDir(), $sourcePath->slice(0, -4));
 
             $firstLine = fgets(fopen($file->getRealPath(), 'rb'));
             if (!$this->filesystem->exists($htmlFile) && ':orphan:' !== trim($firstLine)) {

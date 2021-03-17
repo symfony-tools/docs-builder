@@ -21,7 +21,7 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use SymfonyDocsBuilder\BuildContext;
+use SymfonyDocsBuilder\BuildConfig;
 use SymfonyDocsBuilder\Generator\JsonGenerator;
 use SymfonyDocsBuilder\KernelFactory;
 
@@ -39,13 +39,13 @@ class IntegrationTest extends TestCase
     public function testIntegration(string $folder)
     {
         $fs = new Filesystem();
-        $fs->remove(__DIR__.'/_output');
-        $fs->mkdir(__DIR__.'/_output');
+        $fs->remove([__DIR__.'/_output', __DIR__.'/_cache']);
+        $fs->mkdir([__DIR__.'/_output', __DIR__.'/_cache']);
 
-        $buildContext = $this->createBuildContext(sprintf('%s/fixtures/source/%s', __DIR__, $folder));
+        $buildConfig = $this->createBuildConfig(sprintf('%s/fixtures/source/%s', __DIR__, $folder));
 
         $builder = new Builder(
-            KernelFactory::createKernel($buildContext)
+            KernelFactory::createKernel($buildConfig)
         );
 
         $builder->build(
@@ -80,7 +80,7 @@ class IntegrationTest extends TestCase
         $cachedMetasLoader = new CachedMetasLoader();
         $cachedMetasLoader->loadCachedMetaEntries(__DIR__.'/_output', $metas);
 
-        $jsonGenerator = new JsonGenerator($metas, $buildContext);
+        $jsonGenerator = new JsonGenerator($metas, $buildConfig);
         $jsonGenerator->generateJson(new ProgressBar(new NullOutput()));
 
         foreach ($finder as $htmlFile) {
@@ -127,7 +127,7 @@ class IntegrationTest extends TestCase
         $configuration->setCustomTemplateDirs([__DIR__.'/Templates']);
 
         $parser = new Parser(
-            KernelFactory::createKernel($this->createBuildContext(sprintf('%s/fixtures/source/blocks', __DIR__)))
+            KernelFactory::createKernel($this->createBuildConfig(sprintf('%s/fixtures/source/blocks', __DIR__)))
         );
 
         $sourceFile = sprintf('%s/fixtures/source/blocks/%s.rst', __DIR__, $blockName);
@@ -282,22 +282,13 @@ class IntegrationTest extends TestCase
         ];
     }
 
-    private function createBuildContext(string $sourceDir): BuildContext
+    private function createBuildConfig(string $sourceDir): BuildConfig
     {
-        $buildContext = new BuildContext(
-            '4.0',
-            'https://api.symfony.com/4.0',
-            'https://secure.php.net/manual/en',
-            'https://symfony.com/doc/4.0'
-        );
-        $buildContext->initializeRuntimeConfig(
-            $sourceDir,
-            __DIR__.'/_output',
-            null
-        );
-        $buildContext->setCacheDirectory(__DIR__.'/_cache');
-
-        return $buildContext;
+        return (new BuildConfig())
+            ->setSymfonyVersion('4.0')
+            ->setContentDir($sourceDir)
+            ->setOutputDir(__DIR__.'/_output')
+            ->setCacheDir(__DIR__.'/_cache');
     }
 
     private function createIndenter(): Indenter

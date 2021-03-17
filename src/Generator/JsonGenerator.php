@@ -19,22 +19,22 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
-use SymfonyDocsBuilder\BuildContext;
+use SymfonyDocsBuilder\BuildConfig;
 use function Symfony\Component\String\u;
 
 class JsonGenerator
 {
     private $metas;
 
-    private $buildContext;
+    private $buildConfig;
 
     /** @var SymfonyStyle|null */
     private $output;
 
-    public function __construct(Metas $metas, BuildContext $buildContext)
+    public function __construct(Metas $metas, BuildConfig $buildConfig)
     {
         $this->metas = $metas;
-        $this->buildContext = $buildContext;
+        $this->buildConfig = $buildConfig;
     }
 
     public function generateJson()
@@ -46,9 +46,9 @@ class JsonGenerator
 
         foreach ($this->metas->getAll() as $filename => $metaEntry) {
             $parserFilename = $filename;
-            $jsonFilename = $this->buildContext->getOutputDir().'/'.$filename.'.fjson';
+            $jsonFilename = $this->buildConfig->getOutputDir().'/'.$filename.'.fjson';
 
-            $crawler = new Crawler(file_get_contents($this->buildContext->getOutputDir().'/'.$filename.'.html'));
+            $crawler = new Crawler(file_get_contents($this->buildConfig->getOutputDir().'/'.$filename.'.html'));
 
             $data = [
                 'title' => $metaEntry->getTitle(),

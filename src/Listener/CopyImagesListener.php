@@ -15,16 +15,16 @@ use Doctrine\RST\ErrorManager;
 use Doctrine\RST\Event\PreNodeRenderEvent;
 use Doctrine\RST\Nodes\ImageNode;
 use Symfony\Component\Filesystem\Filesystem;
-use SymfonyDocsBuilder\BuildContext;
+use SymfonyDocsBuilder\BuildConfig;
 
 class CopyImagesListener
 {
-    private $buildContext;
+    private $buildConfig;
     private $errorManager;
 
-    public function __construct(BuildContext $buildContext, ErrorManager $errorManager)
+    public function __construct(BuildConfig $buildConfig, ErrorManager $errorManager)
     {
-        $this->buildContext = $buildContext;
+        $this->buildConfig = $buildConfig;
         $this->errorManager = $errorManager;
     }
 
@@ -50,13 +50,10 @@ class CopyImagesListener
         $fileInfo = new \SplFileInfo($sourceImage);
         $fs = new Filesystem();
 
-        // the /_images path is currently hardcoded here and respected
-        // in the overridden image node template
-        $newPath = '/_images/'.$fileInfo->getFilename();
-        $fs->copy($sourceImage, $this->buildContext->getOutputDir().$newPath, true);
+        $newAbsoluteFilePath = $this->buildConfig->getImagesDir().'/'.$fileInfo->getFilename();
+        $fs->copy($sourceImage, $newAbsoluteFilePath, true);
 
-        $node->setValue($node->getEnvironment()->relativeUrl(
-            '/_images/'.$fileInfo->getFilename()
-        ));
+        $newUrlPath = $this->buildConfig->getImagesPublicPrefix().'/'.$fileInfo->getFilename();
+        $node->setValue($node->getEnvironment()->relativeUrl($newUrlPath));
     }
 }

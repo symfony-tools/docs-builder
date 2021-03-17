@@ -21,13 +21,13 @@ use SymfonyDocsBuilder\Listener\CopyImagesListener;
 
 class DocsKernel extends Kernel
 {
-    private $buildContext;
+    private $buildConfig;
 
-    public function __construct(BuildContext $buildContext, ?Configuration $configuration = null, $directives = [], $references = [])
+    public function __construct(BuildConfig $buildConfig, ?Configuration $configuration = null, $directives = [], $references = [])
     {
         parent::__construct($configuration, $directives, $references);
 
-        $this->buildContext = $buildContext;
+        $this->buildConfig = $buildConfig;
     }
 
     public function initBuilder(Builder $builder): void
@@ -37,20 +37,20 @@ class DocsKernel extends Kernel
             $builder->getErrorManager()
         );
 
-        $builder->setScannerFinder($this->buildContext->createFileFinder());
+        $builder->setScannerFinder($this->buildConfig->createFileFinder());
     }
 
     private function initializeListeners(EventManager $eventManager, ErrorManager $errorManager)
     {
         $eventManager->addEventListener(
            PreNodeRenderEvent::PRE_NODE_RENDER,
-           new CopyImagesListener($this->buildContext, $errorManager)
+           new CopyImagesListener($this->buildConfig, $errorManager)
        );
 
-        if (!$this->buildContext->getParseSubPath()) {
+        if (!$this->buildConfig->getSubdirectoryToBuild()) {
             $eventManager->addEventListener(
                [PostBuildRenderEvent::POST_BUILD_RENDER],
-               new AssetsCopyListener($this->buildContext->getOutputDir())
+               new AssetsCopyListener($this->buildConfig->getOutputDir())
            );
         }
     }

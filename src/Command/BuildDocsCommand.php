@@ -22,7 +22,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
-use SymfonyDocsBuilder\BuildContext;
+use SymfonyDocsBuilder\BuildConfig;
 use SymfonyDocsBuilder\CI\MissingFilesChecker;
 use SymfonyDocsBuilder\ConfigFileParser;
 use SymfonyDocsBuilder\Generator\HtmlForPdfGenerator;
@@ -34,17 +34,17 @@ class BuildDocsCommand extends Command
 {
     protected static $defaultName = 'build:docs';
 
-    private $buildContext;
+    private $buildConfig;
     private $missingFilesChecker;
     /** @var SymfonyStyle */
     private $io;
 
-    public function __construct(BuildContext $buildContext)
+    public function __construct(BuildConfig $buildConfig)
     {
         parent::__construct(self::$defaultName);
 
-        $this->buildContext = $buildContext;
-        $this->missingFilesChecker = new MissingFilesChecker($buildContext);
+        $this->buildConfig = $buildConfig;
+        $this->missingFilesChecker = new MissingFilesChecker($buildConfig);
     }
 
     protected function configure()
@@ -102,47 +102,46 @@ class BuildDocsCommand extends Command
         if (!file_exists($sourceDir)) {
             throw new \InvalidArgumentException(sprintf('RST source directory "%s" does not exist', $sourceDir));
         }
+        $this->buildConfig->setContentDir($sourceDir);
 
         $filesystem = new Filesystem();
         $htmlOutputDir = $input->getArgument('output-dir') ?? rtrim(getcwd(), '/').'/html';
         if ($input->getOption('disable-cache') && $filesystem->exists($htmlOutputDir)) {
             $filesystem->remove($htmlOutputDir);
         }
-
         $filesystem->mkdir($htmlOutputDir);
+        $this->buildConfig->setOutputDir($htmlOutputDir);
 
         $parseSubPath = $input->getOption('parse-sub-path');
         if ($parseSubPath && $input->getOption('output-json')) {
             throw new \InvalidArgumentException('Cannot pass both --parse-sub-path and --output-json options.');
         }
-
         if (!file_exists($sourceDir.'/'.$parseSubPath)) {
             throw new \InvalidArgumentException(sprintf('Given "parse-sub-path" directory "%s" does not exist', $parseSubPath));
         }
+        $this->buildConfig->setSubdirectoryToBuild($parseSubPath);
 
-        $this->buildContext->initializeRuntimeConfig(
-            $sourceDir,
-            $htmlOutputDir,
-            $parseSubPath,
-            $input->getOption('disable-cache'),
-            $input->getOption('no-theme') ? Configuration::THEME_DEFAULT : 'rtd'
-        );
+        if ($input->getOption('disable-cache')) {
+            $this->buildConfig->disableBuildCache();
+        }
 
-        $configFileParser = new ConfigFileParser($this->buildContext, $output);
+        $this->buildConfig->setTheme($input->getOption('no-theme') ? Configuration::THEME_DEFAULT : 'rtd');
+
+        $configFileParser = new ConfigFileParser($this->buildConfig, $output);
         $configFileParser->processConfigFile($sourceDir);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $builder = new Builder(
-            KernelFactory::createKernel($this->buildContext, $this->urlChecker ?? null)
+            KernelFactory::createKernel($this->buildConfig, $this->urlChecker ?? null)
         );
 
         $this->addProgressListener($builder->getConfiguration()->getEventManager());
 
         $builder->build(
-            $this->buildContext->getSourceDir(),
-            $this->buildContext->getOutputDir()
+            $this->buildConfig->getContentDir(),
+            $this->buildConfig->getOutputDir()
         );
 
         $buildErrors = $builder->getErrorManager()->getErrors();
@@ -164,7 +163,7 @@ class BuildDocsCommand extends Command
         }
 
         $metas = $builder->getMetas();
-        if ($this->buildContext->getParseSubPath()) {
+        if ($this->buildConfig->getSubdirectoryToBuild()) {
             $this->renderDocForPDF($metas);
         } elseif ($input->getOption('output-json')) {
             $this->generateJson($metas);
@@ -189,14 +188,14 @@ class BuildDocsCommand extends Command
     {
         $this->io->note('Start exporting doc into json files');
 
-        $jsonGenerator = new JsonGenerator($metas, $this->buildContext);
+        $jsonGenerator = new JsonGenerator($metas, $this->buildConfig);
         $jsonGenerator->setOutput($this->io);
         $jsonGenerator->generateJson();
     }
 
     private function renderDocForPDF(Metas $metas)
     {
-        $htmlForPdfGenerator = new HtmlForPdfGenerator($metas, $this->buildContext);
+        $htmlForPdfGenerator = new HtmlForPdfGenerator($metas, $this->buildConfig);
         $htmlForPdfGenerator->generateHtmlForPdf();
     }
 
