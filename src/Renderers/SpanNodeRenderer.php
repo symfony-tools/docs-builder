@@ -67,7 +67,7 @@ class SpanNodeRenderer extends BaseSpanNodeRenderer
         // some browsers can't break long <code> properly, so we inject a
         // `<wbr>` (word-break HTML tag) after some characters to help break those
         // We only do this for very long <code> (4 or more \\) to not break short
-        // and common `<code> such as App\Entity\Something
+        // and common `<code>` such as App\Entity\Something
         if (substr_count($text, '\\') >= 4) {
             // breaking before the backslask is what Firefox browser does
             $text = str_replace('\\', '<wbr>\\', $text);
