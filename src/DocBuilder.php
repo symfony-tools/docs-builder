@@ -27,7 +27,7 @@ final class DocBuilder
 
         $buildResult = new BuildResult(
             $builder->getErrorManager()->getErrors(),
-            $builder->getMetas()
+            $builder
         );
 
         $missingFilesChecker = new MissingFilesChecker($config);
@@ -47,7 +47,7 @@ final class DocBuilder
             $htmlForPdfGenerator->generateHtmlForPdf();
         } else {
             $jsonGenerator = new JsonGenerator($metas, $config);
-            $buildResult->setJsonResults($jsonGenerator->generateJson());
+            $buildResult->setJsonResults($jsonGenerator->generateJson($builder->getIndexName()));
         }
 
         return $buildResult;

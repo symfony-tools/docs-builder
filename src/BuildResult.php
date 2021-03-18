@@ -16,13 +16,13 @@ use SymfonyDocsBuilder\KernelFactory;
 class BuildResult
 {
     private $errors;
-    private $metas;
+    private $builder;
     private $jsonResults = [];
 
-    public function __construct(array $errors, Metas $metas)
+    public function __construct(array $errors, Builder $builder)
     {
         $this->errors = $errors;
-        $this->metas = $metas;
+        $this->builder = $builder;
     }
 
     public function appendError(string $errorMessage): void
@@ -47,7 +47,19 @@ class BuildResult
 
     public function getMetas(): Metas
     {
-        return $this->metas;
+        return $this->builder->getMetas();
+    }
+
+    /**
+     * Returns the "master document": the first file whose toctree is parsed.
+     *
+     * Unless customized, this is "index" (i.e. file index.rst).
+     *
+     * @return string
+     */
+    public function getMasterDocumentFilename(): string
+    {
+        return $this->builder->getIndexName();
     }
 
     /**

@@ -35,11 +35,11 @@ class JsonIntegrationTest extends AbstractIntegrationTest
         yield 'index' => [
             'file' => 'index',
             'data' => [
-                //'parents' => [],
+                'parents' => [],
                 'prev' => null,
                 'next' => [
-                    'link' => 'dashboards/',
-                    'title' => 'Dashboards'
+                    'title' => 'Dashboards',
+                    'link' => 'dashboards.html',
                 ],
                 'title' => 'JSON Generation Test',
             ]
@@ -48,46 +48,88 @@ class JsonIntegrationTest extends AbstractIntegrationTest
         yield 'dashboards' => [
             'file' => 'dashboards',
             'data' => [
-                //'parents' => [],
+                'parents' => [],
                 'prev' => [
                     'title' => 'JSON Generation Test',
                     'link' => 'index.html',
                 ],
                 'next' => [
+                    'title' => 'Design',
+                    'link' => 'design.html',
+                ],
+                'title' => 'Dashboards',
+            ]
+        ];
+
+        yield 'design' => [
+            'file' => 'design',
+            'data' => [
+                'parents' => [],
+                'prev' => [
+                    'title' => 'Dashboards',
+                    'link' => 'dashboards.html',
+                ],
+                'next' => [
                     'title' => 'CRUD',
                     'link' => 'crud.html',
                 ],
-                'title' => 'Dashboards',
+                'title' => 'Design',
             ]
         ];
 
         yield 'crud' => [
            'file' => 'crud',
            'data' => [
-               //'parents' => [],
+               'parents' => ['design'],
                'prev' => [
-                   'title' => 'Dashboards',
-                   'link' => 'dashboards.html',
-               ],
-               'next' => [
                    'title' => 'Design',
                    'link' => 'design.html',
+               ],
+               'next' => [
+                   'title' => 'Design Sub-Page',
+                   'link' => 'design/sub-page.html',
                ],
                'title' => 'CRUD',
            ]
        ];
 
-        yield 'design' => [
-           'file' => 'design',
+        yield 'design/sub-page' => [
+            'file' => 'design/sub-page',
+            'data' => [
+                'parents' => ['design'],
+                'prev' => [
+                    'title' => 'CRUD',
+                    'link' => 'crud.html',
+                ],
+                'next' => [
+                    'title' => 'Fields',
+                    'link' => 'fields.html',
+                ],
+                'title' => 'Design Sub-Page',
+            ]
+        ];
+
+        yield 'fields' => [
+           'file' => 'fields',
            'data' => [
-               //'parents' => [],
+               'parents' => [],
                'prev' => [
-                   'title' => 'CRUD',
-                   'link' => 'crud.html',
+                   'title' => 'Design Sub-Page',
+                   'link' => 'design/sub-page.html',
                ],
                'next' => null,
-               'title' => 'Design',
+               'title' => 'Fields',
            ]
        ];
+
+        yield 'orphan' => [
+          'file' => 'orphan',
+          'data' => [
+              'parents' => [],
+              'prev' => null,
+              'next' => null,
+              'title' => 'Orphan',
+          ]
+      ];
     }
 }
