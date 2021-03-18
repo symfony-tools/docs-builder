@@ -3,6 +3,7 @@
 namespace SymfonyDocsBuilder;
 
 use Doctrine\RST\Builder;
+use Doctrine\RST\Meta\Metas;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Filesystem\Filesystem;
 use SymfonyDocsBuilder\BuildConfig;
@@ -15,10 +16,13 @@ use SymfonyDocsBuilder\KernelFactory;
 class BuildResult
 {
     private $errors;
+    private $metas;
+    private $jsonResults = [];
 
-    public function __construct(array $errors)
+    public function __construct(array $errors, Metas $metas)
     {
         $this->errors = $errors;
+        $this->metas = $metas;
     }
 
     public function appendError(string $errorMessage): void
@@ -39,5 +43,25 @@ class BuildResult
     public function getErrors(): array
     {
         return $this->errors;
+    }
+
+    public function getMetas(): Metas
+    {
+        return $this->metas;
+    }
+
+    /**
+     * Returns the JSON data generated for each file, keyed by the source filename.
+     *
+     * @return string[]
+     */
+    public function getJsonResults(): array
+    {
+        return $this->jsonResults;
+    }
+
+    public function setJsonResults(array $jsonResults): void
+    {
+        $this->jsonResults = $jsonResults;
     }
 }

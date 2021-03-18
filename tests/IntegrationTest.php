@@ -9,43 +9,25 @@
 
 namespace SymfonyDocsBuilder\Tests;
 
-use Doctrine\RST\Builder;
 use Doctrine\RST\Configuration;
-use Doctrine\RST\Meta\CachedMetasLoader;
-use Doctrine\RST\Meta\Metas;
 use Doctrine\RST\Parser;
 use Gajus\Dindent\Indenter;
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use SymfonyDocsBuilder\BuildConfig;
+use SymfonyDocsBuilder\DocBuilder;
 use SymfonyDocsBuilder\Generator\JsonGenerator;
 use SymfonyDocsBuilder\KernelFactory;
 
-class IntegrationTest extends TestCase
+class IntegrationTest extends AbstractIntegrationTest
 {
     /**
      * @dataProvider integrationProvider
      */
     public function testIntegration(string $folder)
     {
-        $fs = new Filesystem();
-        $fs->remove([__DIR__.'/_output', __DIR__.'/_cache']);
-        $fs->mkdir([__DIR__.'/_output', __DIR__.'/_cache']);
-
         $buildConfig = $this->createBuildConfig(sprintf('%s/fixtures/source/%s', __DIR__, $folder));
-
-        $builder = new Builder(
-            KernelFactory::createKernel($buildConfig)
-        );
-
-        $builder->build(
-            sprintf('%s/fixtures/source/%s', __DIR__, $folder),
-            __DIR__.'/_output'
-        );
+        $builder = new DocBuilder();
+        $buildResult = $builder->build($buildConfig);
 
         $finder = new Finder();
         $finder->in(sprintf('%s/fixtures/expected/%s', __DIR__, $folder))
@@ -55,7 +37,7 @@ class IntegrationTest extends TestCase
         $indenter = $this->createIndenter();
         foreach ($finder as $expectedFile) {
             $relativePath = $expectedFile->getRelativePathname();
-            $actualFilename = __DIR__.'/_output/'.$relativePath;
+            $actualFilename = $buildConfig->getOutputDir().'/'.$relativePath;
             $this->assertFileExists($actualFilename);
 
             $this->assertSame(
@@ -66,13 +48,9 @@ class IntegrationTest extends TestCase
             );
         }
 
-        $metas = $builder->getMetas();
-        $jsonGenerator = new JsonGenerator($metas, $buildConfig);
-        $jsonGenerator->generateJson();
-
         foreach ($finder as $htmlFile) {
             $relativePath = $htmlFile->getRelativePathname();
-            $actualFilename = __DIR__.'/_output/'.str_replace('.html', '.fjson', $relativePath);
+            $actualFilename = $buildConfig->getOutputDir().'/'.str_replace('.html', '.fjson', $relativePath);
             $this->assertFileExists($actualFilename);
 
             $jsonData = json_decode(file_get_contents($actualFilename), true);
@@ -267,16 +245,6 @@ class IntegrationTest extends TestCase
         yield 'code-block-terminal' => [
             'blockName' => 'code-blocks/terminal',
         ];
-    }
-
-    private function createBuildConfig(string $sourceDir): BuildConfig
-    {
-        return (new BuildConfig())
-            ->setSymfonyVersion('4.0')
-            ->setContentDir($sourceDir)
-            ->disableBuildCache()
-            ->setOutputDir(__DIR__.'/_output')
-        ;
     }
 
     private function createIndenter(): Indenter
