@@ -1,4 +1,3 @@
-
 here is some php code from literal::
 
     // config/routes.php
@@ -9,3 +8,6 @@ here is some php code from literal::
             ->controller('App\Controller\CompanyController::about');
     };
 
+The CRUD controller of ``App\Entity\Example`` must implement
+the ``EasyCorp\Bundle\EasyAdminBundle\Contracts\Controller\CrudControllerInterface``,
+but you can also extend from the ``AbstractCrudController`` class.
