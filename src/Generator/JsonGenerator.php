@@ -37,13 +37,19 @@ class JsonGenerator
         $this->buildConfig = $buildConfig;
     }
 
-    public function generateJson()
+    /**
+     * Returns an array of each JSON file string, keyed by the input filename
+     *
+     * @return string[]
+     */
+    public function generateJson(): array
     {
         $fs = new Filesystem();
 
         $progressBar = new ProgressBar($this->output ?: new NullOutput());
         $progressBar->setMaxSteps(\count($this->metas->getAll()));
 
+        $fJsonFiles = [];
         foreach ($this->metas->getAll() as $filename => $metaEntry) {
             $parserFilename = $filename;
             $jsonFilename = $this->buildConfig->getOutputDir().'/'.$filename.'.fjson';
@@ -67,11 +73,14 @@ class JsonGenerator
                 $jsonFilename,
                 json_encode($data, JSON_PRETTY_PRINT)
             );
+            $fJsonFiles[$filename] = json_encode($data, JSON_PRETTY_PRINT);
 
             $progressBar->advance();
         }
 
         $progressBar->finish();
+
+        return $fJsonFiles;
     }
 
     public function setOutput(SymfonyStyle $output)
