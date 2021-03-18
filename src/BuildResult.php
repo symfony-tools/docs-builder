@@ -53,7 +53,7 @@ class BuildResult
     /**
      * Returns the JSON data generated for each file, keyed by the source filename.
      *
-     * @return string[]
+     * @return array[]
      */
     public function getJsonResults(): array
     {

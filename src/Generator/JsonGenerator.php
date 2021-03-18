@@ -73,7 +73,7 @@ class JsonGenerator
                 $jsonFilename,
                 json_encode($data, JSON_PRETTY_PRINT)
             );
-            $fJsonFiles[$filename] = json_encode($data, JSON_PRETTY_PRINT);
+            $fJsonFiles[$filename] = $data;
 
             $progressBar->advance();
         }
