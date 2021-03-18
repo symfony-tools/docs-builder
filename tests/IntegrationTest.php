@@ -15,7 +15,6 @@ use Gajus\Dindent\Indenter;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Finder\Finder;
 use SymfonyDocsBuilder\DocBuilder;
-use SymfonyDocsBuilder\Generator\JsonGenerator;
 use SymfonyDocsBuilder\KernelFactory;
 
 class IntegrationTest extends AbstractIntegrationTest
@@ -27,7 +26,7 @@ class IntegrationTest extends AbstractIntegrationTest
     {
         $buildConfig = $this->createBuildConfig(sprintf('%s/fixtures/source/%s', __DIR__, $folder));
         $builder = new DocBuilder();
-        $buildResult = $builder->build($buildConfig);
+        $builder->build($buildConfig);
 
         $finder = new Finder();
         $finder->in(sprintf('%s/fixtures/expected/%s', __DIR__, $folder))

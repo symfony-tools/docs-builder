@@ -106,12 +106,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/rst-parser.git",
-                "reference": "7907706178f02198a423a907d5aa83dc2a356b70"
+                "reference": "9f9887b282307c7cc8ff92a2c98aec39346696d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/rst-parser/zipball/7907706178f02198a423a907d5aa83dc2a356b70",
-                "reference": "7907706178f02198a423a907d5aa83dc2a356b70",
+                "url": "https://api.github.com/repos/doctrine/rst-parser/zipball/9f9887b282307c7cc8ff92a2c98aec39346696d9",
+                "reference": "9f9887b282307c7cc8ff92a2c98aec39346696d9",
                 "shasum": ""
             },
             "require": {
@@ -130,6 +130,7 @@
                 "phpstan/phpstan-strict-rules": "^0.12",
                 "phpunit/phpunit": "^7.5 || ^8.0 || ^9.0"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -164,9 +165,9 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/rst-parser/issues",
-                "source": "https://github.com/doctrine/rst-parser/tree/0.3.x"
+                "source": "https://github.com/doctrine/rst-parser/tree/0.3.1"
             },
-            "time": "2021-03-08T20:11:41+00:00"
+            "time": "2021-03-15T18:19:47+00:00"
         },
         {
             "name": "psr/container",
