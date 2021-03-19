@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use SymfonyDocsBuilder\BuildConfig;
 
-class AbstractIntegrationTest extends TestCase
+abstract class AbstractIntegrationTest extends TestCase
 {
     protected function createBuildConfig(string $sourceDir): BuildConfig
     {

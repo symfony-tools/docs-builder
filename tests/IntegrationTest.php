@@ -96,14 +96,16 @@ class IntegrationTest extends AbstractIntegrationTest
 
         $sourceFile = sprintf('%s/fixtures/source/blocks/%s.rst', __DIR__, $blockName);
 
-        $document = $parser->parseFile($sourceFile)->renderDocument();
+        $actualHtml = $parser->parseFile($sourceFile)->renderDocument();
+        $expectedHtml = file_get_contents(sprintf('%s/fixtures/expected/blocks/%s.html', __DIR__, $blockName));
 
+        $actualCrawler = new Crawler($actualHtml);
+        $expectedCrawler = new Crawler($expectedHtml);
         $indenter = $this->createIndenter();
 
-        $expectedFile = sprintf('%s/fixtures/expected/blocks/%s.html', __DIR__, $blockName);
         $this->assertSame(
-            str_replace(" \n", "\n", $indenter->indent(file_get_contents($expectedFile))),
-            str_replace(" \n", "\n", $indenter->indent($document))
+            $indenter->indent(trim($expectedCrawler->filter('body')->html())),
+            $indenter->indent(trim($actualCrawler->filter('body')->html()))
         );
     }
 
@@ -195,6 +197,10 @@ class IntegrationTest extends AbstractIntegrationTest
 
         yield 'php-method-reference' => [
             'blockName' => 'references/php-method',
+        ];
+
+        yield 'reference-and-code' => [
+            'blockName' => 'references/reference-and-code',
         ];
 
         yield 'code-block-php' => [
