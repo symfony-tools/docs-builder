@@ -85,7 +85,7 @@ class IntegrationTest extends AbstractIntegrationTest
     /**
      * @dataProvider parserUnitBlockProvider
      */
-    public function testParseUnitBlock(string $blockName)
+    public function testParseUnitBlock(string $blockName, bool $useIndenter = true)
     {
         $configuration = new Configuration();
         $configuration->setCustomTemplateDirs([__DIR__.'/Templates']);
@@ -101,6 +101,11 @@ class IntegrationTest extends AbstractIntegrationTest
         $indenter = $this->createIndenter();
 
         $expectedFile = sprintf('%s/fixtures/expected/blocks/%s.html', __DIR__, $blockName);
+
+        if (!$useIndenter) {
+            $this->assertSame(file_get_contents($expectedFile), $document);
+        }
+
         $this->assertSame(
             str_replace(" \n", "\n", $indenter->indent(file_get_contents($expectedFile))),
             str_replace(" \n", "\n", $indenter->indent($document))
@@ -195,6 +200,11 @@ class IntegrationTest extends AbstractIntegrationTest
 
         yield 'php-method-reference' => [
             'blockName' => 'references/php-method',
+        ];
+
+        yield 'reference-and-code' => [
+            'blockName' => 'references/reference-and-code',
+            'useIndenter' => false,
         ];
 
         yield 'code-block-php' => [
