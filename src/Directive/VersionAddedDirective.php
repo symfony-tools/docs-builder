@@ -23,12 +23,15 @@ class VersionAddedDirective extends SubDirective
     public function processSub(Parser $parser, ?Node $document, string $variable, string $data, array $options): ?Node
     {
         $wrapperDiv = $parser->renderTemplate(
-            'directives/version-added.html.twig',
+            'directives/admonition.html.twig',
             [
+                'name' => 'versionadded',
+                'text' => sprintf('New in version %s', $data),
+                'class' => $options['class'] ?? null,
                 'version' => $data,
             ]
         );
 
-        return $parser->getNodeFactory()->createWrapperNode($document, $wrapperDiv, '</div></div>');
+        return $parser->getNodeFactory()->createWrapperNode($document, $wrapperDiv, '</div>');
     }
 }
