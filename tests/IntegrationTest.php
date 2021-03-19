@@ -85,7 +85,7 @@ class IntegrationTest extends AbstractIntegrationTest
     /**
      * @dataProvider parserUnitBlockProvider
      */
-    public function testParseUnitBlock(string $blockName, bool $useIndenter = true)
+    public function testParseUnitBlock(string $blockName)
     {
         $configuration = new Configuration();
         $configuration->setCustomTemplateDirs([__DIR__.'/Templates']);
@@ -96,19 +96,15 @@ class IntegrationTest extends AbstractIntegrationTest
 
         $sourceFile = sprintf('%s/fixtures/source/blocks/%s.rst', __DIR__, $blockName);
 
-        $document = $parser->parseFile($sourceFile)->renderDocument();
+        $actualHtml = $parser->parseFile($sourceFile)->renderDocument();
+        $expectedHtml = file_get_contents(sprintf('%s/fixtures/expected/blocks/%s.html', __DIR__, $blockName));
 
-        $indenter = $this->createIndenter();
-
-        $expectedFile = sprintf('%s/fixtures/expected/blocks/%s.html', __DIR__, $blockName);
-
-        if (!$useIndenter) {
-            $this->assertSame(file_get_contents($expectedFile), $document);
-        }
+        $actualCrawler = new Crawler($actualHtml);
+        $expectedCrawler = new Crawler($expectedHtml);
 
         $this->assertSame(
-            str_replace(" \n", "\n", $indenter->indent(file_get_contents($expectedFile))),
-            str_replace(" \n", "\n", $indenter->indent($document))
+            trim($expectedCrawler->filter('body')->html()),
+            trim($actualCrawler->filter('body')->html())
         );
     }
 
@@ -204,7 +200,6 @@ class IntegrationTest extends AbstractIntegrationTest
 
         yield 'reference-and-code' => [
             'blockName' => 'references/reference-and-code',
-            'useIndenter' => false,
         ];
 
         yield 'code-block-php' => [
