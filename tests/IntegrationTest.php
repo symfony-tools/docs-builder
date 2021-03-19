@@ -101,10 +101,11 @@ class IntegrationTest extends AbstractIntegrationTest
 
         $actualCrawler = new Crawler($actualHtml);
         $expectedCrawler = new Crawler($expectedHtml);
+        $indenter = $this->createIndenter();
 
         $this->assertSame(
-            trim($expectedCrawler->filter('body')->html()),
-            trim($actualCrawler->filter('body')->html())
+            $indenter->indent(trim($expectedCrawler->filter('body')->html())),
+            $indenter->indent(trim($actualCrawler->filter('body')->html()))
         );
     }
 
