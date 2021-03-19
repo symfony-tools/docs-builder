@@ -74,6 +74,11 @@ class CodeNodeRenderer implements NodeRenderer
             $highlightedCode = str_replace('<span class="hljs-variable">$', '<span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>', $highlightedCode);
         }
 
+        if ('terminal' === $language) {
+            $highlightedCode = preg_replace('/^\$/m', '<span class="hljs-prompt">$</span>', $highlightedCode);
+            $highlightedCode = preg_replace('/^C:\\\&gt;/m', '<span class="hljs-prompt">C:\&gt;</span>', $highlightedCode);
+        }
+
         $numOfLines = \count(preg_split('/\r\n|\r|\n/', $highlightedCode));
         $lines = implode("\n", range(1, $numOfLines - 1));
 
