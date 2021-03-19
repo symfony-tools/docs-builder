@@ -39,13 +39,13 @@ class Compiler
             unlink($pharFile);
         }
 
-        $process = new Process('git log --pretty="%H" -n1 HEAD', __DIR__);
+        $process = new Process(['git', 'log', '--pretty="%H"', '-n1', 'HEAD'], __DIR__);
         if (0 != $process->run()) {
             throw new \RuntimeException('Can\'t run git log.');
         }
         $this->version = trim($process->getOutput());
 
-        $process = new Process('git log -n1 --pretty=%ci HEAD', __DIR__);
+        $process = new Process(['git', 'log', '-n1', '--pretty=%ci', 'HEAD'], __DIR__);
         if (0 != $process->run()) {
             throw new \RuntimeException('Can\'t run git log.');
         }
@@ -53,7 +53,7 @@ class Compiler
         $date->setTimezone(new \DateTimeZone('UTC'));
         $this->versionDate = $date->format('Y-m-d H:i:s');
 
-        $process = new Process('git describe --tags HEAD');
+        $process = new Process(['git', 'describe', '--tags', 'HEAD']);
         if (0 == $process->run()) {
             $this->version = trim($process->getOutput());
         }
@@ -80,11 +80,11 @@ class Compiler
             ->name('*.php')
             ->exclude('Tests')
             ->in(__DIR__.'/../../vendor/doctrine/')
+            ->in(__DIR__.'/../../vendor/gajus/')
             ->in(__DIR__.'/../../vendor/psr/')
             ->in(__DIR__.'/../../vendor/scrivo/')
             ->in(__DIR__.'/../../vendor/symfony/')
             ->in(__DIR__.'/../../vendor/twig/')
-            ->in(__DIR__.'/../../vendor/ralouphie/')
         ;
 
         foreach ($finder as $file) {
