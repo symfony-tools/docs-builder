@@ -76,11 +76,6 @@ class JsonGenerator
                 'toc' => $this->generateToc($metaEntry, current($metaEntry->getTitles())[1]),
                 'next' => $next,
                 'prev' => $prev,
-                'rellinks' => [
-                    // probably these shouldn't be straight copies of next/prev
-                    $next,
-                    $prev,
-                ],
                 'body' => $crawler->filter('body')->html(),
             ];
 

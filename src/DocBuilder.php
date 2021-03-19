@@ -25,10 +25,7 @@ final class DocBuilder
         $builder = new Builder(KernelFactory::createKernel($config));
         $builder->build($config->getContentDir(), $config->getOutputDir());
 
-        $buildResult = new BuildResult(
-            $builder->getErrorManager()->getErrors(),
-            $builder
-        );
+        $buildResult = new BuildResult($builder);
 
         $missingFilesChecker = new MissingFilesChecker($config);
         $missingFiles = $missingFilesChecker->getMissingFiles();
@@ -41,7 +38,7 @@ final class DocBuilder
             $filesystem->dumpFile($config->getOutputDir().'/build_errors.txt', implode("\n", $buildResult->getErrors()));
         }
 
-        $metas = $buildResult->getMetas();
+        $metas = $buildResult->getMetadata();
         if ($config->getSubdirectoryToBuild()) {
             $htmlForPdfGenerator = new HtmlForPdfGenerator($metas, $config);
             $htmlForPdfGenerator->generateHtmlForPdf();
