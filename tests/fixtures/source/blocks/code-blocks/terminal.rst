@@ -5,3 +5,10 @@
 .. code-block:: terminal
 
     $ cowsay 'eat more chicken'
+    $ cowsay 'mmmm'
+
+.. code-block:: terminal
+
+    C:\> CIV
+
+    # Civilization for DOS - my first computer game!
