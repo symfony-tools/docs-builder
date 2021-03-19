@@ -37,29 +37,45 @@ class JsonGenerator
         $this->buildConfig = $buildConfig;
     }
 
-    public function generateJson()
+    /**
+     * Returns an array of each JSON file string, keyed by the input filename
+     *
+     * @param string $masterDocument The file whose toctree should be read first
+     * @return string[]
+     */
+    public function generateJson(string $masterDocument = 'index'): array
     {
         $fs = new Filesystem();
 
         $progressBar = new ProgressBar($this->output ?: new NullOutput());
         $progressBar->setMaxSteps(\count($this->metas->getAll()));
 
+        $walkedFiles = [];
+        $tocTreeHierarchy = $this->walkTocTreeAndReturnHierarchy(
+            $masterDocument,
+            $walkedFiles
+        );
+        // for purposes of prev/next/parents, the "master document"
+        // behaves as if it's the first item in the toctree
+        $tocTreeHierarchy = [$masterDocument => []] + $tocTreeHierarchy;
+        $flattenedTocTree = $this->flattenTocTree($tocTreeHierarchy);
+
+        $fJsonFiles = [];
         foreach ($this->metas->getAll() as $filename => $metaEntry) {
             $parserFilename = $filename;
             $jsonFilename = $this->buildConfig->getOutputDir().'/'.$filename.'.fjson';
 
             $crawler = new Crawler(file_get_contents($this->buildConfig->getOutputDir().'/'.$filename.'.html'));
 
+            $next = $this->determineNext($parserFilename, $flattenedTocTree, $masterDocument);
+            $prev = $this->determinePrev($parserFilename, $flattenedTocTree);
             $data = [
                 'title' => $metaEntry->getTitle(),
+                'parents' => $this->determineParents($parserFilename, $tocTreeHierarchy) ?: [],
                 'current_page_name' => $parserFilename,
                 'toc' => $this->generateToc($metaEntry, current($metaEntry->getTitles())[1]),
-                'next' => $this->guessNext($parserFilename),
-                'prev' => $this->guessPrev($parserFilename),
-                'rellinks' => [
-                    $this->guessNext($parserFilename),
-                    $this->guessPrev($parserFilename),
-                ],
+                'next' => $next,
+                'prev' => $prev,
                 'body' => $crawler->filter('body')->html(),
             ];
 
@@ -67,11 +83,14 @@ class JsonGenerator
                 $jsonFilename,
                 json_encode($data, JSON_PRETTY_PRINT)
             );
+            $fJsonFiles[$filename] = $data;
 
             $progressBar->advance();
         }
 
         $progressBar->finish();
+
+        return $fJsonFiles;
     }
 
     public function setOutput(SymfonyStyle $output)
@@ -100,114 +119,60 @@ class JsonGenerator
         return $tocTree;
     }
 
-    private function guessNext(string $parserFilename): ?array
+    private function determineNext(string $parserFilename, array $flattenedTocTree): ?array
     {
-        $meta = $this->getMetaEntry($parserFilename, true);
+        $foundCurrentFile = false;
+        $nextFileName = null;
 
-        $parentFile = $meta->getParent();
+        foreach ($flattenedTocTree as $filename) {
+            if ($foundCurrentFile) {
+                $nextFileName = $filename;
 
-        // if current file is an index, next is the first chapter
-        if ('index' === $parentFile && 1 === \count($tocs = $meta->getTocs()) && \count($tocs[0]) > 0) {
-            $firstChapterMeta = $this->getMetaEntry($tocs[0][0]);
-
-            if (null === $firstChapterMeta) {
-                return null;
+                break;
             }
 
-            return [
-                'title' => $firstChapterMeta->getTitle(),
-                'link' => $firstChapterMeta->getUrl(),
-            ];
+            if ($filename === $parserFilename) {
+                $foundCurrentFile = true;
+            }
         }
 
-        [$toc, $indexCurrentFile] = $this->getNextPrevInformation($parserFilename);
-
-        if (!isset($toc[$indexCurrentFile + 1])) {
+        // no next document found!
+        if (null === $nextFileName) {
             return null;
         }
 
-        $nextFileName = $toc[$indexCurrentFile + 1];
-
-        $nextMeta = $this->getMetaEntry($nextFileName);
-
-        if (null === $nextMeta) {
-            return null;
-        }
+        $meta = $this->getMetaEntry($nextFileName);
 
         return [
-            'title' => $nextMeta->getTitle(),
-            'link' => $nextMeta->getUrl(),
+            'title' => $meta->getTitle(),
+            'link' => $meta->getUrl(),
         ];
     }
 
-    private function guessPrev(string $parserFilename): ?array
+    private function determinePrev(string $parserFilename, array $flattenedTocTree): ?array
     {
-        $meta = $this->getMetaEntry($parserFilename, true);
-        $parentFile = $meta->getParent();
-
-        // no prev if parent is an index
-        if ('index' === $parentFile) {
-            return null;
-        }
-
-        [$toc, $indexCurrentFile] = $this->getNextPrevInformation($parserFilename);
-
-        // if current file is the first one of the chapter, prev is the direct parent
-        if (0 === $indexCurrentFile) {
-            $parentMeta = $this->getMetaEntry($parentFile);
-
-            if (null === $parentMeta) {
-                return null;
+        $previousFileName = null;
+        $foundCurrentFile = false;
+        foreach ($flattenedTocTree as $filename) {
+            if ($filename === $parserFilename) {
+                $foundCurrentFile = true;
+                break;
             }
 
-            return [
-                'title' => $parentMeta->getTitle(),
-                'link' => $parentMeta->getUrl(),
-            ];
+            $previousFileName = $filename;
         }
 
-        if (!isset($toc[$indexCurrentFile - 1])) {
+        // no previous document found!
+        if (null === $previousFileName || !$foundCurrentFile) {
             return null;
         }
 
-        $prevFileName = $toc[$indexCurrentFile - 1];
-
-        $prevMeta = $this->getMetaEntry($prevFileName);
-
-        if (null === $prevMeta) {
-            return null;
-        }
+        $meta = $this->getMetaEntry($previousFileName);
 
         return [
-            'title' => $prevMeta->getTitle(),
-            'link' => $prevMeta->getUrl(),
+            'title' => $meta->getTitle(),
+            'link' => $meta->getUrl(),
         ];
-    }
-
-    private function getNextPrevInformation(string $parserFilename): ?array
-    {
-        $meta = $this->getMetaEntry($parserFilename, true);
-        $parentFile = $meta->getParent();
-
-        if (!$parentFile) {
-            return [null, null];
-        }
-
-        $metaParent = $this->getMetaEntry($parentFile);
-
-        if (null === $metaParent || !$metaParent->getTocs() || 1 !== \count($metaParent->getTocs())) {
-            return [null, null];
-        }
-
-        $toc = current($metaParent->getTocs());
-
-        if (\count($toc) < 2 || !isset(array_flip($toc)[$parserFilename])) {
-            return [null, null];
-        }
-
-        $indexCurrentFile = array_flip($toc)[$parserFilename];
-
-        return [$toc, $indexCurrentFile];
     }
 
     private function getMetaEntry(string $parserFilename, bool $throwOnMissing = false): ?MetaEntry
@@ -228,5 +193,88 @@ class JsonGenerator
         }
 
         return $metaEntry;
+    }
+
+    /**
+     * Creates a hierarchy of documents by crawling the toctree's
+     *
+     * This looks at the
+     * toc tree of the master document, following the first entry
+     * like a link, then repeating the process on the next document's
+     * toc tree (if it has one). When it hits a dead end, it would
+     * go back to the master document and click the second link.
+     * But, it skips any links that have been seen before. This
+     * is the logic behind how the prev/next parent information is created.
+     *
+     * Example result:
+     *      [
+     *          'dashboards' => [],
+     *          'design' => [
+     *              'crud' => [],
+     *              'design/sub-page' => [],
+     *          ],
+     *          'fields' => []
+     *      ]
+     *
+     * See the JsonIntegrationTest for a test case.
+     */
+    private function walkTocTreeAndReturnHierarchy(string $filename, array &$walkedFiles): array
+    {
+        $hierarchy = [];
+        foreach ($this->getMetaEntry($filename)->getTocs() as $toc) {
+            foreach ($toc as $tocFilename) {
+                // only walk a file one time, the first time you see it
+                if (in_array($tocFilename, $walkedFiles, true)) {
+                    continue;
+                }
+
+                $walkedFiles[] = $tocFilename;
+
+                $hierarchy[$tocFilename] = $this->walkTocTreeAndReturnHierarchy($tocFilename, $walkedFiles);
+            }
+        }
+
+        return $hierarchy;
+    }
+
+    /**
+     * Takes the structure from walkTocTreeAndReturnHierarchy() and flattens it.
+     *
+     * For example:
+     *
+     *      [dashboards, design, crud, design/sub-page, fields]
+     *
+     * @return string[]
+     */
+    private function flattenTocTree(array $tocTreeHierarchy): array
+    {
+        $files = [];
+
+        foreach ($tocTreeHierarchy as $filename => $tocTree) {
+            $files[] = $filename;
+
+            $files = array_merge($files, $this->flattenTocTree($tocTree));
+        }
+
+        return $files;
+    }
+
+    private function determineParents(string $parserFilename, array $tocTreeHierarchy, array $parents = []): ?array
+    {
+        foreach ($tocTreeHierarchy as $filename => $tocTree) {
+            if ($filename === $parserFilename) {
+                return $parents;
+            }
+
+            $subParents = $this->determineParents($parserFilename, $tocTree, $parents + [$filename]);
+
+            if (null !== $subParents) {
+                // the item WAS found and the parents were returned
+                return $subParents;
+            }
+        }
+
+        // item was not found
+        return null;
     }
 }

@@ -8,6 +8,11 @@
             "SymfonyDocsBuilder\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "SymfonyDocsBuilder\\Tests\\": "tests"
+        }
+    },
     "require": {
         "ext-json": "*",
         "ext-curl": "*",
