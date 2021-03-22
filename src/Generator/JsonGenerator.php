@@ -141,12 +141,7 @@ class JsonGenerator
             return null;
         }
 
-        $meta = $this->getMetaEntry($nextFileName);
-
-        return [
-            'title' => $meta->getTitle(),
-            'link' => $meta->getUrl(),
-        ];
+        return $this->makeRelativeLink($parserFilename, $nextFileName);
     }
 
     private function determinePrev(string $parserFilename, array $flattenedTocTree): ?array
@@ -167,12 +162,7 @@ class JsonGenerator
             return null;
         }
 
-        $meta = $this->getMetaEntry($previousFileName);
-
-        return [
-            'title' => $meta->getTitle(),
-            'link' => $meta->getUrl(),
-        ];
+        return $this->makeRelativeLink($parserFilename, $previousFileName);
     }
 
     private function getMetaEntry(string $parserFilename, bool $throwOnMissing = false): ?MetaEntry
@@ -266,7 +256,7 @@ class JsonGenerator
                 return $parents;
             }
 
-            $subParents = $this->determineParents($parserFilename, $tocTree, $parents + [$filename]);
+            $subParents = $this->determineParents($parserFilename, $tocTree, $parents + [$this->makeRelativeLink($parserFilename, $filename)]);
 
             if (null !== $subParents) {
                 // the item WAS found and the parents were returned
@@ -276,5 +266,15 @@ class JsonGenerator
 
         // item was not found
         return null;
+    }
+
+    private function makeRelativeLink(string $currentFilename, string $filename): array
+    {
+        $meta = $this->getMetaEntry($filename);
+
+        return [
+            'title' => $meta->getTitle(),
+            'link' => str_repeat('../', substr_count($currentFilename, '/')).$meta->getUrl(),
+        ];
     }
 }

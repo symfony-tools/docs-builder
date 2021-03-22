@@ -80,7 +80,12 @@ class JsonIntegrationTest extends AbstractIntegrationTest
         yield 'crud' => [
            'file' => 'crud',
            'data' => [
-               'parents' => ['design'],
+               'parents' => [
+                    [
+                        'title' => 'Design',
+                        'link' => 'design.html',
+                    ],
+                ],
                'prev' => [
                    'title' => 'Design',
                    'link' => 'design.html',
@@ -96,14 +101,19 @@ class JsonIntegrationTest extends AbstractIntegrationTest
         yield 'design/sub-page' => [
             'file' => 'design/sub-page',
             'data' => [
-                'parents' => ['design'],
+                'parents' => [
+                    [
+                        'title' => 'Design',
+                        'link' => '../design.html',
+                    ],
+                ],
                 'prev' => [
                     'title' => 'CRUD',
-                    'link' => 'crud.html',
+                    'link' => '../crud.html',
                 ],
                 'next' => [
                     'title' => 'Fields',
-                    'link' => 'fields.html',
+                    'link' => '../fields.html',
                 ],
                 'title' => 'Design Sub-Page',
             ]
