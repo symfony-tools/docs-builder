@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6d6c30105c41457eb65862b1a6684d01",
+    "content-hash": "2739ab0cffd3ad3caba1283d0b2e09e2",
     "packages": [
         {
             "name": "doctrine/event-manager",
@@ -102,16 +102,16 @@
         },
         {
             "name": "doctrine/rst-parser",
-            "version": "0.3.x-dev",
+            "version": "0.4.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/rst-parser.git",
-                "reference": "9f9887b282307c7cc8ff92a2c98aec39346696d9"
+                "reference": "e5e7cbe60957f30924d2b51e1ce284f3ddd0a868"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/rst-parser/zipball/9f9887b282307c7cc8ff92a2c98aec39346696d9",
-                "reference": "9f9887b282307c7cc8ff92a2c98aec39346696d9",
+                "url": "https://api.github.com/repos/doctrine/rst-parser/zipball/e5e7cbe60957f30924d2b51e1ce284f3ddd0a868",
+                "reference": "e5e7cbe60957f30924d2b51e1ce284f3ddd0a868",
                 "shasum": ""
             },
             "require": {
@@ -128,9 +128,10 @@
                 "phpstan/phpstan-deprecation-rules": "^0.12",
                 "phpstan/phpstan-phpunit": "^0.12",
                 "phpstan/phpstan-strict-rules": "^0.12",
-                "phpunit/phpunit": "^7.5 || ^8.0 || ^9.0"
+                "phpunit/phpunit": "^7.5 || ^8.0 || ^9.0",
+                "symfony/css-selector": "4.4 || ^5.2",
+                "symfony/dom-crawler": "4.4 || ^5.2"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -165,9 +166,9 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/rst-parser/issues",
-                "source": "https://github.com/doctrine/rst-parser/tree/0.3.1"
+                "source": "https://github.com/doctrine/rst-parser/tree/0.4.x"
             },
-            "time": "2021-03-15T18:19:47+00:00"
+            "time": "2021-03-22T20:21:31+00:00"
         },
         {
             "name": "psr/container",

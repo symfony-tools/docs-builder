@@ -16,7 +16,7 @@
     "require": {
         "ext-json": "*",
         "ext-curl": "*",
-        "doctrine/rst-parser": "0.3.x-dev",
+        "doctrine/rst-parser": "0.4.x-dev",
         "scrivo/highlight.php": "^9.12.0",
         "symfony/filesystem": "^5.2",
         "symfony/finder": "^5.2",

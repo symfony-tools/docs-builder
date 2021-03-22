@@ -103,7 +103,7 @@ class IntegrationTest extends AbstractIntegrationTest
         $expectedCrawler = new Crawler($expectedHtml);
         $indenter = $this->createIndenter();
 
-        $expected = trim($expectedCrawler->filter('body')->html())
+        $expected = trim($expectedCrawler->filter('body')->html());
         // you can add notes to a test file via <!-- REMOVE the notes here -->
         // we remove them here for comparing
         $expected = preg_replace('/<\!\-\- REMOVE(.)+\-\->/', '', $expected);
