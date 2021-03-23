@@ -29,6 +29,10 @@ abstract class AbstractAdmonitionDirective extends SubDirective
 
     final public function processSub(Parser $parser, ?Node $document, string $variable, string $data, array $options): ?Node
     {
+        if (null === $document) {
+            throw new \RuntimeException('Content expected, none found.');
+        }
+
         $wrapperDiv = $parser->renderTemplate(
             'directives/admonition.html.twig',
             [

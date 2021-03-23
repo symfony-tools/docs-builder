@@ -103,8 +103,13 @@ class IntegrationTest extends AbstractIntegrationTest
         $expectedCrawler = new Crawler($expectedHtml);
         $indenter = $this->createIndenter();
 
+        $expected = trim($expectedCrawler->filter('body')->html());
+        // you can add notes to a test file via <!-- REMOVE the notes here -->
+        // we remove them here for comparing
+        $expected = preg_replace('/<\!\-\- REMOVE(.)+\-\->/', '', $expected);
+
         $this->assertSame(
-            $indenter->indent(trim($expectedCrawler->filter('body')->html())),
+            $indenter->indent($expected),
             $indenter->indent(trim($actualCrawler->filter('body')->html()))
         );
     }
@@ -121,6 +126,10 @@ class IntegrationTest extends AbstractIntegrationTest
 
         yield 'list' => [
             'blockName' => 'nodes/list',
+        ];
+
+        yield 'figure' => [
+            'blockName' => 'nodes/figure',
         ];
 
         yield 'caution' => [
