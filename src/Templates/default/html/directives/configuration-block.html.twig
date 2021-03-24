@@ -1,8 +1,8 @@
 <div class="configuration-block">
     <ul class="configuration-tabs">
         {% for block in blocks %}
-            <li>
-                <a href="#" {{ loop.first ? 'data-active' }} data-language="{{ block.language }}">{{ block.language }}</a>
+            <li data-language="{{ block.language }}" {{ loop.first ? 'data-active="true"' }}>
+                <a href="#">{{ block.language }}</a>
             </li>
         {% endfor %}
     </ul>
