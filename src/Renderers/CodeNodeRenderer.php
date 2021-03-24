@@ -53,7 +53,7 @@ class CodeNodeRenderer implements NodeRenderer
 
     public function render(): string
     {
-        $code = $this->codeNode->getValue();
+        $code = trim($this->codeNode->getValue());
         if ($this->codeNode->isRaw()) {
             return $code;
         }
@@ -79,7 +79,6 @@ class CodeNodeRenderer implements NodeRenderer
             $highlightedCode = preg_replace('/^C:\\\&gt;/m', '<span class="hljs-prompt">C:\&gt;</span>', $highlightedCode);
         }
 
-        $highlightedCode = trim($highlightedCode);
         $numOfLines = \count(preg_split('/\r\n|\r|\n/', $highlightedCode));
         $lines = implode("\n", range(1, $numOfLines));
 
