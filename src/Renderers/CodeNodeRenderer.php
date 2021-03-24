@@ -79,8 +79,9 @@ class CodeNodeRenderer implements NodeRenderer
             $highlightedCode = preg_replace('/^C:\\\&gt;/m', '<span class="hljs-prompt">C:\&gt;</span>', $highlightedCode);
         }
 
+        $highlightedCode = trim($highlightedCode);
         $numOfLines = \count(preg_split('/\r\n|\r|\n/', $highlightedCode));
-        $lines = implode("\n", range(1, $numOfLines - 1));
+        $lines = implode("\n", range(1, $numOfLines));
 
         return $this->templateRenderer->render(
             'code.html.twig',
