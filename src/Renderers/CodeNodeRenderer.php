@@ -53,7 +53,7 @@ class CodeNodeRenderer implements NodeRenderer
 
     public function render(): string
     {
-        $code = $this->codeNode->getValue();
+        $code = trim($this->codeNode->getValue());
         if ($this->codeNode->isRaw()) {
             return $code;
         }
@@ -80,7 +80,7 @@ class CodeNodeRenderer implements NodeRenderer
         }
 
         $numOfLines = \count(preg_split('/\r\n|\r|\n/', $highlightedCode));
-        $lines = implode("\n", range(1, $numOfLines - 1));
+        $lines = implode("\n", range(1, $numOfLines));
 
         return $this->templateRenderer->render(
             'code.html.twig',
