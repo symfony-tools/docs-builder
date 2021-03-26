@@ -1,9 +1,14 @@
 <div class="configuration-block">
-    <ul class="simple">
+    <ul class="configuration-tabs">
         {% for block in blocks %}
-            <li>
-                <em>{{ block.language }}</em>
-                {{ block.code|raw }}
+            <li data-language="{{ block.language }}" {{ loop.first ? 'data-active="true"' }}>
+                <span>{{ block.language }}</span>
             </li>
         {% endfor %}
     </ul>
+
+    {% for block in blocks %}
+        <div class="configuration-codeblock" data-language="{{ block.language }}" style="{{ not loop.first ? 'display: none' }}">
+            {{ block.code|raw }}
+        </div>
+    {% endfor %}
