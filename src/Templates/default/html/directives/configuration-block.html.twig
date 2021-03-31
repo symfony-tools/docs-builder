@@ -2,7 +2,7 @@
     <ul class="configuration-tabs">
         {% for block in blocks %}
             <li data-language="{{ block.language }}" {{ loop.first ? 'data-active="true"' }}>
-                <span>{{ block.language }}</span>
+                <span>{{ block.language_label }}</span>
             </li>
         {% endfor %}
     </ul>
