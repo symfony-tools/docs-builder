@@ -17,6 +17,27 @@ use function strtoupper;
 
 class ConfigurationBlockDirective extends SubDirective
 {
+    private const LANGUAGE_LABELS = [
+        'env' => 'Bash',
+        'html+jinja' => 'Twig',
+        'html+php' => 'PHP',
+        'html+twig' => 'Twig',
+        'jinja' => 'Twig',
+        'php' => 'PHP',
+        'php-annotations' => 'Annotations',
+        'php-attributes' => 'Attributes',
+        'php-standalone' => 'Standalone PHP apps',
+        'php-symfony' => 'Symfony apps',
+        'rst' => 'RST',
+        'terminal' => 'Bash',
+        'varnish3' => 'Varnish 3',
+        'varnish4' => 'Varnish 4',
+        'vcl' => 'VCL',
+        'xml' => 'XML',
+        'xml+php' => 'XML',
+        'yaml' => 'YAML',
+    ];
+
     public function getName(): string
     {
         return 'configuration-block';
@@ -33,7 +54,8 @@ class ConfigurationBlockDirective extends SubDirective
             $language = $node->getLanguage() ?? 'Unknown';
 
             $blocks[] = [
-                'language' => $this->formatLanguageTab($language),
+                'language_label' => self::LANGUAGE_LABELS[$language] ?? ucfirst(str_replace('-', ' ', $language)),
+                'language' => $language,
                 'code' => $node->render(),
             ];
         }
@@ -46,24 +68,5 @@ class ConfigurationBlockDirective extends SubDirective
         );
 
         return $parser->getNodeFactory()->createWrapperNode(null, $wrapperDiv, '</div>');
-    }
-
-    /**
-     * A hack to print exactly what we want in the tab of a configuration block.
-     */
-    private function formatLanguageTab(string $language): string
-    {
-        switch ($language) {
-            case 'php-annotations':
-                return 'Annotations';
-            case 'php-attributes':
-                return 'Attributes';
-            case 'xml':
-            case 'yaml':
-            case 'php':
-                return strtoupper($language);
-            default:
-                return $language;
-        }
     }
 }
