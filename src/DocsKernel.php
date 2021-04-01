@@ -14,10 +14,12 @@ use Doctrine\RST\Builder;
 use Doctrine\RST\Configuration;
 use Doctrine\RST\ErrorManager;
 use Doctrine\RST\Event\PostBuildRenderEvent;
+use Doctrine\RST\Event\PostNodeCreateEvent;
 use Doctrine\RST\Event\PreNodeRenderEvent;
 use Doctrine\RST\Kernel;
 use SymfonyDocsBuilder\Listener\AssetsCopyListener;
 use SymfonyDocsBuilder\Listener\CopyImagesListener;
+use SymfonyDocsBuilder\Listener\TocCustomizerListener;
 
 class DocsKernel extends Kernel
 {
@@ -46,6 +48,11 @@ class DocsKernel extends Kernel
            PreNodeRenderEvent::PRE_NODE_RENDER,
            new CopyImagesListener($this->buildConfig, $errorManager)
        );
+
+        $eventManager->addEventListener(
+            PreNodeRenderEvent::PRE_NODE_RENDER,
+            new TocCustomizerListener($this->buildConfig, $errorManager)
+        );
 
         if (!$this->buildConfig->getSubdirectoryToBuild()) {
             $eventManager->addEventListener(

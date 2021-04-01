@@ -1,4 +1,11 @@
 {% apply spaceless %}
+    {# this defines the size of the TOC (which depends on how many visible items that TOC has)
+        which is used to display TOCs differently (e.g. show large TOCs in 2 columns, etc.) #}
+    {% set is_first_deep_level = 1 == (toc_deep_level ?? 1) %}
+    {% if is_first_deep_level %}
+        {% set toc_size = numOfVisibleTocItems < 10 ? 'md' : numOfVisibleTocItems < 20 ? 'lg' : 'xl' %}
+    {% endif %}
+
     <div class="toctree-wrapper">
         {% include "toc-level.html.twig" %}
     </div>

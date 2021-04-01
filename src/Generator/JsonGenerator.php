@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace SymfonyDocsBuilder\Generator;
 
-use Doctrine\RST\Environment;
 use Doctrine\RST\Meta\MetaEntry;
 use Doctrine\RST\Meta\Metas;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -20,7 +19,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 use SymfonyDocsBuilder\BuildConfig;
-use function Symfony\Component\String\u;
 
 class JsonGenerator
 {
@@ -67,13 +65,15 @@ class JsonGenerator
 
             $crawler = new Crawler(file_get_contents($this->buildConfig->getOutputDir().'/'.$filename.'.html'));
 
+            $tocGenerator = new TocGenerator($metaEntry);
             $next = $this->determineNext($parserFilename, $flattenedTocTree, $masterDocument);
             $prev = $this->determinePrev($parserFilename, $flattenedTocTree);
             $data = [
                 'title' => $metaEntry->getTitle(),
                 'parents' => $this->determineParents($parserFilename, $tocTreeHierarchy) ?: [],
                 'current_page_name' => $parserFilename,
-                'toc' => $this->generateToc($metaEntry, current($metaEntry->getTitles())[1]),
+                'toc' => $tocGenerator->getToc(),
+                'toc_num_items' => $tocGenerator->getNumItemsPerLevel(),
                 'next' => $next,
                 'prev' => $prev,
                 'body' => $crawler->filter('body')->html(),
@@ -96,27 +96,6 @@ class JsonGenerator
     public function setOutput(SymfonyStyle $output)
     {
         $this->output = $output;
-    }
-
-    private function generateToc(MetaEntry $metaEntry, ?array $titles): array
-    {
-        if (null === $titles) {
-            return [];
-        }
-
-        $tocTree = [];
-
-        foreach ($titles as $title) {
-            $tocTree[] = [
-                'url' => sprintf('%s#%s', $metaEntry->getUrl(), Environment::slugify($title[0])),
-                'page' => u($metaEntry->getUrl())->beforeLast('.html'),
-                'fragment' => Environment::slugify($title[0]),
-                'title' => $title[0],
-                'children' => $this->generateToc($metaEntry, $title[1]),
-            ];
-        }
-
-        return $tocTree;
     }
 
     private function determineNext(string $parserFilename, array $flattenedTocTree): ?array
