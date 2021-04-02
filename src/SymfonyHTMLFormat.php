@@ -14,6 +14,7 @@ namespace SymfonyDocsBuilder;
 use Doctrine\RST\Formats\Format;
 use Doctrine\RST\Nodes\CodeNode;
 use Doctrine\RST\Nodes\SpanNode;
+use Doctrine\RST\Nodes\TocNode;
 use Doctrine\RST\Renderers\CallableNodeRendererFactory;
 use Doctrine\RST\Renderers\NodeRendererFactory;
 use Doctrine\RST\Templates\TemplateRenderer;
@@ -52,6 +53,16 @@ final class SymfonyHTMLFormat implements Format
     public function getNodeRendererFactories(): array
     {
         $nodeRendererFactories = $this->htmlFormat->getNodeRendererFactories();
+
+        $nodeRendererFactories[TocNode::class] = new CallableNodeRendererFactory(
+            function (TocNode $node) {
+                return new Renderers\TocNodeRenderer(
+                    $node->getEnvironment(),
+                    $node,
+                    $this->templateRenderer
+                );
+            }
+        );
 
         $nodeRendererFactories[CodeNode::class] = new CallableNodeRendererFactory(
             function (CodeNode $node) {

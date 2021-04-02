@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace SymfonyDocsBuilder\Generator;
 
+use Doctrine\RST\Environment;
 use Doctrine\RST\Meta\MetaEntry;
 use Doctrine\RST\Meta\Metas;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -19,6 +20,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 use SymfonyDocsBuilder\BuildConfig;
+use function Symfony\Component\String\u;
 
 class JsonGenerator
 {
@@ -65,15 +67,14 @@ class JsonGenerator
 
             $crawler = new Crawler(file_get_contents($this->buildConfig->getOutputDir().'/'.$filename.'.html'));
 
-            $tocGenerator = new TocGenerator($metaEntry);
             $next = $this->determineNext($parserFilename, $flattenedTocTree, $masterDocument);
             $prev = $this->determinePrev($parserFilename, $flattenedTocTree);
             $data = [
                 'title' => $metaEntry->getTitle(),
                 'parents' => $this->determineParents($parserFilename, $tocTreeHierarchy) ?: [],
                 'current_page_name' => $parserFilename,
-                'toc' => $tocGenerator->getToc(),
-                'toc_num_items' => $tocGenerator->getNumItemsPerLevel(),
+                'toc' => $toc = $this->generateToc($metaEntry, current($metaEntry->getTitles())[1]),
+                'toc_options' => $this->getTocOptions($toc),
                 'next' => $next,
                 'prev' => $prev,
                 'body' => $crawler->filter('body')->html(),
@@ -96,6 +97,72 @@ class JsonGenerator
     public function setOutput(SymfonyStyle $output)
     {
         $this->output = $output;
+    }
+
+    private function generateToc(MetaEntry $metaEntry, ?array $titles, int $level = 1): array
+    {
+        if (null === $titles) {
+            return [];
+        }
+
+        $tocTree = [];
+
+        foreach ($titles as $title) {
+            $tocTree[] = [
+                'level' => $level,
+                'url' => sprintf('%s#%s', $metaEntry->getUrl(), Environment::slugify($title[0])),
+                'page' => u($metaEntry->getUrl())->beforeLast('.html'),
+                'fragment' => Environment::slugify($title[0]),
+                'title' => $title[0],
+                'children' => $this->generateToc($metaEntry, $title[1], $level + 1),
+            ];
+        }
+
+        return $tocTree;
+    }
+
+    private function getTocOptions(array $toc): array
+    {
+        $flattendToc = $this->flattenToc($toc);
+        $maxDepth = 0;
+        $numVisibleItems = 0;
+        foreach ($flattendToc as $tocItem) {
+            $maxDepth = max($maxDepth, $tocItem['level']);
+            $numVisibleItems++;
+        }
+
+        return [
+            'maxDepth' => $maxDepth,
+            'numVisibleItems' => $numVisibleItems,
+            'size' => $this->getTocSize($numVisibleItems),
+        ];
+    }
+
+    // If you change this method, make the same change in TocNodeRenderer too
+    private function getTocSize(int $numVisibleItems): string
+    {
+        if ($numVisibleItems < 10) {
+            return 'md';
+        }
+
+        if ($numVisibleItems < 20) {
+            return 'lg';
+        }
+
+        return 'xl';
+    }
+
+    private function flattenToc(array $toc, array &$flattenedToc = []): array
+    {
+        foreach ($toc as $item) {
+            $flattenedToc[] = $item;
+
+            if ([] !== $item['children']) {
+                $this->flattenToc($item['children'], $flattenedToc);
+            }
+        }
+
+        return $flattenedToc;
     }
 
     private function determineNext(string $parserFilename, array $flattenedTocTree): ?array

@@ -49,11 +49,6 @@ class DocsKernel extends Kernel
            new CopyImagesListener($this->buildConfig, $errorManager)
        );
 
-        $eventManager->addEventListener(
-            PreNodeRenderEvent::PRE_NODE_RENDER,
-            new TocCustomizerListener($this->buildConfig, $errorManager)
-        );
-
         if (!$this->buildConfig->getSubdirectoryToBuild()) {
             $eventManager->addEventListener(
                [PostBuildRenderEvent::POST_BUILD_RENDER],

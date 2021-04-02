@@ -74,7 +74,12 @@ class JsonIntegrationTest extends AbstractIntegrationTest
                     'link' => 'crud.html',
                 ],
                 'title' => 'Design',
-            ]
+                'toc_options' => [
+                    'maxDepth' => 2,
+                    'numVisibleItems' => 3,
+                    'size' => 'md'
+                ],
+            ],
         ];
 
         yield 'crud' => [
