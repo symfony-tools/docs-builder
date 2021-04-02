@@ -54,16 +54,6 @@ final class SymfonyHTMLFormat implements Format
     {
         $nodeRendererFactories = $this->htmlFormat->getNodeRendererFactories();
 
-        $nodeRendererFactories[TocNode::class] = new CallableNodeRendererFactory(
-            function (TocNode $node) {
-                return new Renderers\TocNodeRenderer(
-                    $node->getEnvironment(),
-                    $node,
-                    $this->templateRenderer
-                );
-            }
-        );
-
         $nodeRendererFactories[CodeNode::class] = new CallableNodeRendererFactory(
             function (CodeNode $node) {
                 return new Renderers\CodeNodeRenderer(

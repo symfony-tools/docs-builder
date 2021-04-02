@@ -1,5 +1,6 @@
 {% apply spaceless %}
-    <div class="toctree-wrapper toc-size-{{ tocOptions.size }}">
+    {% set toc_options = toc_options(tocItems) %}
+    <div class="toctree-wrapper toc-size-{{ toc_options.size }}">
         {% include "toc-level.html.twig" %}
     </div>
 {% endapply %}

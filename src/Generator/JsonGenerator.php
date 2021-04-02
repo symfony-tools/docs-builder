@@ -20,6 +20,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 use SymfonyDocsBuilder\BuildConfig;
+use SymfonyDocsBuilder\Twig\TocExtension;
 use function Symfony\Component\String\u;
 
 class JsonGenerator
@@ -74,7 +75,7 @@ class JsonGenerator
                 'parents' => $this->determineParents($parserFilename, $tocTreeHierarchy) ?: [],
                 'current_page_name' => $parserFilename,
                 'toc' => $toc = $this->generateToc($metaEntry, current($metaEntry->getTitles())[1]),
-                'toc_options' => $this->getTocOptions($toc),
+                'toc_options' => TocExtension::getOptions($toc),
                 'next' => $next,
                 'prev' => $prev,
                 'body' => $crawler->filter('body')->html(),
@@ -119,50 +120,6 @@ class JsonGenerator
         }
 
         return $tocTree;
-    }
-
-    private function getTocOptions(array $toc): array
-    {
-        $flattendToc = $this->flattenToc($toc);
-        $maxDepth = 0;
-        $numVisibleItems = 0;
-        foreach ($flattendToc as $tocItem) {
-            $maxDepth = max($maxDepth, $tocItem['level']);
-            $numVisibleItems++;
-        }
-
-        return [
-            'maxDepth' => $maxDepth,
-            'numVisibleItems' => $numVisibleItems,
-            'size' => $this->getTocSize($numVisibleItems),
-        ];
-    }
-
-    // If you change this method, make the same change in TocNodeRenderer too
-    private function getTocSize(int $numVisibleItems): string
-    {
-        if ($numVisibleItems < 10) {
-            return 'md';
-        }
-
-        if ($numVisibleItems < 20) {
-            return 'lg';
-        }
-
-        return 'xl';
-    }
-
-    private function flattenToc(array $toc, array &$flattenedToc = []): array
-    {
-        foreach ($toc as $item) {
-            $flattenedToc[] = $item;
-
-            if ([] !== $item['children']) {
-                $this->flattenToc($item['children'], $flattenedToc);
-            }
-        }
-
-        return $flattenedToc;
     }
 
     private function determineNext(string $parserFilename, array $flattenedTocTree): ?array

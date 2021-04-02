@@ -17,6 +17,7 @@ use SymfonyDocsBuilder\CI\UrlChecker;
 use SymfonyDocsBuilder\Directive as SymfonyDirectives;
 use SymfonyDocsBuilder\Reference as SymfonyReferences;
 use SymfonyDocsBuilder\Twig\AssetsExtension;
+use SymfonyDocsBuilder\Twig\TocExtension;
 use function Symfony\Component\String\u;
 
 /**
@@ -55,6 +56,7 @@ final class KernelFactory
 
         $twig = $configuration->getTemplateEngine();
         $twig->addExtension(new AssetsExtension());
+        $twig->addExtension(new TocExtension());
 
         return new DocsKernel(
             $buildConfig,
