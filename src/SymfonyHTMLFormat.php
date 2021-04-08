@@ -18,6 +18,7 @@ use Doctrine\RST\Renderers\CallableNodeRendererFactory;
 use Doctrine\RST\Renderers\NodeRendererFactory;
 use Doctrine\RST\Templates\TemplateRenderer;
 use SymfonyDocsBuilder\CI\UrlChecker;
+use Doctrine\RST\HTML\Renderers\SpanNodeRenderer as BaseSpanNodeRenderer;
 
 /**
  * Class SymfonyHTMLFormat.
@@ -67,7 +68,7 @@ final class SymfonyHTMLFormat implements Format
                 return new Renderers\SpanNodeRenderer(
                     $node->getEnvironment(),
                     $node,
-                    $this->templateRenderer,
+                    new BaseSpanNodeRenderer($node->getEnvironment(), $node, $this->templateRenderer),
                     $this->urlChecker
                 );
             }

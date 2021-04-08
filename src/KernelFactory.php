@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace SymfonyDocsBuilder;
 
 use Doctrine\RST\Configuration as RSTParserConfiguration;
+use Doctrine\RST\HTML\Directives\ClassDirective;
 use Doctrine\RST\Kernel;
 use SymfonyDocsBuilder\CI\UrlChecker;
 use SymfonyDocsBuilder\Directive as SymfonyDirectives;
@@ -80,7 +81,7 @@ final class KernelFactory
             new SymfonyDirectives\IndexDirective(),
             new SymfonyDirectives\RoleDirective(),
             new SymfonyDirectives\NoteDirective(),
-            new SymfonyDirectives\RstClassDirective(),
+            new SymfonyDirectives\RstClassDirective(new ClassDirective()),
             new SymfonyDirectives\SeeAlsoDirective(),
             new SymfonyDirectives\SidebarDirective(),
             new SymfonyDirectives\TipDirective(),
