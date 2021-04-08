@@ -14,35 +14,34 @@ namespace SymfonyDocsBuilder\Renderers;
 use Doctrine\RST\Environment;
 use Doctrine\RST\HTML\Renderers\SpanNodeRenderer as BaseSpanNodeRenderer;
 use Doctrine\RST\Nodes\SpanNode;
-use Doctrine\RST\Templates\TemplateRenderer;
+use Doctrine\RST\References\ResolvedReference;
+use Doctrine\RST\Renderers\SpanNodeRenderer as AbstractSpanNodeRenderer;
 use SymfonyDocsBuilder\CI\UrlChecker;
 use function Symfony\Component\String\u;
 
-class SpanNodeRenderer extends BaseSpanNodeRenderer
+class SpanNodeRenderer extends AbstractSpanNodeRenderer
 {
-    /** @var TemplateRenderer */
-    private $templateRenderer;
+    /** @var BaseSpanNodeRenderer */
+    private $decoratedSpanNodeRenderer;
     /** @var UrlChecker|null */
     private $urlChecker;
 
     public function __construct(
+        BaseSpanNodeRenderer $decoratedSpanNodeRenderer,
         Environment $environment,
         SpanNode $span,
-        TemplateRenderer $templateRenderer,
         ?UrlChecker $urlChecker = null
     ) {
-        parent::__construct($environment, $span, $templateRenderer);
+        parent::__construct($environment, $span);
 
-        $this->templateRenderer = $templateRenderer;
+        $this->decoratedSpanNodeRenderer = $decoratedSpanNodeRenderer;
         $this->urlChecker = $urlChecker;
     }
 
-    /**
-     * @param mixed[] $attributes
-     */
+    /** @inheritDoc */
     public function link(?string $url, string $title, array $attributes = []): string
     {
-        $url = (string) $url;
+        $url = (string)$url;
 
         if (
             $this->urlChecker &&
@@ -52,18 +51,47 @@ class SpanNodeRenderer extends BaseSpanNodeRenderer
             $this->urlChecker->checkUrl($url);
         }
 
-        return $this->templateRenderer->render(
-            'link.html.twig',
-            [
-                'url' => $this->environment->generateUrl($url),
-                'title' => $title,
-                'attributes' => $attributes,
-            ]
-        );
+        return $this->decoratedSpanNodeRenderer->link($url, $title, $attributes);
     }
 
-    public function isExternalUrl($url): bool
+    private function isExternalUrl($url): bool
     {
         return u($url)->containsAny('://');
+    }
+
+    public function emphasis(string $text): string
+    {
+        return $this->decoratedSpanNodeRenderer->emphasis($text);
+    }
+
+    public function strongEmphasis(string $text): string
+    {
+        return $this->decoratedSpanNodeRenderer->strongEmphasis($text);
+    }
+
+    public function nbsp(): string
+    {
+        return $this->decoratedSpanNodeRenderer->nbsp();
+    }
+
+    public function br(): string
+    {
+        return $this->decoratedSpanNodeRenderer->br();
+    }
+
+    public function literal(string $text): string
+    {
+        return $this->decoratedSpanNodeRenderer->literal($text);
+    }
+
+    public function escape(string $span): string
+    {
+        return $this->decoratedSpanNodeRenderer->escape($span);
+    }
+
+    /** @inheritDoc */
+    public function reference(ResolvedReference $reference, array $value): string
+    {
+        return $this->decoratedSpanNodeRenderer->reference($reference, $value);
     }
 }
