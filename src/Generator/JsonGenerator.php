@@ -20,6 +20,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Filesystem\Filesystem;
 use SymfonyDocsBuilder\BuildConfig;
+use SymfonyDocsBuilder\Twig\TocExtension;
 use function Symfony\Component\String\u;
 
 class JsonGenerator
@@ -73,7 +74,8 @@ class JsonGenerator
                 'title' => $metaEntry->getTitle(),
                 'parents' => $this->determineParents($parserFilename, $tocTreeHierarchy) ?: [],
                 'current_page_name' => $parserFilename,
-                'toc' => $this->generateToc($metaEntry, current($metaEntry->getTitles())[1]),
+                'toc' => $toc = $this->generateToc($metaEntry, current($metaEntry->getTitles())[1]),
+                'toc_options' => TocExtension::getOptions($toc),
                 'next' => $next,
                 'prev' => $prev,
                 'body' => $crawler->filter('body')->html(),
@@ -98,7 +100,7 @@ class JsonGenerator
         $this->output = $output;
     }
 
-    private function generateToc(MetaEntry $metaEntry, ?array $titles): array
+    private function generateToc(MetaEntry $metaEntry, ?array $titles, int $level = 1): array
     {
         if (null === $titles) {
             return [];
@@ -108,11 +110,12 @@ class JsonGenerator
 
         foreach ($titles as $title) {
             $tocTree[] = [
+                'level' => $level,
                 'url' => sprintf('%s#%s', $metaEntry->getUrl(), Environment::slugify($title[0])),
                 'page' => u($metaEntry->getUrl())->beforeLast('.html'),
                 'fragment' => Environment::slugify($title[0]),
                 'title' => $title[0],
-                'children' => $this->generateToc($metaEntry, $title[1]),
+                'children' => $this->generateToc($metaEntry, $title[1], $level + 1),
             ];
         }
 
