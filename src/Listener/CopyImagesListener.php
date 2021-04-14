@@ -53,7 +53,11 @@ class CopyImagesListener
         $newAbsoluteFilePath = $this->buildConfig->getImagesDir().'/'.$fileInfo->getFilename();
         $fs->copy($sourceImage, $newAbsoluteFilePath, true);
 
-        $newUrlPath = $this->buildConfig->getImagesPublicPrefix().'/'.$fileInfo->getFilename();
-        $node->setValue($node->getEnvironment()->relativeUrl($newUrlPath));
+        if ('' === $this->buildConfig->getImagesPublicPrefix()) {
+            $newUrlPath = $node->getEnvironment()->relativeUrl('_images/'.$fileInfo->getFilename());
+        } else {
+            $newUrlPath = $this->buildConfig->getImagesPublicPrefix().'/'.$fileInfo->getFilename();
+        }
+        $node->setValue($newUrlPath);
     }
 }

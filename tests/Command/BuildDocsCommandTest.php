@@ -90,6 +90,30 @@ class BuildDocsCommandTest extends TestCase
         $this->assertStringContainsString('[OK] Build complete', $output);
     }
 
+    public function testBuildDocsWithCustomImagePrefix()
+    {
+        $buildConfig = $this->createBuildConfig();
+        $buildConfig->setImagesPublicPrefix('/some/custom/prefix-for-images');
+        $outputDir = __DIR__.'/../_output';
+
+        $filesystem = new Filesystem();
+        $filesystem->remove($outputDir);
+        $filesystem->mkdir($outputDir);
+
+        $output = $this->executeCommand(
+            $buildConfig,
+            [
+                'source-dir' => __DIR__.'/../fixtures/source/main',
+                'output-dir' => $outputDir,
+            ]
+        );
+
+        $this->assertStringContainsString('[OK] Build complete', $output);
+
+        $generatedHtml = file_get_contents($outputDir.'/index.html');
+        $this->assertStringContainsString('/some/custom/prefix-for-images/symfony-logo.png', $generatedHtml);
+    }
+
     private function executeCommand(BuildConfig $buildConfig, array $input): string
     {
         $input['--no-theme'] = true;

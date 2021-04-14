@@ -37,7 +37,7 @@ class BuildConfig
         $this->theme = Configuration::THEME_DEFAULT;
         $this->symfonyVersion = '4.4';
         $this->excludedPaths = [];
-        $this->imagesPublicPrefix = '/_images';
+        $this->imagesPublicPrefix = '';
     }
 
     public function createFileFinder(): Finder
