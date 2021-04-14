@@ -15,7 +15,6 @@ use Doctrine\RST\Nodes\CodeNode;
 use Doctrine\RST\Renderers\NodeRenderer;
 use Doctrine\RST\Templates\TemplateRenderer;
 use Highlight\Highlighter;
-use function Symfony\Component\String\u;
 
 class CodeNodeRenderer implements NodeRenderer
 {
