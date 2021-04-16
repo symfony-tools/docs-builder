@@ -34,7 +34,6 @@ class ValidCodeNodeListener
 
     public function __construct(ErrorManager $errorManager)
     {
-
         $this->errorManager = $errorManager;
     }
 
@@ -80,8 +79,9 @@ class ValidCodeNodeListener
         }
 
         $this->errorManager->error(sprintf(
-            'Syntax error in PHP example in "%s"',
-            $node->getEnvironment()->getCurrentFileName()
+            'Invalid PHP syntax in "%s": %s',
+            $node->getEnvironment()->getCurrentFileName(),
+            str_replace($file, 'example', $process->getErrorOutput())
         ));
     }
 
@@ -106,7 +106,7 @@ class ValidCodeNodeListener
                 return;
             }
             $this->errorManager->error(sprintf(
-                'Invalid Xml in "%s": "%s"',
+                'Invalid Xml in "%s": %s',
                 $node->getEnvironment()->getCurrentFileName(),
                 $e->getMessage()
             ));
@@ -115,15 +115,17 @@ class ValidCodeNodeListener
 
     private function validateYaml(CodeNode $node)
     {
+        // Allow us to use "..." as a placeholder
+        $contents = str_replace('...', 'null', $node->getValue());
         try {
-            Yaml::parse($node->getValue(), Yaml::PARSE_CUSTOM_TAGS);
+            Yaml::parse($contents, Yaml::PARSE_CUSTOM_TAGS);
         } catch (ParseException $e) {
             if ('Duplicate key' === substr($e->getMessage(), 0, 13)) {
                 return;
             }
 
             $this->errorManager->error(sprintf(
-                'Invalid Yaml in "%s": "%s"',
+                'Invalid Yaml in "%s": %s',
                 $node->getEnvironment()->getCurrentFileName(),
                 $e->getMessage()
             ));
@@ -140,7 +142,7 @@ class ValidCodeNodeListener
             // $twig->parse($tokens);
         } catch (SyntaxError $e) {
             $this->errorManager->error(sprintf(
-                'Invalid Twig syntax: "%s"',
+                'Invalid Twig syntax: %s',
                 $e->getMessage()
             ));
         }
