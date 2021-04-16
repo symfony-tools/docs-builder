@@ -17,7 +17,6 @@ use Doctrine\RST\Nodes\CodeNode;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
-use SymfonyDocsBuilder\BuildConfig;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Loader\ArrayLoader;
@@ -30,7 +29,6 @@ use Twig\Source;
  */
 class ValidCodeNodeListener
 {
-
     private $errorManager;
     private $twig;
 
@@ -92,11 +90,16 @@ class ValidCodeNodeListener
             });
 
             try {
-                $xml = new \SimpleXMLElement(str_replace('<?xml version="1.0" encoding="UTF-8" ?>', '', $node->getValue()));
+                // Remove first comment only. (No multiline)
+                $xml = preg_replace('#^<!-- .* -->\n#', '', $node->getValue());
+                $xmlObject = new \SimpleXMLElement($xml);
             } finally {
                 restore_error_handler();
             }
         } catch (\Throwable $e) {
+            if ('SimpleXMLElement::__construct(): namespace error : Namespace prefix' === substr($e->getMessage(), 0, 67)) {
+                return;
+            }
             $this->errorManager->error(sprintf(
                 'Invalid Xml in "%s": "%s"',
                 $node->getEnvironment()->getCurrentFileName(),
