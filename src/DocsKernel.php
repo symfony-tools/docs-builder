@@ -18,6 +18,7 @@ use Doctrine\RST\Event\PreNodeRenderEvent;
 use Doctrine\RST\Kernel;
 use SymfonyDocsBuilder\Listener\AssetsCopyListener;
 use SymfonyDocsBuilder\Listener\CopyImagesListener;
+use SymfonyDocsBuilder\Listener\ValidCodeNodeListener;
 
 class DocsKernel extends Kernel
 {
@@ -45,6 +46,10 @@ class DocsKernel extends Kernel
         $eventManager->addEventListener(
            PreNodeRenderEvent::PRE_NODE_RENDER,
            new CopyImagesListener($this->buildConfig, $errorManager)
+       );
+        $eventManager->addEventListener(
+           PreNodeRenderEvent::PRE_NODE_RENDER,
+           new ValidCodeNodeListener($errorManager)
        );
 
         if (!$this->buildConfig->getSubdirectoryToBuild()) {

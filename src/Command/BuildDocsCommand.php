@@ -153,8 +153,9 @@ class BuildDocsCommand extends Command
             $this->io->warning($message);
         }
 
+        $errorCount = \count($buildErrors);
         if ($logPath = $input->getOption('save-errors')) {
-            if (\count($buildErrors) > 0) {
+            if ($errorCount > 0) {
                 array_unshift($buildErrors, sprintf('Build errors from "%s"', date('Y-m-d h:i:s')));
             }
 
@@ -171,8 +172,8 @@ class BuildDocsCommand extends Command
 
         $this->io->newLine(2);
 
-        if (\count($buildErrors) > 0) {
-            $this->io->success('Build completed with warnings');
+        if ($errorCount > 0) {
+            $this->io->success(sprintf('Build completed with %s errors', $errorCount));
 
             if ($input->getOption('fail-on-errors')) {
                 return 1;
