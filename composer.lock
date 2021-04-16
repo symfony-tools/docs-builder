@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2739ab0cffd3ad3caba1283d0b2e09e2",
+    "content-hash": "8247d959cbd262a936251a01509c896b",
     "packages": [
         {
             "name": "doctrine/event-manager",
@@ -102,16 +102,16 @@
         },
         {
             "name": "doctrine/rst-parser",
-            "version": "0.4.x-dev",
+            "version": "0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/rst-parser.git",
-                "reference": "e5e7cbe60957f30924d2b51e1ce284f3ddd0a868"
+                "reference": "dcaee4368788c0bcaf0bdaed351c106f76c58739"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/rst-parser/zipball/e5e7cbe60957f30924d2b51e1ce284f3ddd0a868",
-                "reference": "e5e7cbe60957f30924d2b51e1ce284f3ddd0a868",
+                "url": "https://api.github.com/repos/doctrine/rst-parser/zipball/dcaee4368788c0bcaf0bdaed351c106f76c58739",
+                "reference": "dcaee4368788c0bcaf0bdaed351c106f76c58739",
                 "shasum": ""
             },
             "require": {
@@ -119,6 +119,7 @@
                 "php": "^7.1 || ^8.0",
                 "symfony/filesystem": "^4.1 || ^5.0",
                 "symfony/finder": "^4.1 || ^5.0",
+                "symfony/polyfill-mbstring": "^1.0",
                 "twig/twig": "^2.9 || ^3.3"
             },
             "require-dev": {
@@ -166,9 +167,9 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/rst-parser/issues",
-                "source": "https://github.com/doctrine/rst-parser/tree/0.4.x"
+                "source": "https://github.com/doctrine/rst-parser/tree/0.4.0"
             },
-            "time": "2021-03-22T20:21:31+00:00"
+            "time": "2021-04-05T20:41:08+00:00"
         },
         {
             "name": "psr/container",
@@ -1791,9 +1792,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "doctrine/rst-parser": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
