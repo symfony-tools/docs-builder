@@ -45,7 +45,7 @@ class ValidCodeNodeListener
             return;
         }
 
-        $language = $node->getLanguage() ?? 'php';
+        $language = $node->getLanguage() ?? ($node->isRaw() ? null : 'php');
         if (in_array($language, ['php', 'php-symfony', 'php-standalone', 'php-annotations'])) {
             $this->validatePhp($node);
         } elseif ('yaml' === $language) {
@@ -66,6 +66,9 @@ class ValidCodeNodeListener
         if (!preg_match('#class [a-zA-Z]+#s', $contents) && preg_match('#(public|protected|private) (\$[a-z]+|function)#s', $contents)) {
             $contents = 'class Foobar {'.$contents.'}';
         }
+
+        // Allow us to use "..." as a placeholder
+        $contents = str_replace('...', 'null', $contents);
 
         file_put_contents($file, '<?php' .PHP_EOL. $contents);
 
@@ -92,7 +95,9 @@ class ValidCodeNodeListener
             try {
                 // Remove first comment only. (No multiline)
                 $xml = preg_replace('#^<!-- .* -->\n#', '', $node->getValue());
-                $xmlObject = new \SimpleXMLElement($xml);
+                if ('' !== $xml) {
+                    $xmlObject = new \SimpleXMLElement($xml);
+                }
             } finally {
                 restore_error_handler();
             }
