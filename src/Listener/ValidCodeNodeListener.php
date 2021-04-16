@@ -126,12 +126,10 @@ class ValidCodeNodeListener
     {
         $twig = $this->twig ?? new Environment(new ArrayLoader());
 
-        if ($node->getLanguage() === 'html+twig') {
-            $x = 2;
-        }
-
         try {
-            $twig->tokenize(new Source($node->getValue(), $node->getEnvironment()->getCurrentFileName()));
+            $tokens = $twig->tokenize(new Source($node->getValue(), $node->getEnvironment()->getCurrentFileName()));
+            // We cannot parse the TokenStream because we dont have all extensions loaded.
+            // $twig->parse($tokens);
         } catch (SyntaxError $e) {
             $this->errorManager->error(sprintf(
                 'Invalid Twig syntax: "%s"',
