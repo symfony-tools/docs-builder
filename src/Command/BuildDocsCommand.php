@@ -91,6 +91,12 @@ class BuildDocsCommand extends Command
                 InputOption::VALUE_NONE,
                 'Return a non-zero code if there are errors/warnings'
             )
+            ->addOption(
+                'print-errors',
+                null,
+                InputOption::VALUE_NONE,
+                'Print errors when to standard output'
+            )
         ;
     }
 
@@ -137,7 +143,9 @@ class BuildDocsCommand extends Command
             KernelFactory::createKernel($this->buildConfig, $this->urlChecker ?? null)
         );
 
-        $this->addProgressListener($builder->getConfiguration()->getEventManager());
+        $configuration = $builder->getConfiguration();
+        $configuration->silentOnError(!$input->getOption('print-errors'));
+        $this->addProgressListener($configuration->getEventManager());
 
         $builder->build(
             $this->buildConfig->getContentDir(),
