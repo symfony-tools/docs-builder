@@ -80,6 +80,12 @@ class BuildDocsCommand extends Command
                 'Path where any errors should be saved'
             )
             ->addOption(
+                'print-errors',
+                null,
+                InputOption::VALUE_NONE,
+                'Print errors to standard output'
+            )
+            ->addOption(
                 'no-theme',
                 null,
                 InputOption::VALUE_NONE,
@@ -90,12 +96,6 @@ class BuildDocsCommand extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'Return a non-zero code if there are errors/warnings'
-            )
-            ->addOption(
-                'print-errors',
-                null,
-                InputOption::VALUE_NONE,
-                'Print errors to standard output'
             )
         ;
     }
