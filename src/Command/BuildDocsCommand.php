@@ -95,7 +95,7 @@ class BuildDocsCommand extends Command
                 'print-errors',
                 null,
                 InputOption::VALUE_NONE,
-                'Print errors when to standard output'
+                'Print errors to standard output'
             )
         ;
     }
