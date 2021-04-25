@@ -80,10 +80,10 @@ class BuildDocsCommand extends Command
                 'Path where any errors should be saved'
             )
             ->addOption(
-                'print-errors',
+                'disable-parse-errors-on-stdout',
                 null,
                 InputOption::VALUE_NONE,
-                'Print errors to standard output'
+                'Don\'t print errors to standard output'
             )
             ->addOption(
                 'no-theme',
@@ -144,7 +144,7 @@ class BuildDocsCommand extends Command
         );
 
         $configuration = $builder->getConfiguration();
-        $configuration->silentOnError(!$input->getOption('print-errors'));
+        $configuration->silentOnError($input->getOption('disable-parse-errors-on-stdout'));
         $this->addProgressListener($configuration->getEventManager());
 
         $builder->build(
