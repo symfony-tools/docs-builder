@@ -24,10 +24,16 @@ class TocExtension extends AbstractExtension
     public static function getOptions(array $toc): array
     {
         $flattendToc = self::flattenToc($toc);
-        $maxDepth = 0;
+        // FIXME: this hardcoded '2' value should instead be obtained
+        // automatically using the 'maxdepth' option of 'toctree' directive.
+        // See https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html
+        $maxDepth = 2;
         $numVisibleItems = 0;
         foreach ($flattendToc as $tocItem) {
-            $maxDepth = max($maxDepth, $tocItem['level']);
+            if ($tocItem['level'] > $maxDepth) {
+                continue;
+            }
+
             $numVisibleItems++;
         }
 
