@@ -1,5 +1,5 @@
 <div class="configuration-block">
-    <ul class="configuration-tabs">
+    <ul class="configuration-tabs configuration-tabs-length-{{ blocks|length }}">
         {% for block in blocks %}
             <li data-language="{{ block.language }}" {{ loop.first ? 'data-active="true"' }}>
                 <span>{{ block.language_label }}</span>
