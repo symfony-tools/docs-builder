@@ -79,18 +79,18 @@ class CodeNodeRenderer implements NodeRenderer
         }
 
         $numOfLines = \count(preg_split('/\r\n|\r|\n/', $highlightedCode));
-        $lines = implode("\n", range(1, $numOfLines));
+        $lineNumbers = implode("\n", range(1, $numOfLines));
 
         return $this->templateRenderer->render(
             'code.html.twig',
             [
                 'languages' => $languages,
-                'lines' => $lines,
+                'line_numbers' => $lineNumbers,
                 'code' => $highlightedCode,
-                // this is the number of digits of the codeblock lines-of-code
-                // e.g. LOC = 5, digits = 1; LOC = 18, digits = 2
-                // this is useful to tweak the code listings according to their length
-                'numLocDigits' => strlen((string) $numOfLines),
+                'loc' => $numOfLines,
+                // the length of the codeblock in a semantic way (to tweak styling)
+                // e.g. LOC = 5, length = 'sm'; LOC = 18, length = 'md'
+                'length' => [1 => 'sm', 2 => 'md', 3 => 'lg', 4 => 'xl'][strlen((string) $numOfLines)],
             ]
         );
     }
