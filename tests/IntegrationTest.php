@@ -124,8 +124,20 @@ class IntegrationTest extends AbstractIntegrationTest
             'blockName' => 'nodes/literal',
         ];
 
-        yield 'list' => [
-            'blockName' => 'nodes/list',
+        yield 'unordered-list' => [
+            'blockName' => 'nodes/unordered-list',
+        ];
+
+        yield 'ordered-list' => [
+            'blockName' => 'nodes/ordered-list',
+        ];
+
+        yield 'definition-list' => [
+            'blockName' => 'nodes/definition-list',
+        ];
+
+        yield 'list-with-formatting' => [
+            'blockName' => 'nodes/list-with-formatting',
         ];
 
         yield 'figure' => [
