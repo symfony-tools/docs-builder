@@ -32,10 +32,8 @@
     {# CSS #}
 
     <link rel="stylesheet" href="{{ asset('css/theme.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('css/highlightjs.css') }}" type="text/css" />
     <link rel="stylesheet" href="{{ asset('css/badge_only.css') }}" type="text/css" />
-
-    {# Keep modernizr in head - http://modernizr.com/docs/#installing #}
-    <script src="{{ asset('js/modernizr.min.js') }}"></script>
 
 </head>
 
@@ -137,6 +135,7 @@
 {#{%- endfor %}#}
 
 <script type="text/javascript" src="{{ asset('js/theme.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/badge_only.js') }}"></script>
 
 {#<script type="text/javascript">#}
 {#jQuery(function () {#}

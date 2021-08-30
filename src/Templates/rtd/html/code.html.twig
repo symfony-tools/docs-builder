@@ -1,0 +1,18 @@
+<div translate="no" class="{{ languages|map(language => "highlight-#{language}")|join(' ') }} notranslate">
+    <table class="highlighttable">
+        <tbody>
+            <tr>
+                <td class="linenos">
+                    <div class="linenodiv">
+                        <pre>{{ line_numbers }}</pre>
+                    </div>
+                </td>
+                <td class="code">
+                    <div class="highlight">
+                        <pre class="hljs {{ languages|join(' ') }}">{{ code|raw }}</pre>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
