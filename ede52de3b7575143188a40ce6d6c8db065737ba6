@@ -1,0 +1,6 @@
+---------------------------------------------------------------------------
+
+by wouterj at 2021-08-28T11:12:04Z
+
+@weaverryan @Nyholm is it possible to get this PR merged and tagged with a version? This only changes the "rtd" theme, which shouldn't affect symfony.com build pipelines.
+This tool is _the_ way to let maintainers of third party bundles check their rst doc files, but we currently broke it :confused:
