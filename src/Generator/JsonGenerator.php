@@ -214,7 +214,13 @@ class JsonGenerator
     private function walkTocTreeAndReturnHierarchy(string $filename, array &$walkedFiles): array
     {
         $hierarchy = [];
-        foreach ($this->getMetaEntry($filename)->getTocs() as $toc) {
+
+        // happens in edge-cases such as empty or not found documents
+        if (null === $meta = $this->getMetaEntry($filename)) {
+            return $hierarchy;
+        }
+
+        foreach ($meta->getTocs() as $toc) {
             foreach ($toc as $tocFilename) {
                 // only walk a file one time, the first time you see it
                 if (in_array($tocFilename, $walkedFiles, true)) {
@@ -273,7 +279,10 @@ class JsonGenerator
 
     private function makeRelativeLink(string $currentFilename, string $filename): array
     {
-        $meta = $this->getMetaEntry($filename);
+        // happens in edge-cases such as empty or not found documents
+        if (null === $meta = $this->getMetaEntry($filename)) {
+            return ['title' => '', 'link' => ''];
+        }
 
         return [
             'title' => $meta->getTitle(),
