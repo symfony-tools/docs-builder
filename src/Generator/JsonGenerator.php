@@ -68,13 +68,15 @@ class JsonGenerator
 
             $crawler = new Crawler(file_get_contents($this->buildConfig->getOutputDir().'/'.$filename.'.html'));
 
+            // happens when some doc is a partial included in other doc an it doesn't have any titles
+            $toc = false === current($metaEntry->getTitles()) ? [] : $this->generateToc($metaEntry, current($metaEntry->getTitles())[1]);
             $next = $this->determineNext($parserFilename, $flattenedTocTree, $masterDocument);
             $prev = $this->determinePrev($parserFilename, $flattenedTocTree);
             $data = [
                 'title' => $metaEntry->getTitle(),
                 'parents' => $this->determineParents($parserFilename, $tocTreeHierarchy) ?: [],
                 'current_page_name' => $parserFilename,
-                'toc' => $toc = $this->generateToc($metaEntry, current($metaEntry->getTitles())[1]),
+                'toc' => $toc,
                 'toc_options' => TocExtension::getOptions($toc),
                 'next' => $next,
                 'prev' => $prev,
