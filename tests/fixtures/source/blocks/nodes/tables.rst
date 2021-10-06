@@ -1,3 +1,4 @@
+Simple table with head:
 
 ==========  ========================================  ==========================================
 Route path  If the requested URL is /foo              If the requested URL is /foo/
@@ -5,6 +6,15 @@ Route path  If the requested URL is /foo              If the requested URL is /f
 /foo        It matches (200 status response)          It doesn't match (404 status response)
 /foo/       It makes a 301 redirect to /foo/          It matches (200 status response)
 ==========  ========================================  ==========================================
+
+Simple table headless:
+
+==========  ========================================  ==========================================
+/foo        It matches (200 status response)          It doesn't match (404 status response)
+/foo/       It makes a 301 redirect to /foo/          It matches (200 status response)
+==========  ========================================  ==========================================
+
+Grid table:
 
 +--------+------------+
 | Cell 1 | Cell 2     |
@@ -14,6 +24,8 @@ Route path  If the requested URL is /foo              If the requested URL is /f
 | Cell 5 | Cell 6     |
 |        | extra line |
 +--------+------------+
+
+Grid table with head:
 
 +--------+------------+
 | Cell 1 | Cell 2     |
@@ -23,6 +35,8 @@ Route path  If the requested URL is /foo              If the requested URL is /f
 | Cell 5 | Cell 6     |
 |        | extra line |
 +--------+------------+
+
+Grid table with head and multi-line cells:
 
 +--------+---------------+
 | Cell 1 | Cell 2        |
