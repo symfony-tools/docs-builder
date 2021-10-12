@@ -86,6 +86,7 @@ final class KernelFactory
             new SymfonyDirectives\RoleDirective(),
             new SymfonyDirectives\NoteDirective(),
             new SymfonyDirectives\RstClassDirective(new ClassDirective()),
+            new SymfonyDirectives\ScreencastDirective(),
             new SymfonyDirectives\SeeAlsoDirective(),
             new SymfonyDirectives\SidebarDirective(),
             new SymfonyDirectives\TipDirective(),

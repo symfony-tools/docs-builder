@@ -148,6 +148,10 @@ class IntegrationTest extends AbstractIntegrationTest
             'blockName' => 'directives/note-code-block-nested',
         ];
 
+        yield 'screencast' => [
+            'blockName' => 'directives/screencast',
+        ];
+
         yield 'seealso' => [
             'blockName' => 'directives/seealso',
         ];
