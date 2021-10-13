@@ -15,7 +15,9 @@ use Doctrine\RST\Configuration;
 use Doctrine\RST\ErrorManager;
 use Doctrine\RST\Event\PostBuildRenderEvent;
 use Doctrine\RST\Event\PreNodeRenderEvent;
+use Doctrine\RST\Event\PreParseDocumentEvent;
 use Doctrine\RST\Kernel;
+use SymfonyDocsBuilder\Listener\AdmonitionListener;
 use SymfonyDocsBuilder\Listener\AssetsCopyListener;
 use SymfonyDocsBuilder\Listener\CopyImagesListener;
 
@@ -42,6 +44,11 @@ class DocsKernel extends Kernel
 
     private function initializeListeners(EventManager $eventManager, ErrorManager $errorManager)
     {
+        $eventManager->addEventListener(
+           PreParseDocumentEvent::PRE_PARSE_DOCUMENT,
+           new AdmonitionListener()
+       );
+
         $eventManager->addEventListener(
            PreNodeRenderEvent::PRE_NODE_RENDER,
            new CopyImagesListener($this->buildConfig, $errorManager)

@@ -9,6 +9,7 @@
 
 namespace SymfonyDocsBuilder\Tests;
 
+use Doctrine\RST\Builder;
 use Doctrine\RST\Configuration;
 use Doctrine\RST\Parser;
 use Gajus\Dindent\Indenter;
@@ -90,9 +91,10 @@ class IntegrationTest extends AbstractIntegrationTest
         $configuration = new Configuration();
         $configuration->setCustomTemplateDirs([__DIR__.'/Templates']);
 
-        $parser = new Parser(
-            KernelFactory::createKernel($this->createBuildConfig(sprintf('%s/fixtures/source/blocks', __DIR__)))
-        );
+        $kernel = KernelFactory::createKernel($this->createBuildConfig(sprintf('%s/fixtures/source/blocks', __DIR__)));
+        // necessary because this initializes some listeners on the kernel
+        $builder = new Builder($kernel);
+        $parser = new Parser($kernel);
 
         $sourceFile = sprintf('%s/fixtures/source/blocks/%s.rst', __DIR__, $blockName);
 
