@@ -260,6 +260,10 @@ if(str_contains($expectedFile, 'datetime.html')) {
             'blockName' => 'code-blocks/bash',
         ];
 
+        yield 'code-block-diff' => [
+            'blockName' => 'code-blocks/diff',
+        ];
+
         yield 'code-block-html-php' => [
             'blockName' => 'code-blocks/html-php',
         ];
