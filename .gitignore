@@ -5,3 +5,4 @@
 /docs.phar
 /.env
 /.phpunit.result.cache
+/composer.lock
