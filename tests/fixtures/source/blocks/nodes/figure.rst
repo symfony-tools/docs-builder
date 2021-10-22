@@ -8,3 +8,10 @@ caption for the above figure.
 .. figure:: images/logo.png
 
     But I am a caption *for* the figure above.
+
+Some images use a special CSS class to wrap a fake browser around them:
+
+.. image:: images/exceptions-in-dev-environment.png
+   :alt: A typical exception page in the development environment
+   :align: center
+   :class: some-class with-browser another-class
