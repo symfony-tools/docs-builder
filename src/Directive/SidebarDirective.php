@@ -25,7 +25,7 @@ class SidebarDirective extends SubDirective
         $wrapperDiv = $parser->renderTemplate(
             'directives/sidebar.html.twig',
             [
-                'title' => $data,
+                'title' => $parser->createSpanNode($data)->render(),
             ]
         );
 
