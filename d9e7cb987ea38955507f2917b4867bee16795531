@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-10-17T13:47:40Z
+
+Fixed at https://github.com/doctrine/rst-parser/pull/165
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-10-20T19:59:53Z
+
+This is fixed - I'd still like to merge in this test case, but it won't pass until 0.4.4 is tagged or we use 0.4.x-dev branch for `rst-parser`.
