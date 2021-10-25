@@ -180,6 +180,10 @@ if(str_contains($expectedFile, 'datetime.html')) {
             'blockName' => 'directives/best-practice',
         ];
 
+        yield 'deprecated' => [
+            'blockName' => 'directives/deprecated',
+        ];
+
         yield 'versionadded' => [
             'blockName' => 'directives/versionadded',
         ];

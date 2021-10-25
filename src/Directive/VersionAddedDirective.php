@@ -26,7 +26,7 @@ class VersionAddedDirective extends SubDirective
             'directives/admonition.html.twig',
             [
                 'name' => 'versionadded',
-                'text' => sprintf('New in version %s', $data),
+                'text' => $data,
                 'class' => $options['class'] ?? null,
                 'version' => $data,
             ]
