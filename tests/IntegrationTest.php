@@ -136,6 +136,10 @@ if(str_contains($expectedFile, 'datetime.html')) {
             'blockName' => 'nodes/list',
         ];
 
+        yield 'email' => [
+            'blockName' => 'nodes/email',
+        ];
+
         yield 'figure' => [
             'blockName' => 'nodes/figure',
         ];
