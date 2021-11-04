@@ -31,5 +31,6 @@
         "gajus/dindent": "^2.0",
         "symfony/phpunit-bridge": "^5.2",
         "symfony/process": "^5.2"
-    }
+    },
+    "bin": ["bin/docs-builder"]
 }
