@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2021-11-05T07:53:19Z
+
+I think this won't affect symfony.com because we don't use this tool via a high-level command run via Symfony's `Process` component (we did that in the past). Instead, we use it via low-level function calls such as:
+
+```php
+$buildConfig = (new BuildConfig())->...();
+$result = (new DocBuilder())->build($buildConfig);
+if ($result->isSuccessful()) { ... } else { ... }
+```
+
+This is the same I'm proposing in the "doc build instructions" at https://github.com/symfony/symfony-docs/pull/16068 Please, tell me what do you think about it. Thanks!
