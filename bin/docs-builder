@@ -16,7 +16,7 @@ foreach ($autoloadFiles as $autoloadFile) {
 use Symfony\Component\Console\Input\ArgvInput;
 use SymfonyDocsBuilder\Application;
 
-$input       = new ArgvInput();
+$input   = new ArgvInput();
 $version = $input->getParameterOption(['--symfony-version'], false === getenv('SYMFONY_VERSION') ? 'master' : getenv('SYMFONY_VERSION'));
 
 if (!$version) {

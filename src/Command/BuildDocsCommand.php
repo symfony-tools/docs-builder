@@ -49,93 +49,77 @@ class BuildDocsCommand extends Command
 
     protected function configure()
     {
-        parent::configure();
-
         $this
             ->addArgument('source-dir', InputArgument::OPTIONAL, 'RST files Source directory', getcwd())
-            ->addArgument('output-dir', InputArgument::OPTIONAL, 'HTML files output directory')
-            ->addOption(
-                'parse-sub-path',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Parse only given sub directory and combine it into a single file (directory relative from source-dir)',
-                ''
-            )
-            ->addOption(
-                'output-json',
-                null,
-                InputOption::VALUE_NONE,
-                'If provided, .fjson metadata files will be written'
-            )
-            ->addOption(
-                'disable-cache',
-                null,
-                InputOption::VALUE_NONE,
-                'If provided, caching meta will be disabled'
-            )
-            ->addOption(
-                'save-errors',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'Path where any errors should be saved'
-            )
-            ->addOption(
-                'error-output-format',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'The output format for errors on std out',
-                Configuration::OUTPUT_FORMAT_CONSOLE
-            )
-            ->addOption(
-                'no-theme',
-                null,
-                InputOption::VALUE_NONE,
-                'Use the default theme instead of the styled one'
-            )
-            ->addOption(
-                'fail-on-errors',
-                null,
-                InputOption::VALUE_NONE,
-                'Return a non-zero code if there are errors/warnings'
-            )
+            ->addArgument('output-dir', InputArgument::OPTIONAL, 'HTML files output directory', rtrim(getcwd(), '/').'/html')
+
+            ->addOption('images-dir', null, InputOption::VALUE_REQUIRED, 'Images files output directory')
+            ->addOption('config', null, InputOption::VALUE_REQUIRED, 'Path to the config file')
+
+            ->addOption('disable-cache', null, InputOption::VALUE_NONE, 'If provided, caching meta will be disabled')
+            ->addOption('parse-sub-path', null, InputOption::VALUE_REQUIRED, 'Parse only given sub directory and combine it into a single file (directory relative from source-dir)', '')
+            ->addOption('output-json', null, InputOption::VALUE_NONE, 'If provided, .fjson metadata files will be written')
+            ->addOption('no-theme', null, InputOption::VALUE_NONE, 'Use the default theme instead of the styled one')
+
+            ->addOption('fail-on-errors', null, InputOption::VALUE_NONE, 'Return a non-zero code if there are errors/warnings')
+            ->addOption('save-errors', null, InputOption::VALUE_REQUIRED, 'Path where any errors should be saved')
+            ->addOption('error-output-format', null, InputOption::VALUE_REQUIRED, 'The output format for errors on std out', Configuration::OUTPUT_FORMAT_CONSOLE)
         ;
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        $this->io = new SymfonyStyle($input, $output);
-
-        $sourceDir = $input->getArgument('source-dir');
-        if (!file_exists($sourceDir)) {
-            throw new \InvalidArgumentException(sprintf('RST source directory "%s" does not exist', $sourceDir));
-        }
-        $this->buildConfig->setContentDir($sourceDir);
-
         $filesystem = new Filesystem();
-        $htmlOutputDir = $input->getArgument('output-dir') ?? rtrim(getcwd(), '/').'/html';
-        if ($input->getOption('disable-cache') && $filesystem->exists($htmlOutputDir)) {
-            $filesystem->remove($htmlOutputDir);
-        }
-        $filesystem->mkdir($htmlOutputDir);
-        $this->buildConfig->setOutputDir($htmlOutputDir);
-
-        $parseSubPath = $input->getOption('parse-sub-path');
-        if ($parseSubPath && $input->getOption('output-json')) {
-            throw new \InvalidArgumentException('Cannot pass both --parse-sub-path and --output-json options.');
-        }
-        if (!file_exists($sourceDir.'/'.$parseSubPath)) {
-            throw new \InvalidArgumentException(sprintf('Given "parse-sub-path" directory "%s" does not exist', $parseSubPath));
-        }
-        $this->buildConfig->setSubdirectoryToBuild($parseSubPath);
+        $this->io = new SymfonyStyle($input, $output);
 
         if ($input->getOption('disable-cache')) {
             $this->buildConfig->disableBuildCache();
         }
 
+        $sourceDir = $input->getArgument('source-dir');
+        if (!$filesystem->exists($sourceDir)) {
+            throw new \InvalidArgumentException(sprintf('RST source directory "%s" does not exist', $sourceDir));
+        }
+        $this->buildConfig->setContentDir($sourceDir);
+
+        $htmlOutputDir = $input->getArgument('output-dir');
+        if (!$this->buildConfig->isBuildCacheEnabled() && $filesystem->exists($htmlOutputDir)) {
+            $filesystem->remove($htmlOutputDir);
+        }
+        $filesystem->mkdir($htmlOutputDir);
+        $this->buildConfig->setOutputDir($htmlOutputDir);
+
+        $imgOutputDir = $input->getOption('images-dir');
+        if ($imgOutputDir) {
+            if (!$this->buildConfig->isBuildCacheEnabled() && $filesystem->exists($imgOutputDir)) {
+                $filesystem->remove($imgOutputDir);
+            }
+            $this->buildConfig->setImageDir($imgOutputDir);
+        }
+
+        $parseSubPath = $input->getOption('parse-sub-path');
+        if ($parseSubPath && $input->getOption('output-json')) {
+            throw new \InvalidArgumentException('Cannot pass both --parse-sub-path and --output-json options.');
+        }
+        if (!$filesystem->exists($sourceDir.'/'.$parseSubPath)) {
+            throw new \InvalidArgumentException(sprintf('Given "parse-sub-path" directory "%s" does not exist', $parseSubPath));
+        }
+        $this->buildConfig->setSubdirectoryToBuild($parseSubPath);
+
         $this->buildConfig->setTheme($input->getOption('no-theme') ? Configuration::THEME_DEFAULT : 'rtd');
 
-        $configFileParser = new ConfigFileParser($this->buildConfig, $output);
-        $configFileParser->processConfigFile($sourceDir);
+        $configFileParser = new ConfigFileParser($this->buildConfig);
+        $configPath = $input->getOption('config');
+        if ($configPath && !file_exists($configPath)) {
+            throw new \RuntimeException(sprintf('No config file present at <info>%s</info>', $configPath));
+        }
+
+        if (!$configPath && !file_exists($configPath = $sourceDir.'/docs.json')) {
+            return;
+        }
+
+        $this->io->writeln(sprintf('Loading config file: <info>%s</info>', $configPath));
+        $configFileParser->processConfigFile($configPath);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -146,6 +130,7 @@ class BuildDocsCommand extends Command
 
         $configuration = $builder->getConfiguration();
         $configuration->setOutputFormat($input->getOption('error-output-format'));
+        $configuration->silentOnError(false);
         $this->addProgressListener($configuration->getEventManager());
 
         $builder->build(
@@ -184,7 +169,7 @@ class BuildDocsCommand extends Command
             $this->io->success('Build completed with warnings');
 
             if ($input->getOption('fail-on-errors')) {
-                return 1;
+                return Command::FAILURE;
             }
         } else {
             $this->io->success('Build completed successfully!');
