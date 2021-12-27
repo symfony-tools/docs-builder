@@ -16,7 +16,7 @@ use Symfony\Component\Finder\Finder;
 class BuildConfig
 {
     private const PHP_DOC_URL = 'https://secure.php.net/manual/en';
-    private const SYMFONY_API_URL = 'https://api.symfony.com/{symfonyVersion}';
+    private const GITHUB_URL = 'https://github.com/symfony/symfony/blob/{symfonyVersion}/src';
     private const SYMFONY_DOC_URL = 'https://symfony.com/doc/{symfonyVersion}';
 
     private $useBuildCache;
@@ -78,9 +78,9 @@ class BuildConfig
         return self::PHP_DOC_URL;
     }
 
-    public function getSymfonyApiUrl(): string
+    public function getGithubUrl(): string
     {
-        return str_replace('{symfonyVersion}', $this->getSymfonyVersion(), self::SYMFONY_API_URL);
+        return str_replace('{symfonyVersion}', $this->getSymfonyVersion(), self::GITHUB_URL);
     }
 
     public function getSymfonyDocUrl(): string

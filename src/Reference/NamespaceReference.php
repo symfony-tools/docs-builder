@@ -16,11 +16,11 @@ use function Symfony\Component\String\u;
 
 class NamespaceReference extends Reference
 {
-    private $symfonyApiUrl;
+    private $githubUrl;
 
-    public function __construct(string $symfonyApiUrl)
+    public function __construct(string $githubUrl)
     {
-        $this->symfonyApiUrl = $symfonyApiUrl;
+        $this->githubUrl = $githubUrl;
     }
 
     public function getName(): string
@@ -35,7 +35,7 @@ class NamespaceReference extends Reference
         return new ResolvedReference(
             $environment->getCurrentFileName(),
             $className->afterLast('\\'),
-            sprintf('%s/%s.html', $this->symfonyApiUrl, $className->replace('\\', '/')),
+            sprintf('%s/%s', $this->githubUrl, $className->replace('\\', '/')),
             [],
             [
                 'title' => $className,
