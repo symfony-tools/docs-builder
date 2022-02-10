@@ -12,3 +12,8 @@
     C:\> CIV
 
     # Civilization for DOS - my first computer game!
+
+.. code-block:: terminal
+    :class: hide
+
+    $ git branch -D sessions-in-db || true
