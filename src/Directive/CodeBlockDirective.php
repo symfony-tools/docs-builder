@@ -33,6 +33,9 @@ class CodeBlockDirective extends Directive
         }
 
         $node->setLanguage($data);
+        // grab the "class" option and forward it onto the Node
+        // CodeNodeRenderer can then use it when rendering
+        $node->setClasses(isset($options['class']) ? explode(' ', $options['class']) : []);
 
         if ('' !== $variable) {
             $environment = $parser->getEnvironment();
