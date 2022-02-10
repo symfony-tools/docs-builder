@@ -84,6 +84,7 @@ class CodeNodeRenderer implements NodeRenderer
         return $this->templateRenderer->render(
             'code.html.twig',
             [
+                'css_classes' => $this->codeNode->getClassesString(),
                 'languages' => $languages,
                 'line_numbers' => $lineNumbers,
                 'code' => $highlightedCode,
