@@ -13,6 +13,7 @@ namespace SymfonyDocsBuilder;
 
 use Doctrine\RST\Formats\Format;
 use Doctrine\RST\Nodes\CodeNode;
+use Doctrine\RST\Nodes\FigureNode;
 use Doctrine\RST\Nodes\SpanNode;
 use Doctrine\RST\Renderers\CallableNodeRendererFactory;
 use Doctrine\RST\Renderers\NodeRendererFactory;
@@ -70,6 +71,15 @@ final class SymfonyHTMLFormat implements Format
                     $node,
                     new BaseSpanNodeRenderer($node->getEnvironment(), $node, $this->templateRenderer),
                     $this->urlChecker
+                );
+            }
+        );
+
+        $nodeRendererFactories[FigureNode::class] = new CallableNodeRendererFactory(
+            function (FigureNode $node) {
+                return new Renderers\FigureNodeRenderer(
+                    $node,
+                    $this->templateRenderer
                 );
             }
         );

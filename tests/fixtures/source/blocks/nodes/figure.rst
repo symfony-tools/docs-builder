@@ -15,3 +15,10 @@ Some images use a special CSS class to wrap a fake browser around them:
    :alt: A typical exception page in the development environment
    :align: center
    :class: some-class with-browser another-class
+
+And RST figures use a different syntax to define their custom CSS classes:
+
+.. figure:: images/logo.png
+    :alt: /
+    :align: center
+    :figclass: with-browser foo

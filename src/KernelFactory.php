@@ -80,6 +80,7 @@ final class KernelFactory
             new SymfonyDirectives\DangerDirective(),
             new SymfonyDirectives\DeprecatedDirective(),
             new SymfonyDirectives\ErrorDirective(),
+            new SymfonyDirectives\FigureDirective(),
             new SymfonyDirectives\HintDirective(),
             new SymfonyDirectives\ImportantDirective(),
             new SymfonyDirectives\IndexDirective(),
