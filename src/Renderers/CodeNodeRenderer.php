@@ -81,6 +81,13 @@ class CodeNodeRenderer implements NodeRenderer
         $numOfLines = \count(preg_split('/\r\n|\r|\n/', $highlightedCode));
         $lineNumbers = implode("\n", range(1, $numOfLines));
 
+        // 'caption' is used by code blocks to define the path of the file they belong to
+        // 'patch_file' is a special value used by "diff patches", which don't correspond to any file
+        $codeCaption = $this->codeNode->getOptions()['caption'] ?? null;
+        if ('patch_file' === $codeCaption) {
+            $codeCaption = null;
+        }
+
         return $this->templateRenderer->render(
             'code.html.twig',
             [
@@ -92,6 +99,7 @@ class CodeNodeRenderer implements NodeRenderer
                 // the length of the codeblock in a semantic way (to tweak styling)
                 // e.g. LOC = 5, length = 'sm'; LOC = 18, length = 'md'
                 'length' => [1 => 'sm', 2 => 'md', 3 => 'lg', 4 => 'xl'][strlen((string) $numOfLines)],
+                'caption' => $codeCaption,
             ]
         );
     }

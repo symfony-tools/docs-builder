@@ -1,4 +1,7 @@
 <div translate="no" data-loc="{{ loc }}" class="notranslate codeblock codeblock-length-{{ length }} {{ languages|map(language => "codeblock-#{language}")|join(' ') }}{% if custom_css_classes %} {{ custom_css_classes }}{% endif %}">
+    {% if caption %}
+        <div class="codeblock-caption">{{ caption }}</div>
+    {% endif %}
     <div class="codeblock-scroll">
         <pre class="codeblock-lines">{{ line_numbers }}</pre>
         <pre class="codeblock-code"><code>{{ code|raw }}</code></pre>

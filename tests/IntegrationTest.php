@@ -232,6 +232,10 @@ if(str_contains($expectedFile, 'datetime.html')) {
             'blockName' => 'references/reference-and-code',
         ];
 
+        yield 'code-block-caption' => [
+            'blockName' => 'code-blocks/code-caption',
+        ];
+
         yield 'code-block-php' => [
             'blockName' => 'code-blocks/php',
         ];

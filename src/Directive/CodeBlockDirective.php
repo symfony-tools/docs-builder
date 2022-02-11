@@ -37,6 +37,8 @@ class CodeBlockDirective extends Directive
         // CodeNodeRenderer can then use it when rendering
         $node->setClasses(isset($options['class']) ? explode(' ', $options['class']) : []);
 
+        $node->setOptions(array_merge($node->getOptions(), ['caption' => $options['caption'] ?? null]));
+
         if ('' !== $variable) {
             $environment = $parser->getEnvironment();
             $environment->setVariable($variable, $node);
