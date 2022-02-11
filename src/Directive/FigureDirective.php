@@ -29,6 +29,6 @@ class FigureDirective extends Directive
 
         // grab the "class" option and forward it onto the Node
         // FigureRenderer can then use it when rendering
-        $node->setClasses(isset($options['class']) ? explode(' ', $options['class']) : []);
+        $node->setClasses(isset($options['class']) ? explode(' ', $options['figclass']) : []);
     }
 }
