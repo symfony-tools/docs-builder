@@ -55,15 +55,6 @@ final class SymfonyHTMLFormat implements Format
     {
         $nodeRendererFactories = $this->htmlFormat->getNodeRendererFactories();
 
-        $nodeRendererFactories[FigureNode::class] = new CallableNodeRendererFactory(
-            function (FigureNode $node) {
-                return new Renderers\FigureNodeRenderer(
-                    $node,
-                    $this->templateRenderer
-                );
-            }
-        );
-
         $nodeRendererFactories[CodeNode::class] = new CallableNodeRendererFactory(
             function (CodeNode $node) {
                 return new Renderers\CodeNodeRenderer(

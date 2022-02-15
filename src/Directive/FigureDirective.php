@@ -10,7 +10,6 @@
 namespace SymfonyDocsBuilder\Directive;
 
 use Doctrine\RST\Directives\Directive;
-use Doctrine\RST\Nodes\FigureNode;
 use Doctrine\RST\Nodes\Node;
 use Doctrine\RST\Parser;
 
@@ -21,14 +20,16 @@ class FigureDirective extends Directive
         return 'figure';
     }
 
-    public function process(Parser $parser, ?Node $node, string $variable, string $data, array $options): void
+    final public function processSub(Parser $parser, ?Node $document, string $variable, string $data, array $options): ?Node
     {
-        if (!$node instanceof FigureNode) {
-            return;
-        }
+die('here');exit;
+        $wrapperDiv = $parser->renderTemplate(
+            'directives/figure.html.twig',
+            [
+                'custom_css_classes' => $options['class'] ?? '',
+            ]
+        );
 
-        // grab the "class" option and forward it onto the Node
-        // FigureRenderer can then use it when rendering
-        $node->setClasses(isset($options['class']) ? explode(' ', $options['figclass']) : []);
+        return $parser->getNodeFactory()->createWrapperNode($document, $wrapperDiv, '</div>');
     }
 }
