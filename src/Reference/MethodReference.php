@@ -16,11 +16,11 @@ use function Symfony\Component\String\u;
 
 class MethodReference extends Reference
 {
-    private $githubUrl;
+    private $symfonyRepositoryUrl;
 
-    public function __construct(string $githubUrl)
+    public function __construct(string $symfonyRepositoryUrl)
     {
-        $this->githubUrl = $githubUrl;
+        $this->symfonyRepositoryUrl = $symfonyRepositoryUrl;
     }
 
     public function getName(): string
@@ -42,7 +42,7 @@ class MethodReference extends Reference
         return new ResolvedReference(
             $environment->getCurrentFileName(),
             $methodName.'()',
-            sprintf('%s/%s.php#method_%s', $this->githubUrl, str_replace('\\', '/', $className), $methodName),
+            sprintf('%s/%s.php#method_%s', $this->symfonyRepositoryUrl, str_replace('\\', '/', $className), $methodName),
             [],
             [
                 'title' => sprintf('%s::%s()', $className, $methodName),
