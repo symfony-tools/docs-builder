@@ -9,11 +9,12 @@
 
 namespace SymfonyDocsBuilder\Directive;
 
-use Doctrine\RST\Directives\Directive;
+use Doctrine\RST\Directives\SubDirective;
+use Doctrine\RST\Nodes\FigureNode;
 use Doctrine\RST\Nodes\Node;
 use Doctrine\RST\Parser;
 
-class FigureDirective extends Directive
+class FigureDirective extends SubDirective
 {
     public function getName(): string
     {
@@ -22,11 +23,13 @@ class FigureDirective extends Directive
 
     final public function processSub(Parser $parser, ?Node $document, string $variable, string $data, array $options): ?Node
     {
-die('here');exit;
         $wrapperDiv = $parser->renderTemplate(
             'directives/figure.html.twig',
             [
                 'custom_css_classes' => $options['class'] ?? '',
+                'alt' => $options['alt'] ?? '',
+                'height' => $options['height'] ?? null,
+                'width' => $options['width'] ?? null,
             ]
         );
 
