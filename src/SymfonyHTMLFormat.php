@@ -13,7 +13,6 @@ namespace SymfonyDocsBuilder;
 
 use Doctrine\RST\Formats\Format;
 use Doctrine\RST\Nodes\CodeNode;
-use Doctrine\RST\Nodes\FigureNode;
 use Doctrine\RST\Nodes\SpanNode;
 use Doctrine\RST\Renderers\CallableNodeRendererFactory;
 use Doctrine\RST\Renderers\NodeRendererFactory;

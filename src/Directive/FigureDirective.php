@@ -43,16 +43,21 @@ class FigureDirective extends SubDirective
 
         $nodeFactory = $parser->getNodeFactory();
 
+        /* Start Custom Code */
         $figClass = $options['figclass'] ?? null;
         unset($options['figclass']);
+        /* End Custom Code */
 
         $figureNode = $parser->getNodeFactory()->createFigureNode(
             $nodeFactory->createImageNode($url, $options),
             $document
         );
+
+        /* Start Custom Code */
         if ($figClass) {
             $figureNode->setClasses(explode(' ', $figClass));
         }
+        /* End Custom Code */
 
         return $figureNode;
     }
