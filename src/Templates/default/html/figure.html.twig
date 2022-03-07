@@ -4,7 +4,7 @@ Overridden to fix lack of figclass support (class attribute on <figure)
 {% apply spaceless %}
 <figure
     {% if figureNode.classes is not empty %}
-    class="{{ figureNode.classes ? figureNode.classesString : '' }}"
+    class="{{ figureNode.classesString }}"
     {% endif %}
 >
     {{ figureNode.image.render()|raw }}
