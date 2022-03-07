@@ -1,0 +1,20 @@
+{#
+Overridden to fix lack of figclass support (class attribute on <figure)
+#}
+{% apply spaceless %}
+<figure
+    {% if figureNode.classes is not empty %}
+    class="{{ figureNode.classesString }}"
+    {% endif %}
+>
+    {{ figureNode.image.render()|raw }}
+
+    {% if figureNode.document %}
+        {% set caption = figureNode.document.render()|trim %}
+
+        {% if caption %}
+            <figcaption>{{ caption|raw }}</figcaption>
+        {% endif %}
+    {% endif %}
+</figure>
+{% endapply %}
