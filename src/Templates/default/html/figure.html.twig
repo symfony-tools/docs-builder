@@ -1,0 +1,17 @@
+{% apply spaceless %}
+<figure
+    {% if figureNode.classes is not empty %}
+    class="{{ figureNode.classes ? figureNode.classesString : '' }}"
+    {% endif %}
+>
+    {{ figureNode.image.render()|raw }}
+
+    {% if figureNode.document %}
+        {% set caption = figureNode.document.render()|trim %}
+
+        {% if caption %}
+            <figcaption>{{ caption|raw }}</figcaption>
+        {% endif %}
+    {% endif %}
+</figure>
+{% endapply %}
