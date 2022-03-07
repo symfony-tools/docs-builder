@@ -1,0 +1,38 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2022-02-11T12:51:29Z
+
+Something curious: in the `getNodeRendererFactories()` method of `src/SymfonyHTMLFormat.php`
+
+```php
+$nodeRendererFactories[FigureNode::class] = new CallableNodeRendererFactory(
+    function (FigureNode $node) {
+        return new Renderers\FigureNodeRenderer(
+            $node,
+            $this->templateRenderer
+        );
+    }
+);
+```
+
+If I put a `die('here');` before that code, I see the `here` word. If I move the `die()` inside the callable (after `function (FigureNode $node) {`) then I no longer see it ... so the code never enters there.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-02-15T14:10:19Z
+
+Hmm, yea. That is curious. I don't remember how that stuff works. However, most directives, I believe, (`code` being an exception) simply render the template in the directive with no node renderer involved. For example: https://github.com/symfony-tools/docs-builder/blob/main/src/Directive/TopicDirective.php
+
+That's what I would try here
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2022-02-15T16:04:52Z
+
+Thanks for the insights. I tried what you suggested, but it's not working. It doesn't even reach to this `die('...')` here: https://github.com/symfony-tools/docs-builder/pull/140/files#diff-c0cffc4acc0fb9de41d4fdd2590890c3fbe864e42a16622d724914873de3617fR25
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-03-07T15:15:07Z
+
+I've fixed this! It should really be fixed upstream, but I'm short on time and wanted to get it working for you.
