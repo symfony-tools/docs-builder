@@ -19,18 +19,18 @@
         "ext-curl": "*",
         "doctrine/rst-parser": "^0.5",
         "scrivo/highlight.php": "^9.12.0",
-        "symfony/filesystem": "^5.2",
-        "symfony/finder": "^5.2",
-        "symfony/dom-crawler": "^5.2",
-        "symfony/css-selector": "^5.2",
-        "symfony/console": "^5.2",
-        "twig/twig": "^2.14 || ^3.3",
-        "symfony/http-client": "^5.2"
+        "symfony/filesystem": "^5.2 || ^6.0",
+        "symfony/finder": "^5.2 || ^6.0",
+        "symfony/dom-crawler": "^5.2 || ^6.0",
+        "symfony/css-selector": "^5.2 || ^6.0",
+        "symfony/console": "^5.2 || ^6.0",
+        "symfony/http-client": "^5.2 || ^6.0",
+        "twig/twig": "^2.14 || ^3.3"
     },
     "require-dev": {
         "gajus/dindent": "^2.0",
-        "symfony/phpunit-bridge": "^5.2",
-        "symfony/process": "^5.2"
+        "symfony/phpunit-bridge": "^5.2 || ^6.0",
+        "symfony/process": "^5.2 || ^6.0"
     },
     "bin": ["bin/docs-builder"]
 }
