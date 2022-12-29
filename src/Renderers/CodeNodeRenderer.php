@@ -62,7 +62,8 @@ class CodeNodeRenderer implements NodeRenderer
         $languages = array_unique([$language, $languageMapping]);
 
         if ('text' === $language) {
-            $highlightedCode = $code;
+            // Highlighter escapes correctly the code, we need to manually escape only for "text" code
+            $highlightedCode = $this->escapeForbiddenCharactersInsideCodeBlock($code);
         } else {
             $this->configureHighlighter();
 
@@ -117,23 +118,6 @@ class CodeNodeRenderer implements NodeRenderer
         return \in_array($lang, $supportedLanguages, true);
     }
 
-    private function getLines(string $code): array
-    {
-        $lines = preg_split('/\r\n|\r|\n/', $code);
-        $reversedLines = array_reverse($lines);
-
-        // trim empty lines at the end of the code
-        foreach ($reversedLines as $key => $line) {
-            if ('' !== trim($line)) {
-                break;
-            }
-
-            unset($reversedLines[$key]);
-        }
-
-        return array_reverse($reversedLines);
-    }
-
     private function configureHighlighter()
     {
         if (false === self::$isHighlighterConfigured) {
@@ -142,5 +126,16 @@ class CodeNodeRenderer implements NodeRenderer
         }
 
         self::$isHighlighterConfigured = true;
+    }
+
+    /**
+     * Code blocks are displayed in "<pre>" tags, which has some reserved characters:
+     * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/pre
+     */
+    private function escapeForbiddenCharactersInsideCodeBlock(string $code): string
+    {
+        $codeEscaped = preg_replace('/&(?!amp;|lt;|gt;|quot;)/', '&amp;', $code);
+
+        return strtr($codeEscaped, ['<' => '&lt;', '>' => '&gt;', '"' => '&quot;']);
     }
 }
