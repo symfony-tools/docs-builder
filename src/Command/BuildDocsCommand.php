@@ -140,9 +140,7 @@ class BuildDocsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $builder = new Builder(
-            KernelFactory::createKernel($this->buildConfig, $this->urlChecker ?? null)
-        );
+        $builder = KernelFactory::createKernel($this->buildConfig, $this->urlChecker ?? null)->createBuilder();
 
         $configuration = $builder->getConfiguration();
         $configuration->setOutputFormat($input->getOption('error-output-format'));
@@ -153,7 +151,7 @@ class BuildDocsCommand extends Command
             $this->buildConfig->getOutputDir()
         );
 
-        $buildErrors = $builder->getErrorManager()->getErrors();
+        $buildErrors = $configuration->getErrorManager()->getErrors();
 
         $missingFiles = $this->missingFilesChecker->getMissingFiles();
         foreach ($missingFiles as $missingFile) {

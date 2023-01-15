@@ -17,6 +17,7 @@ use Doctrine\RST\Event\PostBuildRenderEvent;
 use Doctrine\RST\Event\PreNodeRenderEvent;
 use Doctrine\RST\Event\PreParseDocumentEvent;
 use Doctrine\RST\Kernel;
+use Doctrine\RST\Parser;
 use SymfonyDocsBuilder\Listener\AdmonitionListener;
 use SymfonyDocsBuilder\Listener\AssetsCopyListener;
 use SymfonyDocsBuilder\Listener\CopyImagesListener;
@@ -32,14 +33,25 @@ class DocsKernel extends Kernel
         $this->buildConfig = $buildConfig;
     }
 
+    public function createBuilder(): Builder
+    {
+        return new Builder($this->getConfiguration(), $this);
+    }
+
     public function initBuilder(Builder $builder): void
     {
+        $configuration = $builder->getConfiguration();
         $this->initializeListeners(
-            $builder->getConfiguration()->getEventManager(),
-            $builder->getErrorManager()
+            $configuration->getEventManager(),
+            $configuration->getErrorManager()
         );
 
         $builder->setScannerFinder($this->buildConfig->createFileFinder());
+    }
+
+    public function createParser(): Parser
+    {
+        return new Parser($this->getConfiguration(), $this);
     }
 
     private function initializeListeners(EventManager $eventManager, ErrorManager $errorManager)

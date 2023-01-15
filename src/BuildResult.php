@@ -26,7 +26,7 @@ class BuildResult
     {
         $this->builder = $builder;
         $this->errors = [];
-        foreach ($builder->getErrorManager()->getErrors() as $error) {
+        foreach ($builder->getConfiguration()->getErrorManager()->getErrors() as $error) {
             $this->errors[] = $error->asString();
         }
     }

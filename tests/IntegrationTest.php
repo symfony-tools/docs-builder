@@ -93,8 +93,8 @@ class IntegrationTest extends AbstractIntegrationTest
 
         $kernel = KernelFactory::createKernel($this->createBuildConfig(sprintf('%s/fixtures/source/blocks', __DIR__)));
         // necessary because this initializes some listeners on the kernel
-        $builder = new Builder($kernel);
-        $parser = new Parser($kernel);
+        $builder = $kernel->createBuilder();
+        $parser = $kernel->createParser();
 
         $sourceFile = sprintf('%s/fixtures/source/blocks/%s.rst', __DIR__, $blockName);
 

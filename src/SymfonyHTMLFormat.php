@@ -76,4 +76,9 @@ final class SymfonyHTMLFormat implements Format
 
         return $nodeRendererFactories;
     }
+
+    public function getTextRoles(): array
+    {
+        return [];
+    }
 }

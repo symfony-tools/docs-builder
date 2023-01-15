@@ -23,7 +23,7 @@ final class DocBuilder
         $configFileParser = new ConfigFileParser($config, new NullOutput());
         $configFileParser->processConfigFile($config->getContentDir());
 
-        $builder = new Builder(KernelFactory::createKernel($config));
+        $builder = KernelFactory::createKernel($config)->createBuilder();
         $builder->build($config->getContentDir(), $config->getOutputDir());
 
         $buildResult = new BuildResult($builder);

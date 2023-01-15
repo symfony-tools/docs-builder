@@ -112,6 +112,11 @@ class SpanNodeRenderer extends AbstractSpanNodeRenderer
         return $this->decoratedSpanNodeRenderer->escape($span);
     }
 
+    public function interpretedText(string $text): string
+    {
+        return $this->decoratedSpanNodeRenderer->interpretedText($text);
+    }
+
     private function isExternalUrl($url): bool
     {
         return u($url)->containsAny('://');

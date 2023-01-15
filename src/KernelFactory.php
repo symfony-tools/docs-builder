@@ -13,7 +13,6 @@ namespace SymfonyDocsBuilder;
 
 use Doctrine\RST\Configuration as RSTParserConfiguration;
 use Doctrine\RST\HTML\Directives\ClassDirective;
-use Doctrine\RST\Kernel;
 use SymfonyDocsBuilder\CI\UrlChecker;
 use SymfonyDocsBuilder\Directive as SymfonyDirectives;
 use SymfonyDocsBuilder\Reference as SymfonyReferences;
@@ -21,12 +20,9 @@ use SymfonyDocsBuilder\Twig\AssetsExtension;
 use SymfonyDocsBuilder\Twig\TocExtension;
 use function Symfony\Component\String\u;
 
-/**
- * Class KernelFactory.
- */
 final class KernelFactory
 {
-    public static function createKernel(BuildConfig $buildConfig, ?UrlChecker $urlChecker = null): Kernel
+    public static function createKernel(BuildConfig $buildConfig, ?UrlChecker $urlChecker = null): DocsKernel
     {
         $configuration = new RSTParserConfiguration();
         // needed to avoid outputting parser errors on the console output or the webpage contents
