@@ -106,6 +106,9 @@ if(str_contains($expectedFile, 'datetime.html')) {
 
         $actualHtml = $parser->parseFile($sourceFile)->renderDocument();
         $expectedHtml = file_get_contents(sprintf('%s/fixtures/expected/blocks/%s.html', __DIR__, $blockName));
+        if (false === stripos($expectedHtml, '<!doctype')) {
+            $expectedHtml = '<!DOCTYPE html><body>'.$expectedHtml.'</body>';
+        }
 
         $actualCrawler = new Crawler($actualHtml);
         $expectedCrawler = new Crawler($expectedHtml);
