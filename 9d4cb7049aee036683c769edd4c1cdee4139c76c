@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-01-09T15:29:38Z
+
+Odd, there are failures on the new versions. Did you expect that?
+
+---------------------------------------------------------------------------
+
+by wouterj at 2023-01-15T13:13:53Z
+
+Test are now fixed. The new builds used symfony/dom-crawler 6.2, which comes with HTML5 support by default (#44170).
+
+HTML5 parsing is enabled if the document starts with an HTML5 doctype, and our expected HTML files did not use a doctype (they are very incomplete HTML files). I've now always installed the HTML5 parser (which syncs test results between all PHP versions in CI) and added the HTML5 doctype to the expected HTML.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2023-01-19T15:55:08Z
+
+Wouter, thanks a lot for fixing this. I didn't have time to do it so I just created the failing PR ... but you did all the needed investigation and fixing 😍  Thanks!
