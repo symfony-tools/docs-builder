@@ -25,23 +25,27 @@ class SpanNodeRenderer extends AbstractSpanNodeRenderer
     private $decoratedSpanNodeRenderer;
     /** @var UrlChecker|null */
     private $urlChecker;
+    private $symfonyVersion;
 
     public function __construct(
         Environment $environment,
         SpanNode $span,
         BaseSpanNodeRenderer $decoratedSpanNodeRenderer,
-        ?UrlChecker $urlChecker = null
-    ) {
+        ?UrlChecker $urlChecker = null,
+        string $symfonyVersion = null
+    )
+    {
         parent::__construct($environment, $span);
 
         $this->decoratedSpanNodeRenderer = $decoratedSpanNodeRenderer;
         $this->urlChecker = $urlChecker;
+        $this->symfonyVersion = $symfonyVersion;
     }
 
     /** @inheritDoc */
     public function link(?string $url, string $title, array $attributes = []): string
     {
-        $url = (string)$url;
+        $url = (string) $url;
 
         if (
             $this->urlChecker &&
@@ -53,6 +57,10 @@ class SpanNodeRenderer extends AbstractSpanNodeRenderer
 
         if (!$this->isSafeUrl($url)) {
             $attributes = $this->addAttributesForUnsafeUrl($attributes);
+        }
+
+        if (null !== $this->symfonyVersion) {
+            $url = u($url)->replace('{version}', $this->symfonyVersion)->toString();
         }
 
         return $this->decoratedSpanNodeRenderer->link($url, $title, $attributes);

@@ -29,12 +29,14 @@ final class SymfonyHTMLFormat implements Format
     private $htmlFormat;
     /** @var UrlChecker|null */
     private $urlChecker;
+    private $symfonyVersion;
 
-    public function __construct(TemplateRenderer $templateRenderer, Format $HTMLFormat, ?UrlChecker $urlChecker = null)
+    public function __construct(TemplateRenderer $templateRenderer, Format $HTMLFormat, ?UrlChecker $urlChecker = null, string $symfonyVersion = null)
     {
         $this->templateRenderer = $templateRenderer;
         $this->htmlFormat = $HTMLFormat;
         $this->urlChecker = $urlChecker;
+        $this->symfonyVersion = $symfonyVersion;
     }
 
     public function getFileExtension(): string
@@ -69,7 +71,8 @@ final class SymfonyHTMLFormat implements Format
                     $node->getEnvironment(),
                     $node,
                     new BaseSpanNodeRenderer($node->getEnvironment(), $node, $this->templateRenderer),
-                    $this->urlChecker
+                    $this->urlChecker,
+                    $this->symfonyVersion
                 );
             }
         );

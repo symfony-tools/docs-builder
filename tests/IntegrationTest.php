@@ -143,6 +143,10 @@ if(str_contains($expectedFile, 'datetime.html')) {
             'blockName' => 'nodes/figure',
         ];
 
+        yield 'span-link' => [
+            'blockName' => 'nodes/span-link',
+        ];
+
         yield 'title' => [
             'blockName' => 'nodes/title',
         ];
