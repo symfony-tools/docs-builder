@@ -54,6 +54,7 @@ class ConfigurationBlockDirective extends SubDirective
             $language = $node->getLanguage() ?? 'Unknown';
 
             $blocks[] = [
+                'hash' => hash('sha1', $node->getValue()),
                 'language_label' => self::LANGUAGE_LABELS[$language] ?? ucfirst(str_replace('-', ' ', $language)),
                 'language' => $language,
                 'code' => $node->render(),
