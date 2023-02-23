@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2023-02-23T09:03:50Z
+
+I'm merging this and tagging a new release. On symfony.com we've made the changes to support both the old and the new `configuration-block` HTML code.
