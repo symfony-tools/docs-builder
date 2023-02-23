@@ -1,14 +1,16 @@
 <div class="configuration-block">
-    <ul class="configuration-tabs configuration-tabs-length-{{ blocks|length }}">
+    <div role="tablist" aria-label="Configuration formats" class="configuration-tabs configuration-tabs-length-{{ blocks|length }}">
         {% for block in blocks %}
-            <li data-language="{{ block.language }}" {{ loop.first ? 'data-active="true"' }}>
+            <button role="tab" type="button" data-language="{{ block.language }}"
+                aria-controls="{{ 'configuration-block-tabpanel-' ~ block.hash }}" aria-selected="{{ loop.first ? 'true' : 'false' }}"
+                {{ loop.first ? 'data-active="true"' }} {{ not loop.first ? 'tabindex="-1"' }}>
                 <span>{{ block.language_label }}</span>
-            </li>
+            </button>
         {% endfor %}
-    </ul>
+    </div>
 
     {% for block in blocks %}
-        <div class="configuration-codeblock" data-language="{{ block.language }}" style="{{ not loop.first ? 'display: none' }}">
+        <div role="tabpanel" id="{{ 'configuration-block-tabpanel-' ~ block.hash }}" aria-label="{{ block.language_label }}" class="configuration-codeblock" data-language="{{ block.language }}" style="{{ not loop.first ? 'display: none' }}">
             {{ block.code|raw }}
         </div>
     {% endfor %}
