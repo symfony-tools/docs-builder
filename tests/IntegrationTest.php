@@ -40,12 +40,6 @@ class IntegrationTest extends AbstractIntegrationTest
             $actualFilename = $buildConfig->getOutputDir().'/'.$relativePath;
             $this->assertFileExists($actualFilename);
 
-if(str_contains($expectedFile, 'datetime.html')) {
-    $this->markTestSkipped('Temporarily disabled becuase I cannot make it work');
-
-    return;
-}
-
             $this->assertSame(
                 // removes odd trailing space the indenter is adding
                 str_replace(" \n", "\n", $indenter->indent($expectedFile->getContents())),
