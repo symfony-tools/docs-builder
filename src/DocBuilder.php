@@ -54,7 +54,7 @@ final class DocBuilder
         } elseif ($config->generateJsonFiles()) {
             $metas = $buildResult->getMetadata();
             $jsonGenerator = new JsonGenerator($metas, $config);
-            $buildResult->setJsonResults($jsonGenerator->generateJson($builder->getConfiguration()->getIndexFileName()));
+            $buildResult->setJsonResults($jsonGenerator->generateJson($builder->getConfiguration()->getIndexName()));
         }
 
         return $buildResult;
