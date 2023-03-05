@@ -23,7 +23,7 @@ final class DocBuilder
         $configFileParser = new ConfigFileParser($config, new NullOutput());
         $configFileParser->processConfigFile($config->getContentDir());
 
-        $builder = KernelFactory::createKernel($config)->createBuilder();
+        $builder = BuilderFactory::createBuilder($config);
         $builder->build($config->getContentDir(), $config->getOutputDir());
 
         $buildResult = new BuildResult($builder);
@@ -54,7 +54,7 @@ final class DocBuilder
         } elseif ($config->generateJsonFiles()) {
             $metas = $buildResult->getMetadata();
             $jsonGenerator = new JsonGenerator($metas, $config);
-            $buildResult->setJsonResults($jsonGenerator->generateJson($builder->getIndexName()));
+            $buildResult->setJsonResults($jsonGenerator->generateJson($builder->getConfiguration()->getIndexFileName()));
         }
 
         return $buildResult;

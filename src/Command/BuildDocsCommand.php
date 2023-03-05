@@ -15,6 +15,7 @@ use Doctrine\Common\EventManager;
 use Doctrine\RST\Builder;
 use Doctrine\RST\Configuration;
 use Doctrine\RST\Meta\Metas;
+use SymfonyDocsBuilder\BuilderFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -27,7 +28,6 @@ use SymfonyDocsBuilder\CI\MissingFilesChecker;
 use SymfonyDocsBuilder\ConfigFileParser;
 use SymfonyDocsBuilder\Generator\HtmlForPdfGenerator;
 use SymfonyDocsBuilder\Generator\JsonGenerator;
-use SymfonyDocsBuilder\KernelFactory;
 use SymfonyDocsBuilder\Listener\BuildProgressListener;
 
 class BuildDocsCommand extends Command
@@ -140,7 +140,7 @@ class BuildDocsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $builder = KernelFactory::createKernel($this->buildConfig, $this->urlChecker ?? null)->createBuilder();
+        $builder = BuilderFactory::createBuilder($this->buildConfig, $this->urlChecker ?? null);
 
         $configuration = $builder->getConfiguration();
         $configuration->setOutputFormat($input->getOption('error-output-format'));

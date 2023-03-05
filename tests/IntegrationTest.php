@@ -13,10 +13,10 @@ use Doctrine\RST\Builder;
 use Doctrine\RST\Configuration;
 use Doctrine\RST\Parser;
 use Gajus\Dindent\Indenter;
+use SymfonyDocsBuilder\BuilderFactory;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Finder\Finder;
 use SymfonyDocsBuilder\DocBuilder;
-use SymfonyDocsBuilder\KernelFactory;
 
 class IntegrationTest extends AbstractIntegrationTest
 {
@@ -88,13 +88,8 @@ class IntegrationTest extends AbstractIntegrationTest
      */
     public function testParseUnitBlock(string $blockName)
     {
-        $configuration = new Configuration();
-        $configuration->setCustomTemplateDirs([__DIR__.'/Templates']);
-
-        $kernel = KernelFactory::createKernel($this->createBuildConfig(sprintf('%s/fixtures/source/blocks', __DIR__)));
-        // necessary because this initializes some listeners on the kernel
-        $builder = $kernel->createBuilder();
-        $parser = $kernel->createParser();
+        $builder = BuilderFactory::createBuilder($this->createBuildConfig(sprintf('%s/fixtures/source/blocks', __DIR__)));
+        $parser = new Parser($builder->getConfiguration());
 
         $sourceFile = sprintf('%s/fixtures/source/blocks/%s.rst', __DIR__, $blockName);
 
@@ -201,32 +196,32 @@ class IntegrationTest extends AbstractIntegrationTest
             'blockName' => 'directives/sidebar-code-block-nested',
         ];
 
-        yield 'class-reference' => [
-            'blockName' => 'references/class',
+        yield 'class-role' => [
+            'blockName' => 'text-roles/class',
         ];
 
-        yield 'namespace-reference' => [
-            'blockName' => 'references/namespace',
+        yield 'namespace-role' => [
+            'blockName' => 'text-roles/namespace',
         ];
 
-        yield 'method-reference' => [
-            'blockName' => 'references/method',
+        yield 'method-role' => [
+            'blockName' => 'text-roles/method',
         ];
 
-        yield 'php-class-reference' => [
-            'blockName' => 'references/php-class',
+        yield 'php-class-role' => [
+            'blockName' => 'text-roles/php-class',
         ];
 
-        yield 'php-function-reference' => [
-            'blockName' => 'references/php-function',
+        yield 'php-function-role' => [
+            'blockName' => 'text-roles/php-function',
         ];
 
-        yield 'php-method-reference' => [
-            'blockName' => 'references/php-method',
+        yield 'php-method-role' => [
+            'blockName' => 'text-roles/php-method',
         ];
 
         yield 'reference-and-code' => [
-            'blockName' => 'references/reference-and-code',
+            'blockName' => 'text-roles/reference-and-code',
         ];
 
         yield 'code-block-caption' => [
@@ -321,7 +316,7 @@ tempor <strong>incididunt ut</strong> labore et dolore magna aliqua.</p>
 <li>Quis nostrud exercitation</li>
 <li>Ullamco laboris nisi ut</li>
 </ul>
-<p><a href="https://symfony.com" class="reference external">Aliquip ex ea commodo</a> consequat.
+<p><a href="https://symfony.com" class="reference internal">Aliquip ex ea commodo</a> consequat.
 Duis aute irure dolor in reprehenderit in voluptate <a href="https://github.com" class="reference external" rel="external noopener noreferrer" target="_blank">velit esse</a>.</p>
 <div class="section">
 <h2 id="cillum-dolore-eu-fugiat-nulla-pariatur"><a class="headerlink" href="#cillum-dolore-eu-fugiat-nulla-pariatur" title="Permalink to this headline">Cillum dolore eu fugiat nulla pariatur</a></h2>

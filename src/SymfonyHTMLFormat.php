@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace SymfonyDocsBuilder;
 
+use Doctrine\RST\Directives\DirectiveFactory;
 use Doctrine\RST\Formats\Format;
 use Doctrine\RST\Nodes\CodeNode;
 use Doctrine\RST\Nodes\SpanNode;
@@ -25,13 +26,15 @@ use Doctrine\RST\HTML\Renderers\SpanNodeRenderer as BaseSpanNodeRenderer;
  */
 final class SymfonyHTMLFormat implements Format
 {
-    protected $templateRenderer;
+    private $buildConfig;
+    private $templateRenderer;
     private $htmlFormat;
     /** @var UrlChecker|null */
     private $urlChecker;
 
-    public function __construct(TemplateRenderer $templateRenderer, Format $HTMLFormat, ?UrlChecker $urlChecker = null)
+    public function __construct(BuildConfig $buildConfig, TemplateRenderer $templateRenderer, Format $HTMLFormat, ?UrlChecker $urlChecker = null)
     {
+        $this->buildConfig = $buildConfig;
         $this->templateRenderer = $templateRenderer;
         $this->htmlFormat = $HTMLFormat;
         $this->urlChecker = $urlChecker;
@@ -40,11 +43,6 @@ final class SymfonyHTMLFormat implements Format
     public function getFileExtension(): string
     {
         return Format::HTML;
-    }
-
-    public function getDirectives(): array
-    {
-        return $this->htmlFormat->getDirectives();
     }
 
     /**
@@ -63,22 +61,11 @@ final class SymfonyHTMLFormat implements Format
             }
         );
 
-        $nodeRendererFactories[SpanNode::class] = new CallableNodeRendererFactory(
-            function (SpanNode $node) {
-                return new Renderers\SpanNodeRenderer(
-                    $node->getEnvironment(),
-                    $node,
-                    new BaseSpanNodeRenderer($node->getEnvironment(), $node, $this->templateRenderer),
-                    $this->urlChecker
-                );
-            }
-        );
-
         return $nodeRendererFactories;
     }
 
-    public function getTextRoles(): array
+    public function getDirectiveFactory(): DirectiveFactory
     {
-        return [];
+        return new SymfonyHTMLDirectiveFactory($this->buildConfig, $this->urlChecker);
     }
 }
