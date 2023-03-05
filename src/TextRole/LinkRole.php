@@ -44,27 +44,6 @@ class LinkRole extends LinkTextRole
         ]);
     }
 
-    private function isExternalUrl($url): bool
-    {
-        return u($url)->containsAny('://');
-    }
-
-    /*
-     * If the URL is considered safe, it's opened in the same browser tab;
-     * otherwise it's opened in a new tab and with some strict security options.
-     */
-    private function isSafeUrl(string $url): bool
-    {
-        // The following are considered Symfony URLs:
-        //   * https://symfony.com/[...]
-        //   * https://[...].symfony.com/ (e.g. insight.symfony.com, etc.)
-        //   * https://symfony.wip/[...]  (used for internal/local development)
-        $isSymfonyUrl = preg_match('{^http(s)?://(.*\.)?symfony.(com|wip)}', $url);
-        $isRelativeUrl = !str_starts_with($url, 'http://') && !str_starts_with($url, 'https://');
-
-        return $isSymfonyUrl || $isRelativeUrl;
-    }
-
     private function addAttributesForUnsafeUrl(array $attributes): array
     {
         return array_merge(

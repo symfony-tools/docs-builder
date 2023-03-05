@@ -1,0 +1,10 @@
+{% set domElement = attributes.domElement|default %}
+{% set class = (attributes.class|default ? attributes.class ~ ' ') ~ 'reference ' ~ (url is safe_url ? 'internal' : 'external') %}
+<a href="{{ url|raw }}" class="{{ class }}"
+    {%- for key, value in attributes|filter((v, key) => key != 'domElement' and key != 'class') %} {{ key }}="{{ value }}"{% endfor -%}
+    {%- if url is not safe_url %} rel="external noopener noreferrer" target="_blank"{% endif -%}
+>
+    {%- if domElement %}<{{ domElement }}>{% endif -%}
+    {{ title|raw }}
+    {%- if domElement %}</{{ domElement }}>{% endif -%}
+</a>

@@ -24,6 +24,7 @@ use SymfonyDocsBuilder\Listener\AdmonitionListener;
 use SymfonyDocsBuilder\CI\UrlChecker;
 use SymfonyDocsBuilder\Twig\AssetsExtension;
 use SymfonyDocsBuilder\Twig\TocExtension;
+use SymfonyDocsBuilder\Twig\UrlExtension;
 use function Symfony\Component\String\u;
 
 final class BuilderFactory
@@ -81,6 +82,7 @@ final class BuilderFactory
         $twig = $configuration->getTemplateEngine();
         $twig->addExtension(new AssetsExtension());
         $twig->addExtension(new TocExtension());
+        $twig->addExtension(new UrlExtension());
 
         $builder = new Builder($configuration);
         $builder->setScannerFinder($buildConfig->createFileFinder());

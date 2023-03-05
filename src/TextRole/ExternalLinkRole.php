@@ -21,10 +21,7 @@ abstract class ExternalLinkRole extends BaseTextRole
             'title' => $text,
             'url' => $url,
             'attributes' => [
-                'class' => 'reference external',
                 'title' => $title ?? $text,
-                'rel' => 'external noopener noreferrer',
-                'target' => '_blank',
             ],
         ]);
     }

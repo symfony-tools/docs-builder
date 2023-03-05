@@ -4,10 +4,6 @@ namespace SymfonyDocsBuilder;
 
 use Doctrine\RST\HTML\Directives\ClassDirective;
 use Doctrine\RST\HTML\Directives\FormatDirectiveFactory;
-use Doctrine\RST\HTML\TextRoles\DocTextRole;
-use Doctrine\RST\HTML\TextRoles\LinkTextRole;
-use Doctrine\RST\TextRoles\DefinitionTextRole;
-use Doctrine\RST\TextRoles\WrapperTextRole;
 use SymfonyDocsBuilder\CI\UrlChecker;
 use SymfonyDocsBuilder\Directive as SymfonyDirectives;
 use SymfonyDocsBuilder\TextRole as SymfonyTextRoles;
@@ -26,6 +22,8 @@ class SymfonyHTMLDirectiveFactory extends FormatDirectiveFactory
     public function getDirectives(): array
     {
         return [
+            ...parent::getDirectives(),
+
             new SymfonyDirectives\AdmonitionDirective(),
             new SymfonyDirectives\AttentionDirective(),
             new SymfonyDirectives\CautionDirective(),
@@ -56,22 +54,8 @@ class SymfonyHTMLDirectiveFactory extends FormatDirectiveFactory
     public function getTextRoles(): array
     {
         return [
-            new DocTextRole(),
-            new DocTextRole('ref', true),
-            new WrapperTextRole('aspect'),
-            new WrapperTextRole('command'),
-            new WrapperTextRole('dfn'),
-            new WrapperTextRole('file'),
-            new WrapperTextRole('guilabel'),
-            new WrapperTextRole('kbd'),
-            new WrapperTextRole('mailheader'),
-            new WrapperTextRole('math'),
-            new WrapperTextRole('subscript', null, ['sub']),
-            new WrapperTextRole('superscript', null, ['sup']),
-            new WrapperTextRole('title-reference', null, ['t', 'title']),
-            new DefinitionTextRole('abbreviation', null, ['abbr']),
+            ...parent::getTextRoles(),
 
-            new SymfonyTextRoles\LinkRole($this->urlChecker),
             new SymfonyTextRoles\LiteralRole(),
 
             new SymfonyTextRoles\PhpClassRole($this->buildConfig->getPhpDocUrl()),
