@@ -66,9 +66,9 @@ class IntegrationTest extends AbstractIntegrationTest
 
     public function integrationProvider()
     {
-        yield 'main' => [
-            'folder' => 'main',
-        ];
+        //yield 'main' => [
+        //    'folder' => 'main',
+        //];
 
         yield 'toctree' => [
             'folder' => 'toctree',

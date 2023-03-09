@@ -2,6 +2,7 @@
 
 namespace SymfonyDocsBuilder;
 
+use Doctrine\RST\Directives\Admonition;
 use Doctrine\RST\HTML\Directives\ClassDirective;
 use Doctrine\RST\HTML\Directives\FormatDirectiveFactory;
 use SymfonyDocsBuilder\CI\UrlChecker;
@@ -24,30 +25,17 @@ class SymfonyHTMLDirectiveFactory extends FormatDirectiveFactory
         return [
             ...parent::getDirectives(),
 
-            new SymfonyDirectives\AdmonitionDirective(),
-            new SymfonyDirectives\AttentionDirective(),
-            new SymfonyDirectives\CautionDirective(),
+            new Admonition('best-practice', 'Best Practice'),
+            new Admonition('deprecated', 'Deprecated'),
+            new Admonition('note', 'Note'),
+            new Admonition('screencast', 'Screencast'),
+            new Admonition('versionadded', 'Version Added'),
+
             new SymfonyDirectives\CodeBlockDirective(),
             new SymfonyDirectives\ConfigurationBlockDirective(),
-            new SymfonyDirectives\DangerDirective(),
-            new SymfonyDirectives\DeprecatedDirective(),
-            new SymfonyDirectives\ErrorDirective(),
-            new SymfonyDirectives\FigureDirective(),
-            new SymfonyDirectives\HintDirective(),
-            new SymfonyDirectives\ImportantDirective(),
-            new SymfonyDirectives\IndexDirective(),
-            new SymfonyDirectives\RoleDirective(),
-            new SymfonyDirectives\NoteDirective(),
-            new SymfonyDirectives\RstClassDirective(new ClassDirective()),
-            new SymfonyDirectives\ScreencastDirective(),
-            new SymfonyDirectives\SeeAlsoDirective(),
-            new SymfonyDirectives\SidebarDirective(),
-            new SymfonyDirectives\TipDirective(),
-            new SymfonyDirectives\TopicDirective(),
-            new SymfonyDirectives\WarningDirective(),
-            new SymfonyDirectives\VersionAddedDirective(),
-            new SymfonyDirectives\BestPracticeDirective(),
             new SymfonyDirectives\GlossaryDirective(),
+            new SymfonyDirectives\RstClassDirective(new ClassDirective()),
+            new SymfonyDirectives\TopicDirective(),
         ];
     }
 
