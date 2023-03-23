@@ -17,9 +17,19 @@ use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Finder\Finder;
 use SymfonyDocsBuilder\DocBuilder;
 use SymfonyDocsBuilder\KernelFactory;
+use SymfonyDocsBuilder\Renderers\TitleNodeRenderer;
 
 class IntegrationTest extends AbstractIntegrationTest
 {
+    public static function setUpBeforeClass(): void
+    {
+        $reflection = new \ReflectionClass(TitleNodeRenderer::class);
+        $property = $reflection->getProperty('idUsagesCountByFilename');
+        $property->setAccessible(true);
+
+        $property->setValue([]);
+    }
+
     /**
      * @dataProvider integrationProvider
      */
