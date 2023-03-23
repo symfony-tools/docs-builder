@@ -44,7 +44,8 @@ final class KernelFactory
             new SymfonyHTMLFormat(
                 $configuration->getTemplateRenderer(),
                 $configuration->getFormat(),
-                $urlChecker
+                $urlChecker,
+                $buildConfig->getSymfonyVersion()
             )
         );
 

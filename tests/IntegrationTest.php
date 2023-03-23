@@ -137,6 +137,10 @@ class IntegrationTest extends AbstractIntegrationTest
             'blockName' => 'nodes/figure',
         ];
 
+        yield 'span-link' => [
+            'blockName' => 'nodes/span-link',
+        ];
+
         yield 'title' => [
             'blockName' => 'nodes/title',
         ];
