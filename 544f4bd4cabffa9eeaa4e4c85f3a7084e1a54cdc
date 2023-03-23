@@ -1,0 +1,61 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2023-03-07T09:33:18Z
+
+Antoine, thanks for updating the implementation of this PR.
+
+I've reviewed it and it looks great to me 👍
+
+I only have a question ... I don't remember the details, but in symfony.com we build Symfony Docs and other docs different from Symfony (Cloud docs, bundles docs, etc.). So, what would happen if we use `{version}` in those docs? Do we have in this docs-builder app the concept of doc "version" instead of or in addition to "Symfony version"? Thanks!
+
+---------------------------------------------------------------------------
+
+by alamirault at 2023-03-07T12:05:25Z
+
+Version is set with `BuildConfig`. I think each docs have specific value ?
+
+https://github.com/symfony/symfony-docs/blob/43325d00d96ad51af2f90b61cb43e47b5918f450/_build/build.php#L22-L23
+
+Maybe I have to rename `{version}` to `{symfonyVersion}` ?
+
+Or introduce substitution config in BuildConfig, but I think it's overkill for now
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2023-03-07T12:12:39Z
+
+> Maybe I have to rename {version} to {symfonyVersion} ?
+
+No ... my question was exactly about that ... if `{version}` is always "the version of the doc being rendered" ... that's perfect because this feature would work for ALL docs, and not ONLY for Symfony Docs.
+
+---------------------------------------------------------------------------
+
+by alamirault at 2023-03-07T13:06:32Z
+
+> > Maybe I have to rename {version} to {symfonyVersion} ?
+>
+> No ... my question was exactly about that ... if `{version}` is always "the version of the doc being rendered" ... that's perfect because this feature would work for ALL docs, and not ONLY for Symfony Docs.
+
+It's always value of `->setSymfonyVersion()` setter
+
+---------------------------------------------------------------------------
+
+by OskarStark at 2023-03-08T10:21:50Z
+
+> It's always value of ->setSymfonyVersion() setter
+
+And that makes sense, the other docs should use absolute URLS.
+
+@alamirault can you please rename the the PR title accordingly? I think it does not match the current PR content anymore
+
+---------------------------------------------------------------------------
+
+by alamirault at 2023-03-09T17:22:57Z
+
+Title updated
+
+---------------------------------------------------------------------------
+
+by OskarStark at 2023-03-22T12:46:33Z
+
+@weaverryan can you please merge and release this feature?
