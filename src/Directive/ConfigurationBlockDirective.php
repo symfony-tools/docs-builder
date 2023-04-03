@@ -18,6 +18,7 @@ use function strtoupper;
 class ConfigurationBlockDirective extends SubDirective
 {
     private const LANGUAGE_LABELS = [
+        'caddy' => 'Caddy'
         'env' => 'Bash',
         'html+jinja' => 'Twig',
         'html+php' => 'PHP',
