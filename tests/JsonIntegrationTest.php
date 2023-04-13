@@ -10,6 +10,7 @@
 namespace SymfonyDocsBuilder\Tests;
 
 use SymfonyDocsBuilder\DocBuilder;
+use SymfonyDocsBuilder\Renderers\TitleNodeRenderer;
 
 class JsonIntegrationTest extends AbstractIntegrationTest
 {
@@ -26,7 +27,7 @@ class JsonIntegrationTest extends AbstractIntegrationTest
         $actualFileData = $fJsons[$filename];
         foreach ($expectedData as $key => $expectedKeyData) {
             $this->assertArrayHasKey($key, $actualFileData, sprintf('Missing key "%s" in file "%s"', $key, $filename));
-            $this->assertSame($expectedData[$key], $actualFileData[$key], sprintf('Invalid data for key "%s" in file "%s"', $key, $filename));
+            $this->assertSame($expectedKeyData, $actualFileData[$key], sprintf('Invalid data for key "%s" in file "%s"', $key, $filename));
         }
     }
 
@@ -76,8 +77,52 @@ class JsonIntegrationTest extends AbstractIntegrationTest
                 'title' => 'Design',
                 'toc_options' => [
                     'maxDepth' => 2,
-                    'numVisibleItems' => 3,
+                    'numVisibleItems' => 5,
                     'size' => 'md'
+                ],
+                'toc' => [
+                    [
+                        'level' => 1,
+                        'url' => 'design.html#section-1',
+                        'page' => 'design',
+                        'fragment' => 'section-1',
+                        'title' => 'Section 1',
+                        'children' => [
+                            [
+                                'level' => 2,
+                                'url' => 'design.html#some-subsection',
+                                'page' => 'design',
+                                'fragment' => 'some-subsection',
+                                'title' => 'Some subsection',
+                                'children' => [],
+                            ],
+                            [
+                                'level' => 2,
+                                'url' => 'design.html#some-subsection-1',
+                                'page' => 'design',
+                                'fragment' => 'some-subsection-1',
+                                'title' => 'Some subsection',
+                                'children' => [],
+                            ],
+                        ],
+                    ],
+                    [
+                        'level' => 1,
+                        'url' => 'design.html#section-2',
+                        'page' => 'design',
+                        'fragment' => 'section-2',
+                        'title' => 'Section 2',
+                        'children' => [
+                            [
+                                'level' => 2,
+                                'url' => 'design.html#some-subsection-2',
+                                'page' => 'design',
+                                'fragment' => 'some-subsection-2',
+                                'title' => 'Some subsection',
+                                'children' => [],
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ];
