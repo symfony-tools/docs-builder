@@ -32,6 +32,11 @@ class TitleNodeRenderer implements NodeRenderer
         $this->templateRenderer = $templateRenderer;
     }
 
+    public static function resetHeaderIdCache(): void
+    {
+        self::$idUsagesCountByFilename = [];
+    }
+
     public function render(): string
     {
         $filename = $this->titleNode->getEnvironment()->getCurrentFileName();

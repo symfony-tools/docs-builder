@@ -69,7 +69,7 @@ class JsonGenerator
             $crawler = new Crawler(file_get_contents($this->buildConfig->getOutputDir().'/'.$filename.'.html'));
 
             // happens when some doc is a partial included in other doc an it doesn't have any titles
-            $toc = false === current($metaEntry->getTitles()) ? [] : $this->generateToc($metaEntry, current($metaEntry->getTitles())[1]);
+            $toc = $this->generateToc($metaEntry, $crawler);
             $next = $this->determineNext($parserFilename, $flattenedTocTree, $masterDocument);
             $prev = $this->determinePrev($parserFilename, $flattenedTocTree);
             $data = [
@@ -102,26 +102,35 @@ class JsonGenerator
         $this->output = $output;
     }
 
-    private function generateToc(MetaEntry $metaEntry, ?array $titles, int $level = 1): array
+    private function generateToc(MetaEntry $metaEntry, Crawler $crawler): array
     {
-        if (null === $titles) {
-            return [];
-        }
+        $flatTocTree = [];
 
-        $tocTree = [];
+        foreach ($crawler->filter('h2, h3') as $heading) {
+            $headerId = $heading->getAttribute('id') ?? Environment::slugify($heading->textContent);
 
-        foreach ($titles as $title) {
-            $tocTree[] = [
-                'level' => $level,
-                'url' => sprintf('%s#%s', $metaEntry->getUrl(), Environment::slugify($title[0])),
-                'page' => u($metaEntry->getUrl())->beforeLast('.html'),
-                'fragment' => Environment::slugify($title[0]),
-                'title' => $title[0],
-                'children' => $this->generateToc($metaEntry, $title[1], $level + 1),
+            // this tocTree stores items sequentially (h2, h2, h3, h3, h2, h3, etc.)
+            $flatTocTree[] = [
+                'level' => 'h2' === $heading->tagName ? 1 : 2,
+                'url' => sprintf('%s#%s', $metaEntry->getUrl(), $headerId),
+                'page' => u($metaEntry->getUrl())->beforeLast('.html')->toString(),
+                'fragment' => $headerId,
+                'title' => $heading->textContent,
+                'children' => [],
             ];
         }
 
-        return $tocTree;
+        // this tocTree stores items nested by level (h2, h2[h3, h3], h2[h3], etc.)
+        $nestedTocTree = [];
+        foreach ($flatTocTree as $tocItem) {
+            if (1 === $tocItem['level']) {
+                $nestedTocTree[] = $tocItem;
+            } else {
+                $nestedTocTree[\count($nestedTocTree) - 1]['children'][] = $tocItem;
+            }
+        }
+
+        return $nestedTocTree;
     }
 
     private function determineNext(string $parserFilename, array $flattenedTocTree): ?array
