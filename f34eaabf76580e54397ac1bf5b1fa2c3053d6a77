@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2023-04-14T06:38:31Z
+
+This is now ready for review.
+
+@wouterj, @alamirault, @oskarstark if you have some time, please help me reviewing this. Thanks a lot!
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2023-04-14T07:25:26Z
+
+After the last changes, I rebuilt Symfony Docs locally and it worked as expected.
+
+The problem was that the static variable that holds header IDs (which we need to be static for it to work) wasn't reset before parsing each document.
+
+In practice, the code made header IDs unique across all files ... and now they are unique within each single file.
+
+---------------------------------------------------------------------------
+
+by OskarStark at 2023-04-14T07:43:12Z
+
+Looks good to me
