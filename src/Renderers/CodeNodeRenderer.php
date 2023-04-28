@@ -21,6 +21,7 @@ class CodeNodeRenderer implements NodeRenderer
     private static $isHighlighterConfigured = false;
 
     private const LANGUAGES_MAPPING = [
+        'caddy' => 'plaintext',
         'env' => 'bash',
         'html+jinja' => 'twig',
         'html+twig' => 'twig',
