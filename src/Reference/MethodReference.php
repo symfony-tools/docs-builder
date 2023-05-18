@@ -39,10 +39,11 @@ class MethodReference extends Reference
 
         $methodName = explode('::', $data)[1];
 
+        $scrollTextFragment = sprintf('#:~:text=%s', rawurlencode('function '.$methodName));
         return new ResolvedReference(
             $environment->getCurrentFileName(),
             $methodName.'()',
-            sprintf('%s/%s.php#method_%s', $this->symfonyRepositoryUrl, str_replace('\\', '/', $className), $methodName),
+            sprintf('%s/%s.php%s', $this->symfonyRepositoryUrl, str_replace('\\', '/', $className), $scrollTextFragment),
             [],
             [
                 'title' => sprintf('%s::%s()', $className, $methodName),
