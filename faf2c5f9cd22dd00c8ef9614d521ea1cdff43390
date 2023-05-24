@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by OskarStark at 2023-05-19T08:08:51Z
+
+Oh if this works, it would be a nice improvement 👍
+
+---------------------------------------------------------------------------
+
+by wouterj at 2023-05-19T08:54:18Z
+
+Pretty cool and it works nicely in any chromium based browser.
+
+I'm a bit sad that it doesn't work for Firefox yet ([although they are positive](https://mozilla.github.io/standards-positions/#scroll-to-text-fragment)), but given the current anchors also don't work I'm :+1: to use an anchor that at least work for a part of the userbase.
+
+---------------------------------------------------------------------------
+
+by OskarStark at 2023-05-24T04:42:15Z
+
+@javiereguiluz can you please merge and release this PR? Thanks
