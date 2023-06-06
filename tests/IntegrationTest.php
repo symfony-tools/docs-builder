@@ -206,6 +206,10 @@ class IntegrationTest extends AbstractIntegrationTest
             'blockName' => 'directives/sidebar-code-block-nested',
         ];
 
+        yield 'tabs' => [
+            'blockName' => 'directives/tabs',
+        ];
+
         yield 'class-reference' => [
             'blockName' => 'references/class',
         ];
