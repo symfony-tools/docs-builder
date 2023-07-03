@@ -39,6 +39,5 @@
         "symfony/process": "^5.2 || ^6.0",
         "vimeo/psalm": "^5.9",
         "symfony/var-dumper": "^6.2"
-    },
-    "bin": ["bin/docs-builder"]
+    }
 }
