@@ -2,69 +2,80 @@
 
 /*
  * This file is part of the Docs Builder package.
+ *
  * (c) Ryan Weaver <ryan@symfonycasts.com>
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace SymfonyDocsBuilder;
+namespace SymfonyTools\GuidesExtension;
 
-use Doctrine\Common\EventManager;
-use Doctrine\RST\Builder;
-use Doctrine\RST\Configuration;
-use Doctrine\RST\ErrorManager;
-use Doctrine\RST\Event\PostBuildRenderEvent;
-use Doctrine\RST\Event\PreNodeRenderEvent;
-use Doctrine\RST\Event\PreParseDocumentEvent;
-use Doctrine\RST\Kernel;
-use SymfonyDocsBuilder\Listener\AdmonitionListener;
-use SymfonyDocsBuilder\Listener\AssetsCopyListener;
-use SymfonyDocsBuilder\Listener\CopyImagesListener;
-use SymfonyDocsBuilder\Listener\DuplicatedHeaderIdListener;
+use SymfonyTools\GuidesExtension\DependencyInjection\SymfonyExtension;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
+use phpDocumentor\Guides\DependencyInjection\GuidesExtension;
+use phpDocumentor\Guides\NodeRenderers\NodeRendererFactory;
+use phpDocumentor\Guides\NodeRenderers\NodeRendererFactoryAware;
+use phpDocumentor\Guides\RestructuredText\DependencyInjection\ReStructuredTextExtension;
 
-class DocsKernel extends Kernel
+final class DocsKernel
 {
-    private $buildConfig;
+    public function __construct(
+        private Container $container
+    ) {}
 
-    public function __construct(BuildConfig $buildConfig, ?Configuration $configuration = null, $directives = [], $references = [])
+    public static function create(array $extensions = []): self
     {
-        parent::__construct($configuration, $directives, $references);
+        $container = new ContainerBuilder();
 
-        $this->buildConfig = $buildConfig;
-    }
-
-    public function initBuilder(Builder $builder): void
-    {
-        $this->initializeListeners(
-            $builder->getConfiguration()->getEventManager(),
-            $builder->getErrorManager()
-        );
-
-        $builder->setScannerFinder($this->buildConfig->createFileFinder());
-    }
-
-    private function initializeListeners(EventManager $eventManager, ErrorManager $errorManager)
-    {
-        $eventManager->addEventListener(
-           PreParseDocumentEvent::PRE_PARSE_DOCUMENT,
-           new AdmonitionListener()
-       );
-
-        $eventManager->addEventListener(
-            PreParseDocumentEvent::PRE_PARSE_DOCUMENT,
-            new DuplicatedHeaderIdListener()
-        );
-
-        $eventManager->addEventListener(
-           PreNodeRenderEvent::PRE_NODE_RENDER,
-           new CopyImagesListener($this->buildConfig, $errorManager)
-       );
-
-        if (!$this->buildConfig->getSubdirectoryToBuild()) {
-            $eventManager->addEventListener(
-               [PostBuildRenderEvent::POST_BUILD_RENDER],
-               new AssetsCopyListener($this->buildConfig->getOutputDir())
-           );
+        for ($i = 1; $i <= 4; $i++) {
+            if (is_dir($vendor = dirname(__DIR__, $i).'/vendor')) {
+                $container->setParameter('vendor_dir', $vendor);
+                break;
+            }
         }
+
+        foreach (array_merge($extensions, self::createDefaultExtensions()) as $extension) {
+            $container->registerExtension($extension);
+            $container->loadFromExtension($extension->getAlias());
+
+            if ($extension instanceof CompilerPassInterface) {
+                $container->addCompilerPass($extension);
+            }
+        }
+
+        $container->compile();
+
+        return new self($container);
+    }
+
+    /**
+     * @template T
+     * @param class-string<T> $fqcn
+     * @return T
+     *
+     * @psalm-suppress InvalidReturnType
+     * @psalm-suppress InvalidReturnStatement
+     */
+    public function get(string $fqcn): object
+    {
+        return $this->container->get($fqcn);
+    }
+
+    /** @return list<ExtensionInterface> */
+    private static function createDefaultExtensions(): array
+    {
+        return [
+            new GuidesExtension(),
+            new ReStructuredTextExtension(),
+            new SymfonyExtension(),
+        ];
     }
 }

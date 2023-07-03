@@ -1,0 +1,2 @@
+
+:phpmethod:`Locale::getDefault`

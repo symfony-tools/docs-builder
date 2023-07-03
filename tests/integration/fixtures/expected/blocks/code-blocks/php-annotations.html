@@ -1,0 +1,32 @@
+<div translate="no" data-loc="14" class="notranslate codeblock codeblock-length-md codeblock-php-annotations codeblock-php">
+    <div class="codeblock-scroll">
+        <pre class="codeblock-lines">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14</pre>
+        <pre class="codeblock-code"><code><span class="hljs-comment">// src/AppBundle/Entity/Transaction.php</span>
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">AppBundle</span>\<span class="hljs-title">Entity</span>;
+
+<span class="hljs-keyword">use</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">Validator</span>\<span class="hljs-title">Constraints</span> <span class="hljs-title">as</span> <span class="hljs-title">Assert</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Transaction</span>
+</span>{
+    <span class="hljs-comment">/**
+     * <span class="hljs-doctag">@Assert</span>\Iban(
+     *     message="This is not a valid International Bank Account Number (IBAN)."
+     * )
+     */</span>
+    <span class="hljs-keyword">protected</span> <span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>bankAccountNumber</span>;
+}</code></pre>
+    </div>
+</div>

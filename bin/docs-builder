@@ -3,9 +3,9 @@
 
 $autoloadFiles = [
     __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/../../../vendor/autoload.php',
     __DIR__ . '/../../../autoload.php'
 ];
-
 foreach ($autoloadFiles as $autoloadFile) {
     if (file_exists($autoloadFile)) {
         require_once $autoloadFile;
@@ -13,15 +13,7 @@ foreach ($autoloadFiles as $autoloadFile) {
     }
 }
 
-use Symfony\Component\Console\Input\ArgvInput;
 use SymfonyDocsBuilder\Application;
+use SymfonyDocsBuilder\DocsKernel;
 
-$input       = new ArgvInput();
-$version = $input->getParameterOption(['--symfony-version'], false === getenv('SYMFONY_VERSION') ? 'master' : getenv('SYMFONY_VERSION'));
-
-if (!$version) {
-    throw new \Exception('Please pass a --symfony-version= flag or set a SYMFONY_VERSION environment variable to 4.0, master, etc.');
-}
-
-$application = new Application($version);
-$application->run($input);
+DocsKernel::create()->get(Application::class)->run();

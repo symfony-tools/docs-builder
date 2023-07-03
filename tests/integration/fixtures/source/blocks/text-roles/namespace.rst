@@ -1,0 +1,2 @@
+
+:namespace:`Symfony\\Component\\HttpFoundation`

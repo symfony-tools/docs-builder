@@ -1,0 +1,6 @@
+<div class="admonition {{ name }}{{ class ? ' '~class }}">
+    <p class="{{ name == 'sidebar' ? 'sidebar-title' : 'admonition-title' }}">
+        {{- name | capitalize -}}
+    </p>
+    {{ renderNode(node) }}
+</div>

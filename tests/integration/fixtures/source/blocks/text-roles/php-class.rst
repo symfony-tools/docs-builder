@@ -1,0 +1,2 @@
+
+:phpclass:`ArrayAccess`
