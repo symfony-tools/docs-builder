@@ -9,14 +9,13 @@
 
 namespace SymfonyDocsBuilder\Tests\Twig;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use SymfonyDocsBuilder\Twig\TocExtension;
 
 class TocExtensionTest extends TestCase
 {
-    /**
-     * @dataProvider getMaxDepthTests
-     */
+    #[DataProvider('getMaxDepthTests')]
     public function testItemsDeeperThanMaxDepthAreNotCounted(int $maxDepth, int $expectedNumVisibleItems, string $expectedSize)
     {
         $options = TocExtension::getOptions($this->createToc(), $maxDepth);
@@ -26,7 +25,7 @@ class TocExtensionTest extends TestCase
         $this->assertSame($expectedSize, $options['size']);
     }
 
-    public function getMaxDepthTests()
+    public static function getMaxDepthTests()
     {
         // the TOC below has 2 items on level 1, 4 on level 2 and 8 on level 3
         yield 'level 1 only' => [1, 2, 'md'];

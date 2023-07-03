@@ -1,8 +1,11 @@
-/vendor/
+!tools/*/composer.lock
+vendor/
 /tests/_output
 /tests/_cache
 /var/
 /docs.phar
 /.env
+/.php-cs-fixer.cache
 /.phpunit.result.cache
-/composer.lock
+/.phpunit.cache
+composer.lock

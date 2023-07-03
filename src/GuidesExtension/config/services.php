@@ -1,0 +1,30 @@
+<?php
+
+/*
+ * This file is part of the Guides SymfonyExtension package.
+ *
+ * (c) Wouter de Jong
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+
+use Psr\Log\LogLevel;
+use SymfonyTools\DocsBuilder\GuidesExtension\Build\BuildConfig;
+use SymfonyTools\DocsBuilder\GuidesExtension\DocBuilder;
+use SymfonyTools\DocsBuilder\GuidesExtension\Logger\TraceHandler;
+
+return static function (ContainerConfigurator $container) {
+    $container->services()
+        ->defaults()->autowire()
+
+        ->set(TraceHandler::class)
+            ->arg('$level', LogLevel::WARNING)
+
+        ->set(BuildConfig::class)->public()
+
+        ->set(DocBuilder::class)->public()
+    ;
+};

@@ -1,4 +1,3 @@
-
 .. class:: a-class
 
 * list-item-1
