@@ -1,0 +1,9 @@
+<li>
+    <a href="{{ url }}">{{ renderNode(node.value.value) }}</a>
+    {% if node.children|length %}
+        {% include "body/menu/menu-level.html.twig" with {
+            tocItems: tocItem.children,
+            level: level + 1
+        } %}
+    {% endif %}
+</li>

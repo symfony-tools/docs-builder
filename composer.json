@@ -1,0 +1,44 @@
+{
+    "name": "symfony-tools/guides-extension",
+    "description": "A phpDocumentor Guides extension used by the Symfony docs",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "SymfonyTools\\GuidesExtension\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SymfonyTools\\GuidesExtension\\Tests\\": "tests"
+        }
+    },
+    "require": {
+        "php": ">=8.0",
+        "ext-json": "*",
+        "ext-curl": "*",
+        "phpdocumentor/guides": "*@dev",
+        "phpdocumentor/guides-restructured-text": "*@dev",
+        "scrivo/highlight.php": "^9.12.0",
+        "symfony/config": "^5.2 || ^6.0",
+        "symfony/filesystem": "^5.2 || ^6.0",
+        "symfony/finder": "^5.2 || ^6.0",
+        "symfony/event-dispatcher": "^5.2 || ^6.0",
+        "symfony/dependency-injection": "^5.2 || ^6.0",
+        "symfony/dom-crawler": "^5.2 || ^6.0",
+        "symfony/css-selector": "^5.2 || ^6.0",
+        "symfony/console": "^5.2 || ^6.0",
+        "symfony/http-client": "^5.2 || ^6.0",
+        "symfony/string": "^5.4 || ^6.0",
+        "twig/twig": "^2.14 || ^3.3",
+        "twig/string-extra": "^3.6"
+    },
+    "require-dev": {
+        "league/flysystem-memory": "1.*",
+        "symfony/phpunit-bridge": "^5.2 || ^6.0",
+        "symfony/process": "^5.2 || ^6.0",
+        "vimeo/psalm": "^5.9",
+        "symfony/var-dumper": "^6.2"
+    },
+    "bin": ["bin/docs-builder"]
+}

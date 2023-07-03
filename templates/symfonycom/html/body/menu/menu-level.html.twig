@@ -1,0 +1,6 @@
+{% set level = level | default(1) %}
+<ul class="toctree toctree-level-{{ level }} toctree-length-{{ node.entries | length }}">
+    {% for tocItem in tocItems|default(node.entries) -%}
+        {{ renderNode(tocItem) }}
+    {%- endfor %}
+</ul>

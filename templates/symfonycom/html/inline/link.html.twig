@@ -1,0 +1,3 @@
+{% import "_helpers.twig" as helpers %}
+
+{{ helpers.link(node.url, node.value, { class: node.classes|join(' '), title: node.title }|filter(v => v != '')) }}
