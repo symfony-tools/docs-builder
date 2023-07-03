@@ -1,0 +1,29 @@
+<div translate="no" class="highlight-{{ node.language }} notranslate">
+    <table class="highlighttable">
+        <tbody>
+            <tr>
+                <td class="linenos">
+                    <div class="linenodiv">
+                        <pre>
+                            {%- set nr = node.startingLineNumber ?? 1 -%}
+                            {%- for l in node.value | split("\n") -%}
+                                {{ nr + loop.index0 }}
+{% endfor -%}
+                        </pre>
+                    </div>
+                </td>
+                <td class="code">
+                    <div class="highlight">
+                        <pre class="hljs {{ node.language }}">
+                            {%- if node.language -%}
+                                {{ node.value | highlight(node.language) }}
+                            {%- else -%}
+                                {{ node.value }}
+                            {%- endif -%}
+                        </pre>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
