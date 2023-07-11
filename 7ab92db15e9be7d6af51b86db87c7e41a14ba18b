@@ -1,0 +1,45 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2023-06-07T06:55:17Z
+
+@weaverryan thanks for this! I've tested this in my local machine and didn't fully work. The missing part is the `data-language` attribute for each tab with the same content as the tab title ("Webpack Encore" and "AssetMapper" in this case).
+
+I know that these tabs won't always be used for "programming languages" ... but this is just an internal detail in the generated HTML, so I think it's OK to do it without renaming the `data-language` attribute. Thanks!
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-06-07T13:30:01Z
+
+Thank you for trying it out @javiereguiluz!
+
+I've updated to re-add the `data-language` - it's a "slugged" version of what appears on the tab, which I think will work: the current configuration block also uses a slightly different string in the `data-language` vs what appears in the tab.
+
+I'm also now just reusing the `configuration-block.html.twig` template: it is effectively now the "generic tab template". Let me know if this work.
+
+Cheers!
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2023-06-07T14:53:14Z
+
+Thanks for the updates! I copied the HTML code of `tests/fixtures/expected/blocks/directives/tabs.html` in a random Symfony Docs page and it worked:
+
+![tabs](https://github.com/symfony-tools/docs-builder/assets/73419/b7f4436f-ea4c-4b3b-8282-c555ca884ed8)
+
+About the value of `data-language`, it can be anything as long as it's different from the other tabs and it's consistent (all tabs of the same type use the same value).
+
+So, this should be ready! Cheers!
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-06-07T17:39:46Z
+
+Yaaaaaay! That looks like I expected. Thank you!!!
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-07-11T15:08:20Z
+
+@javiereguiluz Is this ready to merge? I was going to allow you to do it, as I assume you'll be the one integrating this into symfony.com.
+
+Thanks!
