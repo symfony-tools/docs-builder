@@ -91,6 +91,8 @@ final class KernelFactory
             new SymfonyDirectives\ScreencastDirective(),
             new SymfonyDirectives\SeeAlsoDirective(),
             new SymfonyDirectives\SidebarDirective(),
+            new SymfonyDirectives\TabDirective(),
+            new SymfonyDirectives\TabsDirective(),
             new SymfonyDirectives\TipDirective(),
             new SymfonyDirectives\TopicDirective(),
             new SymfonyDirectives\WarningDirective(),

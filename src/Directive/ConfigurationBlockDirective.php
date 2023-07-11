@@ -66,6 +66,7 @@ class ConfigurationBlockDirective extends SubDirective
             'directives/configuration-block.html.twig',
             [
                 'blocks' => $blocks,
+                'title' => 'Configuration formats',
             ]
         );
 

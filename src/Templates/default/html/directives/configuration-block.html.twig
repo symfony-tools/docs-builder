@@ -1,5 +1,5 @@
 <div class="configuration-block">
-    <div role="tablist" aria-label="Configuration formats" class="configuration-tabs configuration-tabs-length-{{ blocks|length }}">
+    <div role="tablist" aria-label="{{ title }}" class="configuration-tabs configuration-tabs-length-{{ blocks|length }}">
         {% for block in blocks %}
             <button role="tab" type="button" data-language="{{ block.language }}"
                 aria-controls="{{ 'configuration-block-tabpanel-' ~ block.hash }}" aria-selected="{{ loop.first ? 'true' : 'false' }}"
