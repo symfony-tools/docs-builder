@@ -11,18 +11,17 @@
 
 namespace SymfonyTools\GuidesExtension;
 
+use Monolog\Logger;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\LoggerInterface;
 use SymfonyTools\GuidesExtension\DependencyInjection\SymfonyExtension;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
-use Symfony\Component\DependencyInjection\Reference;
-use phpDocumentor\Guides\DependencyInjection\GuidesExtension;
-use phpDocumentor\Guides\NodeRenderers\NodeRendererFactory;
-use phpDocumentor\Guides\NodeRenderers\NodeRendererFactoryAware;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use phpDocumentor\Guides\Cli\DependencyInjection\ContainerFactory;
 use phpDocumentor\Guides\RestructuredText\DependencyInjection\ReStructuredTextExtension;
 
 final class DocsKernel
@@ -33,25 +32,19 @@ final class DocsKernel
 
     public static function create(array $extensions = []): self
     {
-        $container = new ContainerBuilder();
+        $containerFactory = new ContainerFactory([new SymfonyExtension(), self::createDefaultExtension(), ...$extensions]);
 
         for ($i = 1; $i <= 4; $i++) {
             if (is_dir($vendor = dirname(__DIR__, $i).'/vendor')) {
-                $container->setParameter('vendor_dir', $vendor);
                 break;
             }
         }
 
-        foreach (array_merge($extensions, self::createDefaultExtensions()) as $extension) {
-            $container->registerExtension($extension);
-            $container->loadFromExtension($extension->getAlias());
+        $containerFactory->loadExtensionConfig(RestructuredTextExtension::class, [
+            'default_code_language' => 'php',
+        ]);
 
-            if ($extension instanceof CompilerPassInterface) {
-                $container->addCompilerPass($extension);
-            }
-        }
-
-        $container->compile();
+        $container = $containerFactory->create($vendor);
 
         return new self($container);
     }
@@ -69,13 +62,22 @@ final class DocsKernel
         return $this->container->get($fqcn);
     }
 
-    /** @return list<ExtensionInterface> */
-    private static function createDefaultExtensions(): array
+    private static function createDefaultExtension(): ExtensionInterface
     {
-        return [
-            new GuidesExtension(),
-            new ReStructuredTextExtension(),
-            new SymfonyExtension(),
-        ];
+        return new class extends Extension {
+            public function load(array $configs, ContainerBuilder $container): void
+            {
+                $container->register(Logger::class)->addArgument('$name', 'docs-builder');
+                $container->setAlias(LoggerInterface::class, new Alias(Logger::class));
+
+                $container->register(EventDispatcher::class);
+                $container->setAlias(EventDispatcherInterface::class, new Alias(EventDispatcher::class));
+            }
+
+            public function getAlias(): string
+            {
+                return 'docs-builder';
+            }
+        };
     }
 }

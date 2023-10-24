@@ -18,6 +18,7 @@
         "ext-json": "*",
         "ext-curl": "*",
         "phpdocumentor/guides": "*@dev",
+        "phpdocumentor/guides-cli": "*@dev",
         "phpdocumentor/guides-restructured-text": "*@dev",
         "scrivo/highlight.php": "^9.12.0",
         "symfony/config": "^5.2 || ^6.0",

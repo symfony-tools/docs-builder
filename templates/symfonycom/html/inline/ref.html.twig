@@ -1,6 +1,1 @@
-{% import "_helpers.twig" as helpers %}
-{%- if node.internalTarget -%}
-    {{ helpers.link(renderInternalTarget(node.internalTarget), node.text, { class: node.classes|join(' ') }) }}
-{%- else -%}
-    {{- node.text -}}
-{%- endif -%}
+{{ include('inline/link.html.twig') }}
