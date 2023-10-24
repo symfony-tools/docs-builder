@@ -12,11 +12,12 @@
 namespace SymfonyTools\GuidesExtension\Directives;
 
 use phpDocumentor\Guides\RestructuredText\Directives\AbstractAdmonitionDirective;
+use phpDocumentor\Guides\RestructuredText\Parser\Productions\Rule;
 
 class ScreencastDirective extends AbstractAdmonitionDirective
 {
-    public function __construct()
+    public function __construct(Rule $startingRule)
     {
-        parent::__construct('screencast', 'Screencast');
+        parent::__construct($startingRule, 'screencast', 'Screencast');
     }
 }

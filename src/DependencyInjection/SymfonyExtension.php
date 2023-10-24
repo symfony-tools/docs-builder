@@ -23,7 +23,7 @@ class SymfonyExtension extends Extension implements PrependExtensionInterface
         $loader->load('renderer.php');
     }
 
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         $templatesDir = dirname(__DIR__, 2).'/templates';
 
