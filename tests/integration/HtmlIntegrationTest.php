@@ -3,14 +3,17 @@
 namespace SymfonyTools\GuidesExtension\Tests;
 
 use League\Flysystem\Adapter\Local;
+use Monolog\Handler\TestHandler;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use SymfonyTools\GuidesExtension\Build\DynamicBuildEnvironment;
 use SymfonyTools\GuidesExtension\DocBuilder;
 use SymfonyTools\GuidesExtension\DocsKernel;
 use SymfonyTools\GuidesExtension\Test\HtmlAsserter;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Finder\Finder;
+use phpDocumentor\Guides\DependencyInjection\TestExtension;
 
 class HtmlIntegrationTest extends TestCase
 {
@@ -24,8 +27,9 @@ class HtmlIntegrationTest extends TestCase
             $expectedContents = strstr($expectedContents, "\n");
         }
 
+        $kernel = DocsKernel::create([new TestExtension()]);
         try {
-            $generatedContents = DocsKernel::create()->get(DocBuilder::class)->buildString(file_get_contents($sourceFile));
+            $generatedContents = $kernel->get(DocBuilder::class)->buildString(file_get_contents($sourceFile));
             $generated = new \DOMDocument();
             $generated->loadHTML($generatedContents, \LIBXML_NOERROR);
             $generated->preserveWhiteSpace = false;
@@ -61,7 +65,8 @@ class HtmlIntegrationTest extends TestCase
     {
         $buildEnvironment = new DynamicBuildEnvironment(new Local(__DIR__.'/fixtures/source/'.$directory));
         
-        DocsKernel::create()->get(DocBuilder::class)->build($buildEnvironment);
+        $kernel = DocsKernel::create([new TestExtension()]);
+        $kernel->get(DocBuilder::class)->build($buildEnvironment);
 
         $expectedDirectory = __DIR__.'/fixtures/expected/'.$directory;
         $skip = false;

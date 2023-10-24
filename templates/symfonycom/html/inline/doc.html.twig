@@ -1,6 +1,1 @@
-{% import "_helpers.twig" as helpers %}
-{%- if node.documentEntry -%}
-    {{ helpers.link(renderLink(node.documentEntry.file), node.text, { class: node.classes|join(' ') }) }}
-{%- else -%}
-    {{- node.text -}}
-{%- endif -%}
+{{ include('inline/link.html.twig') }}

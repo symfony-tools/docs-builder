@@ -41,6 +41,7 @@ final class DocBuilder
                 $document,
                 RenderContext::forDocument(
                     $document,
+                    $documents,
                     $buildEnvironment->getSourceFilesystem(),
                     $buildEnvironment->getOutputFilesystem(),
                     '/',

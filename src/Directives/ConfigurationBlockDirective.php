@@ -6,10 +6,12 @@ use Psr\Log\LoggerInterface;
 use SymfonyTools\GuidesExtension\Node\ConfigurationBlockNode;
 use SymfonyTools\GuidesExtension\Node\ConfigurationTab;
 use phpDocumentor\Guides\Nodes\CodeNode;
+use phpDocumentor\Guides\Nodes\CollectionNode;
 use phpDocumentor\Guides\Nodes\DocumentNode;
 use phpDocumentor\Guides\Nodes\Node;
 use phpDocumentor\Guides\RestructuredText\Directives\SubDirective;
 use phpDocumentor\Guides\RestructuredText\Parser\Directive;
+use phpDocumentor\Guides\RestructuredText\Parser\Productions\Rule;
 
 class ConfigurationBlockDirective extends SubDirective
 {
@@ -36,8 +38,10 @@ class ConfigurationBlockDirective extends SubDirective
     ];
 
     public function __construct(
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
+        Rule $startingRule,
     ) {
+        parent::__construct($startingRule);
     }
 
     public function getName(): string
@@ -45,10 +49,12 @@ class ConfigurationBlockDirective extends SubDirective
         return 'configuration-block';
     }
 
-    protected function processSub(DocumentNode $document, Directive $directive): ?Node
-    {
+    protected function processSub(
+        CollectionNode $node,
+        Directive $directive,
+    ): Node|null {
         $tabs = [];
-        foreach ($document->getValue() as $child) {
+        foreach ($node->getValue() as $child) {
             if (!$child instanceof CodeNode) {
                 $this->logger->warning('The ".. configuration-block::" directive only supports code blocks, "'.get_debug_type($child).'" given in "'.$document->getFilePath().'".');
 
