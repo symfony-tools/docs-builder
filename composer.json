@@ -19,18 +19,18 @@
         "ext-curl": "*",
         "doctrine/rst-parser": "^0.5",
         "scrivo/highlight.php": "^9.18.1",
-        "symfony/filesystem": "^5.2 || ^6.0",
-        "symfony/finder": "^5.2 || ^6.0",
-        "symfony/dom-crawler": "^5.2 || ^6.0",
-        "symfony/css-selector": "^5.2 || ^6.0",
-        "symfony/console": "^5.2 || ^6.0",
-        "symfony/http-client": "^5.2 || ^6.0",
+        "symfony/filesystem": "^5.2 || ^6.0 || ^7.0",
+        "symfony/finder": "^5.2 || ^6.0 || ^7.0",
+        "symfony/dom-crawler": "^5.2 || ^6.0 || ^7.0",
+        "symfony/css-selector": "^5.2 || ^6.0 || ^7.0",
+        "symfony/console": "^5.2 || ^6.0 || ^7.0",
+        "symfony/http-client": "^5.2 || ^6.0 || ^7.0",
         "twig/twig": "^2.14 || ^3.3"
     },
     "require-dev": {
         "gajus/dindent": "^2.0",
-        "symfony/phpunit-bridge": "^5.2 || ^6.0",
-        "symfony/process": "^5.2 || ^6.0",
+        "symfony/phpunit-bridge": "^5.2 || ^6.0 || ^7.0",
+        "symfony/process": "^5.2 || ^6.0 || ^7.0",
         "masterminds/html5": "^2.7"
     },
     "bin": ["bin/docs-builder"]
