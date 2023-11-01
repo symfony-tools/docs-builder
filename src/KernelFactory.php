@@ -21,9 +21,6 @@ use SymfonyDocsBuilder\Twig\AssetsExtension;
 use SymfonyDocsBuilder\Twig\TocExtension;
 use function Symfony\Component\String\u;
 
-/**
- * Class KernelFactory.
- */
 final class KernelFactory
 {
     public static function createKernel(BuildConfig $buildConfig, ?UrlChecker $urlChecker = null): Kernel

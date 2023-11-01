@@ -21,9 +21,6 @@ use Doctrine\RST\Templates\TemplateRenderer;
 use SymfonyDocsBuilder\CI\UrlChecker;
 use Doctrine\RST\HTML\Renderers\SpanNodeRenderer as BaseSpanNodeRenderer;
 
-/**
- * Class SymfonyHTMLFormat.
- */
 final class SymfonyHTMLFormat implements Format
 {
     protected $templateRenderer;
