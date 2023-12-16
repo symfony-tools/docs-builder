@@ -12,8 +12,8 @@ use phpDocumentor\Guides\Handlers\ParseDirectoryCommand;
 use phpDocumentor\Guides\Handlers\RenderDocumentCommand;
 use phpDocumentor\Guides\Nodes\DocumentNode;
 use phpDocumentor\Guides\RenderContext;
+use phpDocumentor\Guides\Renderer\UrlGenerator\UrlGeneratorInterface;
 use phpDocumentor\Guides\Twig\Theme\ThemeManager;
-use phpDocumentor\Guides\UrlGeneratorInterface;
 
 final class DocBuilder
 {

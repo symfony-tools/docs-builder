@@ -2,8 +2,7 @@
 
 namespace SymfonyTools\GuidesExtension\NodeRenderer;
 
-use SymfonyTools\GuidesExtension\Build\BuildConfig;
-use SymfonyTools\GuidesExtension\Highlighter\Highlighter;
+use phpDocumentor\Guides\Code\Highlighter\Highlighter;
 use phpDocumentor\Guides\NodeRenderers\NodeRenderer;
 use phpDocumentor\Guides\Nodes\CodeNode;
 use phpDocumentor\Guides\Nodes\Node;
@@ -18,7 +17,6 @@ class CodeNodeRenderer implements NodeRenderer
     public function __construct(
         private TemplateRenderer $renderer,
         private Highlighter $higlighter,
-        private BuildConfig $buildConfig
     ) {
     }
 
@@ -33,8 +31,8 @@ class CodeNodeRenderer implements NodeRenderer
             throw new \LogicException(sprintf('"%s" can only render code nodes, got "%s".', __CLASS__, \get_debug_type($node)));
         }
 
-        $language = ($node->getLanguage() ?? $this->buildConfig->getDefaultHighlightLanguage()) ?: 'text';
-        $highlight = $this->higlighter->highlight($language, $node->getValue());
+        $language = $node->getLanguage() ?? 'text';
+        $highlight = ($this->higlighter)($language, $node->getValue());
 
         $languages = array_unique([$language, $highlight->language]);
         $code = $highlight->code;

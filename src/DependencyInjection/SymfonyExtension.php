@@ -33,5 +33,12 @@ class SymfonyExtension extends Extension implements PrependExtensionInterface
                 'rtd' => $templatesDir.'/rtd/html',
             ]
         ]);
+
+        $container->prependExtensionConfig('code', [
+            'languages' => [
+                'php' => dirname(__DIR__, 2).'/templates/highlight.php/php.json',
+                'twig' => dirname(__DIR__, 2).'/templates/highlight.php/twig.json',
+            ],
+        ]);
     }
 }
