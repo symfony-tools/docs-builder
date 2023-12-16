@@ -11,8 +11,6 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use Highlight\Highlighter as HighlightPHP;
-use SymfonyTools\GuidesExtension\Highlighter\Highlighter;
 use SymfonyTools\GuidesExtension\NodeRenderer\CodeNodeRenderer;
 use SymfonyTools\GuidesExtension\Node\ConfigurationBlockNode;
 use SymfonyTools\GuidesExtension\Node\ExternalLinkNode;
@@ -42,12 +40,5 @@ return static function (ContainerConfigurator $container) {
         ->set('symfony.node_renderer.html.inline.external_link', TemplateNodeRenderer::class)
             ->arg('$template', 'inline/external-link.html.twig')
             ->arg('$nodeClass', ExternalLinkNode::class)
-
-        ->set(Highlighter::class)
-            ->args([
-                inline_service(HighlightPHP::class)
-                    ->call('registerLanguage', ['php', dirname(__DIR__, 1).'/templates/highlight.php/php.json', true])
-                    ->call('registerLanguage', ['twig', dirname(__DIR__, 1).'/templates/highlight.php/twig.json', true])
-            ])
     ;
 };

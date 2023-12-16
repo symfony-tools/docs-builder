@@ -10,6 +10,7 @@ use phpDocumentor\Guides\Nodes\CollectionNode;
 use phpDocumentor\Guides\Nodes\DocumentNode;
 use phpDocumentor\Guides\Nodes\Node;
 use phpDocumentor\Guides\RestructuredText\Directives\SubDirective;
+use phpDocumentor\Guides\RestructuredText\Parser\BlockContext;
 use phpDocumentor\Guides\RestructuredText\Parser\Directive;
 use phpDocumentor\Guides\RestructuredText\Parser\Productions\Rule;
 
@@ -50,6 +51,7 @@ class ConfigurationBlockDirective extends SubDirective
     }
 
     protected function processSub(
+        BlockContext $blockContext,
         CollectionNode $node,
         Directive $directive,
     ): Node|null {

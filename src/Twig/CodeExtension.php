@@ -3,7 +3,6 @@
 namespace SymfonyTools\GuidesExtension\Twig;
 
 use SymfonyTools\GuidesExtension\Build\BuildConfig;
-use SymfonyTools\GuidesExtension\Highlighter\Highlighter;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -11,7 +10,6 @@ use Twig\TwigFunction;
 class CodeExtension extends AbstractExtension
 {
     public function __construct(
-        private Highlighter $highlighter,
         private BuildConfig $buildConfig
     ) {
     }
@@ -19,7 +17,6 @@ class CodeExtension extends AbstractExtension
     public function getFilters(): array
     {
         return [
-            new TwigFilter('highlight', $this->highlight(...), ['is_safe' => ['html']]),
             new TwigFilter('fqcn', $this->fqcn(...), ['is_safe' => ['html']]),
         ];
     }
@@ -29,11 +26,6 @@ class CodeExtension extends AbstractExtension
         return [
             new TwigFunction('dump', dd(...)),
         ];
-    }
-
-    public function highlight(string $code, ?string $language): string
-    {
-        return $this->highlighter->highlight($language ?? $this->buildConfig->getDefaultHighlightLanguage(), $code)->code;
     }
 
     public function fqcn(string $fqcn): string
