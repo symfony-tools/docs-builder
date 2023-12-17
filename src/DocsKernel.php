@@ -22,6 +22,7 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use phpDocumentor\Guides\Cli\DependencyInjection\ContainerFactory;
+use phpDocumentor\Guides\Code\DependencyInjection\CodeExtension;
 use phpDocumentor\Guides\RestructuredText\DependencyInjection\ReStructuredTextExtension;
 
 final class DocsKernel
@@ -32,7 +33,7 @@ final class DocsKernel
 
     public static function create(array $extensions = []): self
     {
-        $containerFactory = new ContainerFactory([new SymfonyExtension(), self::createDefaultExtension(), ...$extensions]);
+        $containerFactory = new ContainerFactory([new SymfonyExtension(), self::createDefaultExtension(), new CodeExtension(), ...$extensions]);
 
         for ($i = 1; $i <= 4; $i++) {
             if (is_dir($vendor = dirname(__DIR__, $i).'/vendor')) {

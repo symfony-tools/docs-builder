@@ -2,7 +2,7 @@
 
 namespace SymfonyTools\GuidesExtension\NodeRenderer;
 
-use phpDocumentor\Guides\Code\Highlighter\Highlighter;
+use SymfonyTools\GuidesExtension\Highlighter\SymfonyHighlighter;
 use phpDocumentor\Guides\NodeRenderers\NodeRenderer;
 use phpDocumentor\Guides\Nodes\CodeNode;
 use phpDocumentor\Guides\Nodes\Node;
@@ -16,7 +16,7 @@ class CodeNodeRenderer implements NodeRenderer
 {
     public function __construct(
         private TemplateRenderer $renderer,
-        private Highlighter $higlighter,
+        private SymfonyHighlighter $higlighter,
     ) {
     }
 
