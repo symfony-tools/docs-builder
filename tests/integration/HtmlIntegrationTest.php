@@ -75,7 +75,7 @@ class HtmlIntegrationTest extends TestCase
         }
 
         try {
-            foreach ((new Finder())->files()->in($expectedDirectory) as $file) {
+            foreach ((new Finder())->files()->notName('skip')->in($expectedDirectory) as $file) {
                 $expected = $this->sanitizeHTML($file->getContents());
                 $actual = $this->sanitizeHTML($buildEnvironment->getOutputFilesystem()->read($file->getRelativePathname()));
 

@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use SymfonyTools\GuidesExtension\Highlighter\SymfonyHighlighter;
 use SymfonyTools\GuidesExtension\NodeRenderer\CodeNodeRenderer;
 use SymfonyTools\GuidesExtension\Node\ConfigurationBlockNode;
 use SymfonyTools\GuidesExtension\Node\ExternalLinkNode;
@@ -18,6 +19,7 @@ use SymfonyTools\GuidesExtension\Twig\CodeExtension;
 use SymfonyTools\GuidesExtension\Twig\UrlExtension;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extra\String\StringExtension;
+use phpDocumentor\Guides\Code\Highlighter\Highlighter;
 use phpDocumentor\Guides\NodeRenderers\NodeRenderer;
 use phpDocumentor\Guides\NodeRenderers\TemplateNodeRenderer;
 
@@ -40,5 +42,8 @@ return static function (ContainerConfigurator $container) {
         ->set('symfony.node_renderer.html.inline.external_link', TemplateNodeRenderer::class)
             ->arg('$template', 'inline/external-link.html.twig')
             ->arg('$nodeClass', ExternalLinkNode::class)
+
+        ->set(SymfonyHighlighter::class)
+            ->decorate(Highlighter::class)
     ;
 };
