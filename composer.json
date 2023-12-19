@@ -40,8 +40,5 @@
         "symfony/phpunit-bridge": "^5.2 || ^6.0",
         "symfony/process": "^5.2 || ^6.0",
         "symfony/var-dumper": "^6.2"
-    },
-    "repositories": [
-        { "type": "path", "url": "../guides/packages/guides-code" }
-    ]
+    }
 }
