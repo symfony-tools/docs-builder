@@ -1,9 +1,19 @@
 <?php
 
+/*
+ * This file is part of the Guides SymfonyExtension package.
+ *
+ * (c) Wouter de Jong
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SymfonyTools\GuidesExtension\Twig;
 
 use Twig\Extension\AbstractExtension;
 use Twig\TwigTest;
+
 use function Symfony\Component\String\u;
 
 class UrlExtension extends AbstractExtension

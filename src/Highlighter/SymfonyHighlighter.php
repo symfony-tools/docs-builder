@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Guides SymfonyExtension package.
+ *
+ * (c) Wouter de Jong
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SymfonyTools\GuidesExtension\Highlighter;
 
 use phpDocumentor\Guides\Code\Highlighter\Highlighter;
@@ -17,7 +26,7 @@ final class SymfonyHighlighter implements Highlighter
         $result = ($this->highlighter)($language, $code);
 
         $code = $result->code;
-        if ($result->language === 'php') {
+        if ('php' === $result->language) {
             // highlight the $ in PHP variable names
             $code = str_replace('<span class="hljs-variable">$', '<span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>', $code);
         }

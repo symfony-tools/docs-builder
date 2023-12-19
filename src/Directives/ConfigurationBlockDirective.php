@@ -1,18 +1,26 @@
 <?php
 
+/*
+ * This file is part of the Guides SymfonyExtension package.
+ *
+ * (c) Wouter de Jong
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SymfonyTools\GuidesExtension\Directives;
 
-use Psr\Log\LoggerInterface;
-use SymfonyTools\GuidesExtension\Node\ConfigurationBlockNode;
-use SymfonyTools\GuidesExtension\Node\ConfigurationTab;
 use phpDocumentor\Guides\Nodes\CodeNode;
 use phpDocumentor\Guides\Nodes\CollectionNode;
-use phpDocumentor\Guides\Nodes\DocumentNode;
 use phpDocumentor\Guides\Nodes\Node;
 use phpDocumentor\Guides\RestructuredText\Directives\SubDirective;
 use phpDocumentor\Guides\RestructuredText\Parser\BlockContext;
 use phpDocumentor\Guides\RestructuredText\Parser\Directive;
 use phpDocumentor\Guides\RestructuredText\Parser\Productions\Rule;
+use Psr\Log\LoggerInterface;
+use SymfonyTools\GuidesExtension\Node\ConfigurationBlockNode;
+use SymfonyTools\GuidesExtension\Node\ConfigurationTab;
 
 class ConfigurationBlockDirective extends SubDirective
 {
@@ -55,7 +63,7 @@ class ConfigurationBlockDirective extends SubDirective
         BlockContext $blockContext,
         CollectionNode $collectionNode,
         Directive $directive,
-    ): Node|null {
+    ): ?Node {
         $tabs = [];
         foreach ($collectionNode->getValue() as $child) {
             if (!$child instanceof CodeNode) {
@@ -65,7 +73,7 @@ class ConfigurationBlockDirective extends SubDirective
             }
 
             $language = $child->getLanguage();
-            assert(null !== $language);
+            \assert(null !== $language);
 
             $label = self::LANGUAGE_LABELS[$language] ?? ucfirst(str_replace('-', ' ', $language));
 

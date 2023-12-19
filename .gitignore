@@ -2,3 +2,4 @@ composer.lock
 !tools/*/composer.lock
 vendor
 .phpunit.cache
+.php-cs-fixer.cache
