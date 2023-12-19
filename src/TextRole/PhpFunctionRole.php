@@ -15,7 +15,7 @@ class PhpFunctionRole implements TextRole
     ) {
     }
 
-    public function processNode(DocumentParserContext $parserContext, string $role, string $content, string $rawContent): InlineNode
+    public function processNode(DocumentParserContext $documentParserContext, string $role, string $content, string $rawContent): InlineNode
     {
         $url = 'https://php.net/function.'.strtolower(str_replace('_', '-', $content));
         $content .= '()';

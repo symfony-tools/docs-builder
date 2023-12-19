@@ -4,11 +4,19 @@ namespace SymfonyTools\GuidesExtension\Node;
 
 use phpDocumentor\Guides\Nodes\AbstractNode;
 
+/** @extends AbstractNode<list<ConfigurationTab>> */
 class ConfigurationBlockNode extends AbstractNode
 {
-    /** @param list<ConfigurationTabNode> $tabs */
+    /** @param list<ConfigurationTab> $tabs */
     public function __construct(
-        public readonly array $tabs
+        array $tabs
     ) {
+        $this->value = $tabs;
+    }
+
+    /** @return list<ConfigurationTab> */
+    public function getTabs(): array
+    {
+        return $this->value;
     }
 }

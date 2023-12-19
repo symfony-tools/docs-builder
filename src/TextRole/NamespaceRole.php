@@ -16,13 +16,13 @@ class NamespaceRole implements TextRole
     ) {
     }
 
-    public function processNode(DocumentParserContext $parserContext, string $role, string $content, string $rawContent): InlineNode
+    public function processNode(DocumentParserContext $documentParserContext, string $role, string $content, string $rawContent): InlineNode
     {
         $fqcn = u($content)->replace('\\\\', '\\');
 
         $url = sprintf($this->buildConfig->getSymfonyRepositoryUrl(), $fqcn->replace('\\', '/'));
 
-        return new ExternalLinkNode($url, $fqcn->afterLast('\\'), $fqcn);
+        return new ExternalLinkNode($url, (string) $fqcn->afterLast('\\'), (string) $fqcn);
     }
 
     public function getName(): string
