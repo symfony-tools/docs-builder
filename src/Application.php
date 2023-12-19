@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Docs Builder package.
+ * This file is part of the Guides SymfonyExtension package.
  *
- * (c) Ryan Weaver <ryan@symfonycasts.com>
+ * (c) Wouter de Jong
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.

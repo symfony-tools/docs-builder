@@ -1,14 +1,21 @@
 <?php
 
+/*
+ * This file is part of the Guides SymfonyExtension package.
+ *
+ * (c) Wouter de Jong
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SymfonyTools\GuidesExtension\DependencyInjection;
 
-use SymfonyTools\GuidesExtension\Highlighter\SymfonyHighlighter;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
-use phpDocumentor\Guides\Code\Highlighter\Highlighter;
 
 class SymfonyExtension extends Extension implements PrependExtensionInterface
 {
@@ -27,20 +34,20 @@ class SymfonyExtension extends Extension implements PrependExtensionInterface
 
     public function prepend(ContainerBuilder $container): void
     {
-        $templatesDir = dirname(__DIR__, 2).'/resources/templates';
+        $templatesDir = \dirname(__DIR__, 2).'/resources/templates';
 
         $container->prependExtensionConfig('guides', [
             'default_code_language' => 'php',
             'themes' => [
                 'symfonycom' => $templatesDir.'/symfonycom/html',
                 'rtd' => $templatesDir.'/rtd/html',
-            ]
+            ],
         ]);
 
         $container->prependExtensionConfig('code', [
             'languages' => [
-                'php' => dirname(__DIR__, 2).'/resources/highlight.php/php.json',
-                'twig' => dirname(__DIR__, 2).'/resources/highlight.php/twig.json',
+                'php' => \dirname(__DIR__, 2).'/resources/highlight.php/php.json',
+                'twig' => \dirname(__DIR__, 2).'/resources/highlight.php/twig.json',
             ],
             'aliases' => [
                 'caddy' => 'plaintext',

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Guides SymfonyExtension package.
+ *
+ * (c) Wouter de Jong
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SymfonyTools\GuidesExtension\Build;
 
 use Flyfinder\Finder;
@@ -12,7 +21,8 @@ final class DynamicBuildEnvironment implements BuildEnvironment
     private Filesystem $sourceFilesystem;
     private Filesystem $outputFilesystem;
 
-    public function __construct(?AdapterInterface $sourceAdapter = null, ?AdapterInterface $outputAdapter = null) {
+    public function __construct(AdapterInterface $sourceAdapter = null, AdapterInterface $outputAdapter = null)
+    {
         $this->sourceFilesystem = (new Filesystem($sourceAdapter ?? new MemoryAdapter()))->addPlugin(new Finder());
         $this->outputFilesystem = (new Filesystem($outputAdapter ?? new MemoryAdapter()))->addPlugin(new Finder());
     }
