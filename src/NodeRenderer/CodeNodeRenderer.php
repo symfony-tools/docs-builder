@@ -1,13 +1,22 @@
 <?php
 
+/*
+ * This file is part of the Guides SymfonyExtension package.
+ *
+ * (c) Wouter de Jong
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SymfonyTools\GuidesExtension\NodeRenderer;
 
-use SymfonyTools\GuidesExtension\Highlighter\SymfonyHighlighter;
 use phpDocumentor\Guides\NodeRenderers\NodeRenderer;
 use phpDocumentor\Guides\Nodes\CodeNode;
 use phpDocumentor\Guides\Nodes\Node;
 use phpDocumentor\Guides\RenderContext;
 use phpDocumentor\Guides\TemplateRenderer;
+use SymfonyTools\GuidesExtension\Highlighter\SymfonyHighlighter;
 
 /**
  * @implements NodeRenderer<CodeNode>
@@ -28,7 +37,7 @@ class CodeNodeRenderer implements NodeRenderer
     public function render(Node $node, RenderContext $renderContext): string
     {
         if (!$node instanceof CodeNode) {
-            throw new \LogicException(sprintf('"%s" can only render code nodes, got "%s".', __CLASS__, \get_debug_type($node)));
+            throw new \LogicException(sprintf('"%s" can only render code nodes, got "%s".', __CLASS__, get_debug_type($node)));
         }
 
         $language = $node->getLanguage() ?? 'text';

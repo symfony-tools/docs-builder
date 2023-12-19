@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the Docs Builder package.
+ * This file is part of the Guides SymfonyExtension package.
  *
- * (c) Ryan Weaver <ryan@symfonycasts.com>
+ * (c) Wouter de Jong
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,32 +12,33 @@
 namespace SymfonyTools\GuidesExtension;
 
 use Monolog\Logger;
+use phpDocumentor\Guides\Cli\DependencyInjection\ContainerFactory;
+use phpDocumentor\Guides\Code\DependencyInjection\CodeExtension;
+use phpDocumentor\Guides\RestructuredText\DependencyInjection\ReStructuredTextExtension;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
-use SymfonyTools\GuidesExtension\DependencyInjection\SymfonyExtension;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use phpDocumentor\Guides\Cli\DependencyInjection\ContainerFactory;
-use phpDocumentor\Guides\Code\DependencyInjection\CodeExtension;
-use phpDocumentor\Guides\RestructuredText\DependencyInjection\ReStructuredTextExtension;
+use SymfonyTools\GuidesExtension\DependencyInjection\SymfonyExtension;
 
 final class DocsKernel
 {
     public function __construct(
         private Container $container
-    ) {}
+    ) {
+    }
 
     /** @param list<ExtensionInterface> $extensions */
     public static function create(array $extensions = []): self
     {
         $containerFactory = new ContainerFactory([new SymfonyExtension(), self::createDefaultExtension(), new CodeExtension(), ...$extensions]);
 
-        for ($i = 1; $i <= 4; $i++) {
-            if (is_dir($vendor = dirname(__DIR__, $i).'/vendor')) {
+        for ($i = 1; $i <= 4; ++$i) {
+            if (is_dir($vendor = \dirname(__DIR__, $i).'/vendor')) {
                 break;
             }
         }
@@ -53,7 +54,9 @@ final class DocsKernel
 
     /**
      * @template T
+     *
      * @param class-string<T> $fqcn
+     *
      * @return T
      *
      * @psalm-suppress InvalidReturnType
@@ -66,7 +69,7 @@ final class DocsKernel
 
     private static function createDefaultExtension(): ExtensionInterface
     {
-        return new class extends Extension {
+        return new class() extends Extension {
             public function load(array $configs, ContainerBuilder $container): void
             {
                 $container->register(Logger::class)->setArgument('$name', 'docs-builder');
