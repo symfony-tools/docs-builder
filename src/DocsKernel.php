@@ -31,6 +31,7 @@ final class DocsKernel
         private Container $container
     ) {}
 
+    /** @param list<ExtensionInterface> $extensions */
     public static function create(array $extensions = []): self
     {
         $containerFactory = new ContainerFactory([new SymfonyExtension(), self::createDefaultExtension(), new CodeExtension(), ...$extensions]);
@@ -68,7 +69,7 @@ final class DocsKernel
         return new class extends Extension {
             public function load(array $configs, ContainerBuilder $container): void
             {
-                $container->register(Logger::class)->addArgument('$name', 'docs-builder');
+                $container->register(Logger::class)->setArgument('$name', 'docs-builder');
                 $container->setAlias(LoggerInterface::class, new Alias(Logger::class));
 
                 $container->register(EventDispatcher::class);

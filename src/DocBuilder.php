@@ -57,6 +57,11 @@ final class DocBuilder
 
         $this->build($buildEnvironment);
 
-        return $buildEnvironment->getOutputFilesystem()->read('/index.html');
+        $output = $buildEnvironment->getOutputFilesystem()->read('/index.html');
+        if (false === $output) {
+            throw new \LogicException('Cannot build HTML from the provided reStructuredText: no HTML output found.');
+        }
+
+        return $output;
     }
 }
