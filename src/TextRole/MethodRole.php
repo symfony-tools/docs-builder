@@ -16,7 +16,7 @@ class MethodRole implements TextRole
     ) {
     }
 
-    public function processNode(DocumentParserContext $parserContext, string $role, string $content, string $rawContent): InlineNode
+    public function processNode(DocumentParserContext $documentParserContext, string $role, string $content, string $rawContent): InlineNode
     {
         [$fqcn, $method] = u($content)->replace('\\\\', '\\')->split('::', 2);
 
