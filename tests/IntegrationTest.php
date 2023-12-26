@@ -158,6 +158,10 @@ class IntegrationTest extends AbstractIntegrationTest
             'blockName' => 'directives/admonition',
         ];
 
+        yield 'danger' => [
+            'blockName' => 'directives/danger',
+        ];
+
         yield 'note-code-block-nested' => [
             'blockName' => 'directives/note-code-block-nested',
         ];
