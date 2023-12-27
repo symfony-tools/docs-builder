@@ -1,22 +1,21 @@
-SKIP https://github.com/wouterj/symfony-docs-guides/issues/3
 <figure>
-    <img src="images/logo.png" width="200px" alt="Symfony Logo">
+    <img src="/images/logo.png" width="200px" alt="Symfony Logo">
 </figure>
 <p>I am a paragraph AFTER the figure. I should not be included as the
 caption for the above figure.</p>
 <figure>
-    <img src="images/logo.png">
+    <img src="/images/logo.png">
 
-    <figcaption><p>But I am a caption <em>for</em> the figure above.</p></figcaption>
+    <figcaption><p>But I am a caption <em>for</em> the figure above.</p>
+    </figcaption>
 </figure>
 
 <p>Some images use a special CSS class to wrap a fake browser around them:</p>
-<div class="with-browser">
-    <img src="images/exceptions-in-dev-environment.png" alt="A typical exception page in the development environment" align="center" class="some-class with-browser another-class">
+<div class="with-browser"><img src="/images/exceptions-in-dev-environment.png" alt="A typical exception page in the development environment" align="center" class="some-class with-browser another-class">
 </div>
 
 <p>And RST figures use a different syntax to define their custom CSS classes:</p>
 
 <figure class="with-browser foo">
-    <img src="images/logo.png" alt="/" align="center">
+    <img src="/images/logo.png" alt="/" align="center">
 </figure>
