@@ -1,0 +1,6 @@
+{% set entries = entries | default(node.menuEntries) %}
+<ul class="{{ true in entries|map(e => e.isCurrent) ? 'current' }}">
+    {% for entry in entries -%}
+        {{ renderNode(entry) }}
+    {%- endfor %}
+</ul>
