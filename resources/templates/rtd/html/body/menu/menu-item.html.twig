@@ -1,0 +1,11 @@
+<li class="toctree-l{{ node.level }}{{ node.isCurrent ? ' current' }}">
+    <a href="{{ url }}">
+        {{ renderNode(node.value.value) }}
+    </a>
+    {%- set entries = node.children|merge(node.sections) -%}
+    {% if entries|length %}
+        {% include "body/menu/menu-level.html.twig" with {
+            entries: entries
+        } %}
+    {% endif %}
+</li>
