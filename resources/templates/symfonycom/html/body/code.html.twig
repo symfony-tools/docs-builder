@@ -1,5 +1,6 @@
 {% set size = ['-', 'sm', 'md', 'lg', 'xl'][loc | length] %}
-<div translate="no" data-loc="{{ loc }}" class="notranslate codeblock codeblock-length-{{ size }}{% for lang in languages %} codeblock-{{ lang }}{% endfor %}{% if node.caption %} codeblock-has-caption{% endif %}">
+
+<div translate="no" data-loc="{{ loc }}" class="notranslate codeblock codeblock-length-{{ size }}{% for lang in languages %} codeblock-{{ lang }}{% endfor %}{{ node.caption ? ' codeblock-has-caption' }}{{ node.classes ? ' ' ~ node.classes | join(' ') }}">
     {% if node.caption -%}
         <div class="codeblock-caption">{{ node.caption }}</div>
     {% endif -%}

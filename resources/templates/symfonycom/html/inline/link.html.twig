@@ -3,9 +3,9 @@
        class: (node.classes ? node.classes|join(' ') ~ ' ') ~ 'reference ' ~ (node.url is safe_url ? 'internal' : 'external')
    }|filter(v => v != '')
 %}
+{% apply spaceless %}
 <a href="{{ node.url }}"
     {%- for name, value in attributes %} {{ name }}="{{ value }}"{% endfor -%}
     {%- if node.url is not safe_url %} rel="external noopener noreferrer" target="_blank"{% endif -%}
->
-    {{- node.value|raw -}}
-</a>
+>{{- node.value|raw -}}</a>
+{% endapply %}
