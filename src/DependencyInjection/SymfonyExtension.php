@@ -40,7 +40,6 @@ class SymfonyExtension extends Extension implements PrependExtensionInterface
             'default_code_language' => 'php',
             'themes' => [
                 'symfonycom' => $templatesDir.'/symfonycom/html',
-                'rtd' => $templatesDir.'/rtd/html',
             ],
         ]);
 

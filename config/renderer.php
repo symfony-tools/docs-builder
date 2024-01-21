@@ -13,7 +13,6 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use SymfonyTools\GuidesExtension\Highlighter\SymfonyHighlighter;
 use SymfonyTools\GuidesExtension\NodeRenderer\CodeNodeRenderer;
-use SymfonyTools\GuidesExtension\Node\ConfigurationBlockNode;
 use SymfonyTools\GuidesExtension\Node\ExternalLinkNode;
 use SymfonyTools\GuidesExtension\Twig\CodeExtension;
 use SymfonyTools\GuidesExtension\Twig\UrlExtension;
@@ -34,10 +33,6 @@ return static function (ContainerConfigurator $container) {
         ->set(StringExtension::class)
 
         ->set(CodeNodeRenderer::class)
-
-        ->set('symfony.node_renderer.html.configuration_block', TemplateNodeRenderer::class)
-            ->arg('$template', 'body/configuration-block.html.twig')
-            ->arg('$nodeClass', ConfigurationBlockNode::class)
 
         ->set('symfony.node_renderer.html.inline.external_link', TemplateNodeRenderer::class)
             ->arg('$template', 'inline/external-link.html.twig')
