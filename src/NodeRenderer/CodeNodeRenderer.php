@@ -18,6 +18,8 @@ use phpDocumentor\Guides\RenderContext;
 use phpDocumentor\Guides\TemplateRenderer;
 use SymfonyTools\GuidesExtension\Highlighter\SymfonyHighlighter;
 
+use function is_a;
+
 /**
  * @implements NodeRenderer<CodeNode>
  */
@@ -29,9 +31,9 @@ class CodeNodeRenderer implements NodeRenderer
     ) {
     }
 
-    public function supports(Node $node): bool
+    public function supports(string $nodeFqcn): bool
     {
-        return $node instanceof CodeNode;
+        return $nodeFqcn === CodeNode::class || is_a($nodeFqcn, CodeNode::class, true);
     }
 
     public function render(Node $node, RenderContext $renderContext): string
@@ -41,7 +43,7 @@ class CodeNodeRenderer implements NodeRenderer
         }
 
         $language = $node->getLanguage() ?? 'text';
-        $highlight = ($this->higlighter)($language, $node->getValue());
+        $highlight = ($this->higlighter)($language, $node->getValue(), $renderContext->getLoggerInformation());
 
         $languages = array_unique([$language, $highlight->language]);
         $code = $highlight->code;

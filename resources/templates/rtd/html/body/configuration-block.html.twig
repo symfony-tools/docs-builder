@@ -1,7 +1,0 @@
-{% for tab in node.tabs %}
-    <div class="literal-block-wrapper docutils container">
-        <div class="code-block-caption"><span class="caption-text">{{ tab.label }}</span></div>
-
-        {{ renderNode(tab.content) }}
-    </div>
-{% endfor %}

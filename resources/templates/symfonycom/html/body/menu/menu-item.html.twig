@@ -2,8 +2,14 @@
     <a href="{{ url }}">{{ renderNode(node.value.value) }}</a>
     {% if node.children|length %}
         {% include "body/menu/menu-level.html.twig" with {
-            tocItems: tocItem.children,
+            tocItems: node.children,
             level: level + 1
+        } %}
+    {% endif %}
+    {% if node.sections|length %}
+        {% include "body/menu/menu-level.html.twig" with {
+            entries: node.sections,
+            level: node.level + 1
         } %}
     {% endif %}
 </li>
