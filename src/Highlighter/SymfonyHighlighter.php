@@ -21,9 +21,9 @@ final class SymfonyHighlighter implements Highlighter
     ) {
     }
 
-    public function __invoke(string $language, string $code): HighlightResult
+    public function __invoke(string $language, string $code, array $debugInformation): HighlightResult
     {
-        $result = ($this->highlighter)($language, $code);
+        $result = ($this->highlighter)($language, $code, $debugInformation);
 
         $code = $result->code;
         if ('php' === $result->language) {
