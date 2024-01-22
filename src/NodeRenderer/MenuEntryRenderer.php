@@ -32,7 +32,7 @@ class MenuEntryRenderer implements NodeRenderer
 
     public function supports(string $nodeFqcn): bool
     {
-        return $nodeFqcn === MenuEntryNode::class || is_a($nodeFqcn, MenuEntryNode::class, true);
+        return MenuEntryNode::class === $nodeFqcn || is_a($nodeFqcn, MenuEntryNode::class, true);
     }
 
     public function render(Node $node, RenderContext $renderContext): string
