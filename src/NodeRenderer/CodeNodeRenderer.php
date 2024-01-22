@@ -18,8 +18,6 @@ use phpDocumentor\Guides\RenderContext;
 use phpDocumentor\Guides\TemplateRenderer;
 use SymfonyTools\GuidesExtension\Highlighter\SymfonyHighlighter;
 
-use function is_a;
-
 /**
  * @implements NodeRenderer<CodeNode>
  */
