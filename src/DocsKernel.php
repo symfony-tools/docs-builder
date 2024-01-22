@@ -14,6 +14,7 @@ namespace SymfonyTools\GuidesExtension;
 use Monolog\Logger;
 use phpDocumentor\Guides\Cli\DependencyInjection\ContainerFactory;
 use phpDocumentor\Guides\Code\DependencyInjection\CodeExtension;
+use phpDocumentor\Guides\DependencyInjection\GuidesExtension;
 use phpDocumentor\Guides\RestructuredText\DependencyInjection\ReStructuredTextExtension;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
@@ -43,8 +44,52 @@ final class DocsKernel
             }
         }
 
-        $containerFactory->loadExtensionConfig(RestructuredTextExtension::class, [
+        $containerFactory->loadExtensionConfig(GuidesExtension::class, [
             'default_code_language' => 'php',
+        ]);
+
+        $containerFactory->loadExtensionConfig(ReStructuredTextExtension::class, [
+            'code_language_labels' => [
+                ['language' => 'caddy', 'label' => 'Caddy'],
+                ['language' => 'env', 'label' => 'Dotenv'],
+                ['language' => 'html+jinja', 'label' => 'Twig'],
+                ['language' => 'html+php', 'label' => 'PHP'],
+                ['language' => 'html+twig', 'label' => 'Twig'],
+                ['language' => 'jinja', 'label' => 'Twig'],
+                ['language' => 'php', 'label' => 'PHP'],
+                ['language' => 'php-annotations', 'label' => 'Annotations'],
+                ['language' => 'php-attributes', 'label' => 'Attributes'],
+                ['language' => 'php-standalone', 'label' => 'Standalone Use'],
+                ['language' => 'php-symfony', 'label' => 'Framework Use'],
+                ['language' => 'rst', 'label' => 'RST'],
+                ['language' => 'terminal', 'label' => 'Bash'],
+                ['language' => 'varnish3', 'label' => 'Varnish 3'],
+                ['language' => 'varnish4', 'label' => 'Varnish 4'],
+                ['language' => 'vcl', 'label' => 'VCL'],
+                ['language' => 'xml', 'label' => 'XML'],
+                ['language' => 'xml+php', 'label' => 'XML'],
+                ['language' => 'yaml', 'label' => 'YAML'],
+            ],
+        ]);
+
+        $containerFactory->loadExtensionConfig(CodeExtension::class, [
+            'aliases' => [
+                'env' => 'bash',
+                'html+jinja' => 'twig',
+                'html+twig' => 'twig',
+                'jinja' => 'twig',
+                'html+php' => 'html',
+                'xml+php' => 'xml',
+                'php-annotations' => 'php',
+                'php-attributes' => 'php',
+                'terminal' => 'bash',
+                'rst' => 'markdown',
+                'php-standalone' => 'php',
+                'php-symfony' => 'php',
+                'varnish4' => 'c',
+                'varnish3' => 'c',
+                'vcl' => 'c',
+            ],
         ]);
 
         $container = $containerFactory->create($vendor);
