@@ -33,7 +33,7 @@ class CodeExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('dump', function(...$args) { dump(...$args); }),
+            new TwigFunction('dump', function(mixed ...$args) { dump(...$args); }),
         ];
     }
 
