@@ -13,6 +13,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use SymfonyTools\GuidesExtension\Highlighter\SymfonyHighlighter;
 use SymfonyTools\GuidesExtension\NodeRenderer\CodeNodeRenderer;
+use SymfonyTools\GuidesExtension\NodeRenderer\MenuEntryRenderer;
 use SymfonyTools\GuidesExtension\Node\ExternalLinkNode;
 use SymfonyTools\GuidesExtension\Twig\CodeExtension;
 use SymfonyTools\GuidesExtension\Twig\UrlExtension;
@@ -26,13 +27,14 @@ return static function (ContainerConfigurator $container) {
     $container ->services()
         ->defaults()->autowire()->autoconfigure()
         ->instanceof(ExtensionInterface::class)->tag('twig.extension')
-        ->instanceof(NodeRenderer::class)->tag('phpdoc.guides.noderenderer.html')
+        ->instanceof(NodeRenderer::class)->tag('phpdoc.guides.noderenderer.html', ['priority' => 10])
 
         ->set(CodeExtension::class)
         ->set(UrlExtension::class)
         ->set(StringExtension::class)
 
         ->set(CodeNodeRenderer::class)
+        ->set(MenuEntryRenderer::class)
 
         ->set('symfony.node_renderer.html.inline.external_link', TemplateNodeRenderer::class)
             ->arg('$template', 'inline/external-link.html.twig')
