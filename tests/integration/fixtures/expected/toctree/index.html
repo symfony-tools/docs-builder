@@ -6,6 +6,7 @@
     <body>
         <div class="section" id="toctree">
             <h1><a class="headerlink" href="#toctree" title="Permalink to this headline">Toctree</a></h1>
+            <p>Simple</p>
             <div class="toctree-wrapper toc-size-md">
                 <ul class="toctree toctree-level-1 toctree-length-1">
                     <li>
@@ -18,6 +19,7 @@
                     </li>
                 </ul>
             </div>
+            <p>Simple, titles only</p>
             <div class="toctree-wrapper toc-size-md">
                 <ul class="toctree toctree-level-1 toctree-length-1">
                     <li>
@@ -25,6 +27,7 @@
                     </li>
                 </ul>
             </div>
+            <p>Simple, file from other directory</p>
             <div class="toctree-wrapper toc-size-md">
                 <ul class="toctree toctree-level-1 toctree-length-1">
                     <li>
@@ -32,22 +35,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="toctree-wrapper toc-size-md">
-                <ul class="toctree toctree-level-1 toctree-length-2">
-                    <li>
-                        <a href="/directory/another_file.html">Another file</a>
-                    </li>
-                    <li>
-                        <a href="/file.html">Title
-                        </a>
-                        <ul class="toctree toctree-level-2 toctree-length-1">
-                            <li>
-                                <a href="/file.html#sub-title">Sub title</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+            <p>Glob</p>
             <div class="toctree-wrapper toc-size-md">
                 <ul class="toctree toctree-level-1 toctree-length-2">
                     <li>
@@ -59,10 +47,27 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="/directory/another_file.html">Another file</a>
+                        <a href="/file1.html">Title 1</a>
                     </li>
                 </ul>
             </div>
+            <p>Glob, with explicit order</p>
+            <div class="toctree-wrapper toc-size-md">
+                <ul class="toctree toctree-level-1 toctree-length-2">
+                    <li>
+                        <a href="/file1.html">Title 1</a>
+                    </li>
+                    <li>
+                        <a href="/file.html">Title</a>
+                        <ul class="toctree toctree-level-2 toctree-length-1">
+                            <li>
+                                <a href="/file.html#sub-title">Sub title</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <p>Hidden</p>
         </div>
     </body>
 </html>
