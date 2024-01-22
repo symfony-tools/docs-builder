@@ -31,7 +31,7 @@ class CodeNodeRenderer implements NodeRenderer
 
     public function supports(string $nodeFqcn): bool
     {
-        return $nodeFqcn === CodeNode::class || is_a($nodeFqcn, CodeNode::class, true);
+        return CodeNode::class === $nodeFqcn || is_a($nodeFqcn, CodeNode::class, true);
     }
 
     public function render(Node $node, RenderContext $renderContext): string
