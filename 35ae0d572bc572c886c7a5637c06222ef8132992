@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-01-25T11:29:22Z
+
+Tests are only failing on Windows. I can't fix them but hopefully someone who uses that OS will look into this and try to fix the errors. Thanks!
+
+---------------------------------------------------------------------------
+
+by wouterj at 2024-01-25T11:32:48Z
+
+Do we really want this? From the readme: "This project is considered an internal tool and therefore, you shouldn't use this project in your application."
+
+As long as it works on the machine building symfony.com and our CI, I'm more than happy.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-01-25T12:52:49Z
+
+OK then, let's remove Windows and macOS and let's only update the PHP versions. Thanks.
