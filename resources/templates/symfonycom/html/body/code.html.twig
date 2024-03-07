@@ -2,7 +2,7 @@
 
 <div translate="no" data-loc="{{ loc }}" class="notranslate codeblock codeblock-length-{{ size }}{% for lang in languages %} codeblock-{{ lang }}{% endfor %}{{ node.caption ? ' codeblock-has-caption' }}{{ node.classes ? ' ' ~ node.classes | join(' ') }}">
     {% if node.caption -%}
-        <div class="codeblock-caption">{{ node.caption }}</div>
+        <div class="codeblock-caption">{{ renderNode(node.caption) }}</div>
     {% endif -%}
     <div class="codeblock-scroll">
         <pre class="codeblock-lines">
