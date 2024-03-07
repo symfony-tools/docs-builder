@@ -1,8 +1,8 @@
-{% set attributes = {
+{%- set attributes = {
        title: node.title,
        class: (node.classes ? node.classes|join(' ') ~ ' ') ~ 'reference ' ~ (node.url is safe_url ? 'internal' : 'external')
    }|filter(v => v != '')
-%}
+-%}
 {% apply spaceless %}
 <a href="{{ node.url }}"
     {%- for name, value in attributes %} {{ name }}="{{ value }}"{% endfor -%}
