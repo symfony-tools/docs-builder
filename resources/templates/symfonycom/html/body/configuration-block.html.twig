@@ -3,7 +3,7 @@
         {% for tab in node.tabs %}
             <button role="tab" type="button" data-language="{{ tab.label|lower|slug }}"
                 aria-controls="{{ 'configuration-block-tabpanel-' ~ tab.hash }}" aria-selected="{{ loop.first ? 'true' : 'false' }}"
-                {{ loop.first ? 'data-active="true"' }} {{ not loop.first ? 'tabindex="-1"' }}>
+                {{ loop.first ? 'data-active="true"' }}{{ not loop.first ? ' tabindex="-1"' }}>
                 <span>{{ tab.label }}</span>
             </button>
         {% endfor %}
