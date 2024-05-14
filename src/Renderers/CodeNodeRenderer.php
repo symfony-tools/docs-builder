@@ -70,9 +70,10 @@ class CodeNodeRenderer implements NodeRenderer
 
             $highLighter = new Highlighter();
             $highlightedCode = $highLighter->highlight($languageMapping, $code)->value;
+        }
 
-            // this allows to highlight the $ in PHP variable names
-            $highlightedCode = str_replace('<span class="hljs-variable">$', '<span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>', $highlightedCode);
+        if ('php' === $language) {
+            $highlightedCode = $this->processHighlightedPhpCode($highlightedCode);
         }
 
         if ('terminal' === $language) {
@@ -138,5 +139,60 @@ class CodeNodeRenderer implements NodeRenderer
         $codeEscaped = preg_replace('/&(?!amp;|lt;|gt;|quot;)/', '&amp;', $code);
 
         return strtr($codeEscaped, ['<' => '&lt;', '>' => '&gt;', '"' => '&quot;']);
+    }
+
+    private function processHighlightedPhpCode(string $highlightedCode): string
+    {
+        // this allows to highlight the $ in PHP variable names
+        $highlightedCode = str_replace('<span class="hljs-variable">$', '<span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>', $highlightedCode);
+
+        // this highlights PHP attributes, which can be defined in many different ways:
+        //
+        //   #[AttributeName]
+        //   #[AttributeName()]
+        //   #[AttributeName('value')]
+        //   #[AttributeName('value', option: 'value')]
+        //   #[AttributeName(['value' => 'value'])]
+        //   #[AttributeName(
+        //       'value',
+        //       option: 'value'
+        //   )]
+        //
+        // The attribute name is mandatory, but the parentheses and the arguments are optional.
+        $highlightedCode = preg_replace_callback(
+            // '/<span class="hljs-comment">#\[\s*((?<name>[a-zA-Z_\\\\][\w\\\\]*)(?<arguments>\((?:[^\(\)]*|\((?:[^\(\)]*|\([^)]*\))*\))*\))?)\s*\]<\/span>/',
+            '/<span class="hljs-comment">#\[\s*(?<name>[a-zA-Z_\\\\][\w\\\\]*)(?<arguments>\(.*\))?\s*\]<\/span>/',
+            static function (array $matches) {
+                $attributeName = $matches['name'];
+                $attributeArguments = $matches['arguments'] ?? '';
+
+                if ('' === $attributeArguments) {
+                    return sprintf('<span class="hljs-attribute">#[%s]</span>', $attributeName);
+                }
+
+                // the tricky part is to highlight the values and options; so we
+                // use the highlighter to highlight the whole attribute wrapped with
+                // some contents to make it valid PHP code
+                // Original string to highlight: AttributeName('value', option: 'value')
+                // String passed to highlight: $attribute = new AttributeName('value', option: 'value');
+                // After highlighting, we remove the `$attribute = new ` prefix and the trailing `;`
+                $highlighter = new Highlighter();
+                $highlightedAttribute = $highlighter->highlight('php', sprintf('$attribute = new %s%s;', $attributeName, $attributeArguments))->value;
+                $highlightedAttribute = preg_replace('/^<span class="hljs-variable">\$attribute<\/span> = <span class="hljs-keyword">new<\/span> (.*);$/', '$1', $highlightedAttribute);
+
+                // $highlightedAttribute is like 'Route(<span class="hljs-string">'/posts/{id}'</span>)'
+                // remove the attribute name and the parenthesis from the highlighted code
+                $highlightedAttribute = preg_replace(
+                    sprintf('/^%s\((.*)\)$/', preg_quote($attributeName, '/')),
+                    '$1',
+                    $highlightedAttribute
+                );
+echo sprintf('<span class="hljs-attribute">#[%s(</span>%s<span class="hljs-attribute">)]</span>', $attributeName, $highlightedAttribute)."\n\n";
+                return sprintf('<span class="hljs-attribute">#[%s</span>%s<span class="hljs-attribute">]</span>', $attributeName, $highlightedAttribute);
+            },
+            $highlightedCode
+        );
+
+        return $highlightedCode;
     }
 }
