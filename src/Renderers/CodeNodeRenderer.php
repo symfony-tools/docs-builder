@@ -146,6 +146,7 @@ class CodeNodeRenderer implements NodeRenderer
         // this allows to highlight the $ in PHP variable names
         $highlightedCode = str_replace('<span class="hljs-variable">$', '<span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>', $highlightedCode);
 
+        // the rest of this method highlights PHP attributes, so if we can't find this pattern, return early
         if (!str_contains($highlightedCode, '<span class="hljs-comment">#[')) {
             return $highlightedCode;
         }
@@ -173,16 +174,10 @@ class CodeNodeRenderer implements NodeRenderer
                     return sprintf('<span class="hljs-php-attribute">#[%s]</span>', $attributeName);
                 }
 
-                // the tricky part is to highlight the values and options; so we
-                // use the highlighter to highlight the whole attribute wrapped with
-                // some contents to make it valid PHP code
-                // Original string to highlight: AttributeName('value', option: 'value')
-                // String passed to highlighter: $attribute = new AttributeName('value', option: 'value');
-                // After highlighting, we remove the `$attribute = new ` prefix and the trailing `;`
                 $highlighter = new Highlighter();
 
                 // this is needed because when using 'class' as the name of an attribute argument, the highlighter
-                // confuses it for a new class instantiation and highlights it as such
+                // confuses it for a new class instantiation and highlights it as such (this is later reverted)
                 $attributeArguments = str_replace('class:', 'klass:', $attributeArguments);
 
                 // this happens in multiline attributes, where the highlighter already highlighted each line of the attribute (except the attribute name)
@@ -190,20 +185,22 @@ class CodeNodeRenderer implements NodeRenderer
                     // don't trim the result to keep the leading and trailing \n
                     $highlightedAttribute = preg_replace('/\(<\/span>(.*)\)$/s', '$1', $attributeArguments);
                 } else {
+                    // the tricky part is to highlight the values and options; so we
+                    // use the highlighter to highlight the whole attribute wrapped with
+                    // some contents to make it valid PHP code:
+                    //   Original string to highlight: AttributeName('value', option: 'value')
+                    //   String passed to highlighter: $hljsAttribute = new AttributeName('value', option: 'value');
+                    //   After highlighting, we remove the `$hljsAttribute = new ` prefix and the trailing `;`
                     $highlightedAttribute = $highlighter->highlight('php', sprintf('$hljsAttribute = new %s%s;', $attributeName, $attributeArguments))->value;
                     $highlightedAttribute = preg_replace('/^<span class="hljs-variable">\$hljsAttribute<\/span> = <span class="hljs-keyword">new<\/span> (.*);$/', '$1', $highlightedAttribute);
 
-                    // fix the double transformation of < to &amp;&lt; and > to &amp;&gt; caused by the highlighter
+                    // fix the transformation of < to &amp;&lt; and > to &amp;&gt; caused by the highlighter
                     $highlightedAttribute = str_replace('&amp;lt;', '&lt;', $highlightedAttribute);
                     $highlightedAttribute = str_replace('&amp;gt;', '&gt;', $highlightedAttribute);
 
                     // $highlightedAttribute is like 'Route(<span class="hljs-string">'/posts/{id}'</span>)'
                     // remove the attribute name and the parenthesis from the highlighted code
-                    $highlightedAttribute = substr(
-                        $highlightedAttribute,
-                        strlen($attributeName) + 1,
-                        -1
-                    );
+                    $highlightedAttribute = substr($highlightedAttribute, strlen($attributeName) + 1, -1);
                 }
 
                 // reverse the previous change needed to avoid highlighting 'class' as a new class instantiation

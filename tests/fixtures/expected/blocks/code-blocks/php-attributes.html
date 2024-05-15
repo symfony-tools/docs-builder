@@ -1,4 +1,4 @@
-<div translate="no" data-loc="45" class="notranslate codeblock codeblock-length-md codeblock-php-attributes codeblock-php">
+<div translate="no" data-loc="48" class="notranslate codeblock codeblock-length-md codeblock-php-attributes codeblock-php">
     <div class="codeblock-scroll">
         <pre class="codeblock-lines">1
 2
@@ -44,7 +44,10 @@
 42
 43
 44
-45</pre>
+45
+46
+47
+48</pre>
         <pre class="codeblock-code">
             <code>
                 <span class="hljs-comment">// src/SomePath/SomeClass.php</span>
@@ -130,6 +133,14 @@
                 <span class="hljs-keyword">private</span>
                 <span class="hljs-variable">
                 <span class="hljs-variable-other-marker">$</span> property10</span>
+                ;
+                <span class="hljs-php-attribute">#[ORM\CustomIdGenerator(</span>
+                class:
+                <span class="hljs-string">'doctrine.uuid_generator'</span>
+                <span class="hljs-php-attribute">)]</span>
+                <span class="hljs-keyword">private</span>
+                <span class="hljs-variable">
+                <span class="hljs-variable-other-marker">$</span> property11</span>
                 ;
 }</code></pre>
     </div>

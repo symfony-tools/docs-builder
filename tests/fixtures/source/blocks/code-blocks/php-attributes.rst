@@ -44,5 +44,8 @@
              value: 18,
          )]
          private $property10;
+
+         #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+         private $property11;
     }
 
