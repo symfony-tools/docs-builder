@@ -31,21 +31,21 @@
         #[Assert\AttributeName('value')]
         private $property7;
 
-         #[Assert\AttributeName(
+        #[Assert\AttributeName(
             'value',
             option: 'value'
-         )]
-         private $property8;
+        )]
+        private $property8;
 
-         #[Route('/blog/{page<\d+>}', name: 'blog_list')]
-         private $property9;
+        #[Route('/blog/{page<\d+>}', name: 'blog_list')]
+        private $property9;
 
-         #[Assert\GreaterThanOrEqual(
-             value: 18,
-         )]
-         private $property10;
+        #[Assert\GreaterThanOrEqual(
+            value: 18,
+        )]
+        private $property10;
 
-         #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-         private $property11;
+        #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+        private $property11;
     }
 
