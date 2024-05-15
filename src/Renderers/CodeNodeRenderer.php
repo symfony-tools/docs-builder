@@ -59,8 +59,8 @@ class CodeNodeRenderer implements NodeRenderer
         }
 
         $language = $this->codeNode->getLanguage() ?? 'php';
-        $languageMapping = self::LANGUAGES_MAPPING[$language] ?? $language;
-        $languages = array_unique([$language, $languageMapping]);
+        $highlightingLanguage = self::LANGUAGES_MAPPING[$language] ?? $language;
+        $languages = array_unique([$language, $highlightingLanguage]);
 
         if ('text' === $language) {
             // Highlighter escapes correctly the code, we need to manually escape only for "text" code
@@ -69,10 +69,10 @@ class CodeNodeRenderer implements NodeRenderer
             $this->configureHighlighter();
 
             $highLighter = new Highlighter();
-            $highlightedCode = $highLighter->highlight($languageMapping, $code)->value;
+            $highlightedCode = $highLighter->highlight($highlightingLanguage, $code)->value;
         }
 
-        if ('php' === $language) {
+        if ('php' === $highlightingLanguage) {
             $highlightedCode = $this->processHighlightedPhpCode($highlightedCode);
         }
 
@@ -146,6 +146,10 @@ class CodeNodeRenderer implements NodeRenderer
         // this allows to highlight the $ in PHP variable names
         $highlightedCode = str_replace('<span class="hljs-variable">$', '<span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>', $highlightedCode);
 
+        if (!str_contains($highlightedCode, '<span class="hljs-comment">#[')) {
+            return $highlightedCode;
+        }
+
         // this highlights PHP attributes, which can be defined in many different ways:
         //
         //   #[AttributeName]
@@ -160,35 +164,52 @@ class CodeNodeRenderer implements NodeRenderer
         //
         // The attribute name is mandatory, but the parentheses and the arguments are optional.
         $highlightedCode = preg_replace_callback(
-            // '/<span class="hljs-comment">#\[\s*((?<name>[a-zA-Z_\\\\][\w\\\\]*)(?<arguments>\((?:[^\(\)]*|\((?:[^\(\)]*|\([^)]*\))*\))*\))?)\s*\]<\/span>/',
-            '/<span class="hljs-comment">#\[\s*(?<name>[a-zA-Z_\\\\][\w\\\\]*)(?<arguments>\(.*\))?\s*\]<\/span>/',
+            '/<span class="hljs-comment">#\[\s*(?<name>[a-zA-Z_\\\\][\w\\\\]*)(?<arguments>\(.*\))?\s*\]/Us',
             static function (array $matches) {
                 $attributeName = $matches['name'];
                 $attributeArguments = $matches['arguments'] ?? '';
 
                 if ('' === $attributeArguments) {
-                    return sprintf('<span class="hljs-attribute">#[%s]</span>', $attributeName);
+                    return sprintf('<span class="hljs-php-attribute">#[%s]</span>', $attributeName);
                 }
 
                 // the tricky part is to highlight the values and options; so we
                 // use the highlighter to highlight the whole attribute wrapped with
                 // some contents to make it valid PHP code
                 // Original string to highlight: AttributeName('value', option: 'value')
-                // String passed to highlight: $attribute = new AttributeName('value', option: 'value');
+                // String passed to highlighter: $attribute = new AttributeName('value', option: 'value');
                 // After highlighting, we remove the `$attribute = new ` prefix and the trailing `;`
                 $highlighter = new Highlighter();
-                $highlightedAttribute = $highlighter->highlight('php', sprintf('$attribute = new %s%s;', $attributeName, $attributeArguments))->value;
-                $highlightedAttribute = preg_replace('/^<span class="hljs-variable">\$attribute<\/span> = <span class="hljs-keyword">new<\/span> (.*);$/', '$1', $highlightedAttribute);
 
-                // $highlightedAttribute is like 'Route(<span class="hljs-string">'/posts/{id}'</span>)'
-                // remove the attribute name and the parenthesis from the highlighted code
-                $highlightedAttribute = preg_replace(
-                    sprintf('/^%s\((.*)\)$/', preg_quote($attributeName, '/')),
-                    '$1',
-                    $highlightedAttribute
-                );
-echo sprintf('<span class="hljs-attribute">#[%s(</span>%s<span class="hljs-attribute">)]</span>', $attributeName, $highlightedAttribute)."\n\n";
-                return sprintf('<span class="hljs-attribute">#[%s</span>%s<span class="hljs-attribute">]</span>', $attributeName, $highlightedAttribute);
+                // this is needed because when using 'class' as the name of an attribute argument, the highlighter
+                // confuses it for a new class instantiation and highlights it as such
+                $attributeArguments = str_replace('class:', 'klass:', $attributeArguments);
+
+                // this happens in multiline attributes, where the highlighter already highlighted each line of the attribute (except the attribute name)
+                if (str_contains($attributeArguments, '<span class="hljs-string') || str_contains($attributeArguments, '<span class="hljs-number')) {
+                    // don't trim the result to keep the leading and trailing \n
+                    $highlightedAttribute = preg_replace('/\(<\/span>(.*)\)$/s', '$1', $attributeArguments);
+                } else {
+                    $highlightedAttribute = $highlighter->highlight('php', sprintf('$hljsAttribute = new %s%s;', $attributeName, $attributeArguments))->value;
+                    $highlightedAttribute = preg_replace('/^<span class="hljs-variable">\$hljsAttribute<\/span> = <span class="hljs-keyword">new<\/span> (.*);$/', '$1', $highlightedAttribute);
+
+                    // fix the double transformation of < to &amp;&lt; and > to &amp;&gt; caused by the highlighter
+                    $highlightedAttribute = str_replace('&amp;lt;', '&lt;', $highlightedAttribute);
+                    $highlightedAttribute = str_replace('&amp;gt;', '&gt;', $highlightedAttribute);
+
+                    // $highlightedAttribute is like 'Route(<span class="hljs-string">'/posts/{id}'</span>)'
+                    // remove the attribute name and the parenthesis from the highlighted code
+                    $highlightedAttribute = substr(
+                        $highlightedAttribute,
+                        strlen($attributeName) + 1,
+                        -1
+                    );
+                }
+
+                // reverse the previous change needed to avoid highlighting 'class' as a new class instantiation
+                $highlightedAttribute = str_replace('klass:', 'class:', $highlightedAttribute);
+
+                return sprintf('<span class="hljs-php-attribute">#[%s(</span>%s<span class="hljs-php-attribute">)]</span>', $attributeName, $highlightedAttribute);
             },
             $highlightedCode
         );
