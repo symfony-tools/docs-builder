@@ -47,5 +47,10 @@
 
         #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
         private $property11;
-    }
 
+        #[Assert\AtLeastOneOf([
+            new Assert\Regex('/#/'),
+            new Assert\Length(min: 10),
+        ])]
+        private $property12;
+    }

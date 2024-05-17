@@ -8,8 +8,23 @@
         "php7"
     ],
     "case_insensitive": true,
-    "keywords": "and include_once list abstract global private echo interface as static endswitch array null if endwhile or const for endforeach self var while isset public protected exit foreach throw elseif include __FILE__ empty require_once do xor return parent clone use __CLASS__ __LINE__ else break print eval new catch __METHOD__ case exception default die require __FUNCTION__ enddeclare final try switch continue endfor endif declare unset true false trait goto instanceof insteadof __DIR__ __NAMESPACE__ yield finally",
+    "keywords": "and include_once list abstract global private echo interface as static endswitch array null if endwhile or const for endforeach self var while isset public protected exit foreach throw elseif include __FILE__ empty require_once do xor return parent clone use __CLASS__ __LINE__ else break print eval new catch __METHOD__ case exception default die require __FUNCTION__ enddeclare final try match switch continue endfor endif declare unset true false goto instanceof insteadof __DIR__ __NAMESPACE__ yield finally",
     "contains": [
+        {
+            "className": "php-attribute",
+            "begin": "#\\[\\s*(\\\\?[A-Z][A-Za-z0-9_\\x7f-\\xff]+|\\\\?[A-Z]+(?=[A-Z][a-z0-9_\\x7f-\\xff])){1,}(?![A-Za-z0-9])(?![$])",
+            "end": "]",
+            "contains": [
+                {
+                    "begin": "\\(",
+                    "end": "\\)",
+                    "keywords": "true false null new array",
+                    "contains": {
+                        "$ref": "#contains.10.contains.1.contains"
+                    }
+                }
+            ]
+        },
         {
             "className": "comment",
             "begin": "#",
@@ -35,7 +50,7 @@
                     "begin": "<\\?(php)?|\\?>"
                 },
                 {
-                    "$ref": "#contains.0.contains.0"
+                    "$ref": "#contains.1.contains.0"
                 },
                 {
                     "className": "doctag",
@@ -54,7 +69,7 @@
                     "begin": "@[A-Za-z]+"
                 },
                 {
-                    "$ref": "#contains.0.contains.0"
+                    "$ref": "#contains.1.contains.0"
                 },
                 {
                     "className": "doctag",
@@ -69,7 +84,7 @@
             "end": false,
             "contains": [
                 {
-                    "$ref": "#contains.0.contains.0"
+                    "$ref": "#contains.1.contains.0"
                 },
                 {
                     "className": "doctag",
@@ -105,7 +120,7 @@
             ]
         },
         {
-            "$ref": "#contains.1.contains.0"
+            "$ref": "#contains.2.contains.0"
         },
         {
             "className": "variable",
@@ -137,10 +152,11 @@
                     "className": "params",
                     "begin": "\\(",
                     "end": "\\)",
+                    "keywords": "true false null new array",
                     "contains": [
                         "self",
                         {
-                            "$ref": "#contains.7"
+                            "$ref": "#contains.8"
                         },
                         {
                             "className": "comment",
@@ -148,7 +164,7 @@
                             "end": "\\*/",
                             "contains": [
                                 {
-                                    "$ref": "#contains.0.contains.0"
+                                    "$ref": "#contains.1.contains.0"
                                 },
                                 {
                                     "className": "doctag",
@@ -161,10 +177,10 @@
                             "className": "string",
                             "contains": [
                                 {
-                                    "$ref": "#contains.4.contains.0"
+                                    "$ref": "#contains.5.contains.0"
                                 },
                                 {
-                                    "$ref": "#contains.1.contains.0"
+                                    "$ref": "#contains.2.contains.0"
                                 }
                             ],
                             "variants": [
@@ -183,7 +199,7 @@
                                     "illegal": null,
                                     "contains": [
                                         {
-                                            "$ref": "#contains.4.contains.0"
+                                            "$ref": "#contains.5.contains.0"
                                         }
                                     ]
                                 },
@@ -194,7 +210,7 @@
                                     "illegal": null,
                                     "contains": [
                                         {
-                                            "$ref": "#contains.4.contains.0"
+                                            "$ref": "#contains.5.contains.0"
                                         },
                                         {
                                             "className": "subst",
@@ -230,7 +246,7 @@
         },
         {
             "className": "class",
-            "beginKeywords": "class interface",
+            "beginKeywords": "class interface trait enum",
             "end": "{",
             "excludeEnd": true,
             "illegal": "[:\\(\\$\"]",
@@ -239,7 +255,7 @@
                     "beginKeywords": "extends implements"
                 },
                 {
-                    "$ref": "#contains.9.contains.0"
+                    "$ref": "#contains.10.contains.0"
                 }
             ]
         },
@@ -249,7 +265,7 @@
             "illegal": "[\\.']",
             "contains": [
                 {
-                    "$ref": "#contains.9.contains.0"
+                    "$ref": "#contains.10.contains.0"
                 }
             ]
         },
@@ -258,7 +274,7 @@
             "end": ";",
             "contains": [
                 {
-                    "$ref": "#contains.9.contains.0"
+                    "$ref": "#contains.10.contains.0"
                 }
             ]
         },
@@ -266,10 +282,10 @@
             "begin": "=>"
         },
         {
-            "$ref": "#contains.9.contains.1.contains.3"
+            "$ref": "#contains.10.contains.1.contains.3"
         },
         {
-            "$ref": "#contains.9.contains.1.contains.4"
+            "$ref": "#contains.10.contains.1.contains.4"
         }
     ]
 }
