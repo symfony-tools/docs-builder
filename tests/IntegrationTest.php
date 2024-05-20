@@ -290,6 +290,10 @@ class IntegrationTest extends AbstractIntegrationTest
             'blockName' => 'code-blocks/php-annotations',
         ];
 
+        yield 'code-block-php-attributes' => [
+            'blockName' => 'code-blocks/php-attributes',
+        ];
+
         yield 'code-block-text' => [
             'blockName' => 'code-blocks/text',
         ];
