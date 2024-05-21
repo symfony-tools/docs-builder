@@ -1,4 +1,4 @@
-<div translate="no" data-loc="54" class="notranslate codeblock codeblock-length-md codeblock-php-attributes codeblock-php">
+<div translate="no" data-loc="65" class="notranslate codeblock codeblock-length-md codeblock-php-attributes codeblock-php">
     <div class="codeblock-scroll">
         <pre class="codeblock-lines">1
 2
@@ -53,7 +53,18 @@
 51
 52
 53
-54</pre>
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65</pre>
         <pre class="codeblock-code">
             <code>
                 <span class="hljs-comment">// src/SomePath/SomeClass.php</span>
@@ -64,77 +75,87 @@
                     <span class="hljs-title">SomeClass</span>
                 </span>
                 {
-                <span class="hljs-php-attribute">#[AttributeName]</span>
+                <span class="hljs-meta">#[AttributeName]</span>
                 <span class="hljs-keyword">private</span>
                 <span class="hljs-variable">
                     <span class="hljs-variable-other-marker">$</span> property1</span>
                 ;
-                <span class="hljs-php-attribute">#[AttributeName()]</span>
+                <span class="hljs-meta">#[AttributeName</span>()<span class="hljs-meta">]</span>
                 <span class="hljs-keyword">private</span>
                 <span class="hljs-variable">
                     <span class="hljs-variable-other-marker">$</span> property2</span>
                 ;
-                <span class="hljs-php-attribute">#[AttributeName(<span class="hljs-string">'value'</span>)]</span>
+                <span class="hljs-meta">#[AttributeName</span>(<span class="hljs-string">'value'</span>)<span class="hljs-meta">]</span>
                 <span class="hljs-keyword">private</span>
                 <span class="hljs-variable">
                     <span class="hljs-variable-other-marker">$</span> property3</span>
                 ;
-                <span class="hljs-php-attribute">#[AttributeName(<span class="hljs-string">'value'</span>, option: <span class="hljs-string">'value'</span>)]</span>
+                <span class="hljs-meta">#[AttributeName</span>(<span class="hljs-string">'value'</span>, option: <span class="hljs-string">'value'</span>)<span class="hljs-meta">]</span>
                 <span class="hljs-keyword">private</span>
                 <span class="hljs-variable">
                     <span class="hljs-variable-other-marker">$</span> property4</span>
                 ;
-                <span class="hljs-php-attribute">#[AttributeName([<span class="hljs-string">'value'</span> =&gt; <span class="hljs-string">'value'</span>])]</span>
+                <span class="hljs-meta">#[AttributeName</span>([<span class="hljs-string">'value'</span> =&gt; <span class="hljs-string">'value'</span>])<span class="hljs-meta">]</span>
                 <span class="hljs-keyword">private</span>
                 <span class="hljs-variable">
                     <span class="hljs-variable-other-marker">$</span> property5</span>
                 ;
-                <span class="hljs-php-attribute">#[AttributeName(
+                <span class="hljs-meta">#[AttributeName</span>(
                     <span class="hljs-string">'value'</span>,
                     option: <span class="hljs-string">'value'</span>
-                )]</span>
+                )<span class="hljs-meta">]</span>
                 <span class="hljs-keyword">private</span>
                 <span class="hljs-variable">
                     <span class="hljs-variable-other-marker">$</span> property6</span>
                 ;
-                <span class="hljs-php-attribute">#[Assert\AttributeName(<span class="hljs-string">'value'</span>)]</span>
+                <span class="hljs-meta">#[Assert\AttributeName</span>(<span class="hljs-string">'value'</span>)<span class="hljs-meta">]</span>
                 <span class="hljs-keyword">private</span>
                 <span class="hljs-variable">
                     <span class="hljs-variable-other-marker">$</span> property7</span>
                 ;
-                <span class="hljs-php-attribute">#[Assert\AttributeName(
+                <span class="hljs-meta">#[Assert\AttributeName</span>(
                     <span class="hljs-string">'value'</span>,
                     option: <span class="hljs-string">'value'</span>
-                )]</span>
+                )<span class="hljs-meta">]</span>
                 <span class="hljs-keyword">private</span>
                 <span class="hljs-variable">
                     <span class="hljs-variable-other-marker">$</span> property8</span>
                 ;
-                <span class="hljs-php-attribute">#[Route(<span class="hljs-string">'/blog/{page&lt;\d+&gt;}'</span>, name: <span class="hljs-string">'blog_list'</span>)]</span>
+                <span class="hljs-meta">#[Route</span>(<span class="hljs-string">'/blog/{page&lt;\d+&gt;}'</span>, name: <span class="hljs-string">'blog_list'</span>)<span class="hljs-meta">]</span>
                 <span class="hljs-keyword">private</span>
                 <span class="hljs-variable">
                 <span class="hljs-variable-other-marker">$</span> property9</span>
                 ;
-                <span class="hljs-php-attribute">#[Assert\GreaterThanOrEqual(
+                <span class="hljs-meta">#[Assert\GreaterThanOrEqual</span>(
                     value: <span class="hljs-number">18</span>,
-                )]</span>
+                )<span class="hljs-meta">]</span>
                 <span class="hljs-keyword">private</span>
                 <span class="hljs-variable">
                 <span class="hljs-variable-other-marker">$</span> property10</span>
                 ;
-                <span class="hljs-php-attribute">#[ORM\CustomIdGenerator(class: <span class="hljs-string">'doctrine.uuid_generator'</span>)]</span>
+                <span class="hljs-meta">#[ORM\CustomIdGenerator</span>(class: <span class="hljs-string">'doctrine.uuid_generator'</span>)<span class="hljs-meta">]</span>
                 <span class="hljs-keyword">private</span>
                 <span class="hljs-variable">
                 <span class="hljs-variable-other-marker">$</span> property11</span>
                 ;
-                <span class="hljs-php-attribute">#[Assert\AtLeastOneOf([
+                <span class="hljs-meta">#[Assert\AtLeastOneOf</span>([
                     <span class="hljs-keyword">new</span> Assert\Regex(<span class="hljs-string">'/#/'</span>),
                     <span class="hljs-keyword">new</span> Assert\Length(min: <span class="hljs-number">10</span>),
-                ])]</span>
+                ])<span class="hljs-meta">]</span>
                 <span class="hljs-keyword">private</span>
                 <span class="hljs-variable">
                 <span class="hljs-variable-other-marker">$</span> property12</span>
                 ;
+                <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(
+                        <span class="hljs-meta">#[TaggedIterator</span>(<span class="hljs-string">'app.handlers'</span>)<span class="hljs-meta">]</span>
+                        iterable <span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>handlers</span>,
+                )</span></span>{
+                }
+
+                <span class="hljs-meta">#[AsController]</span>
+                <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-title">someAction</span><span class="hljs-params">(<span class="hljs-meta">#[CurrentUser]</span> User <span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>user</span>)</span></span>
+                {
+                }
 }</code></pre>
     </div>
 </div>
