@@ -8,7 +8,7 @@
         "php7"
     ],
     "case_insensitive": true,
-    "keywords": "and include_once list abstract global private echo interface as static endswitch array null if endwhile or const for endforeach self var while isset public protected exit foreach throw elseif include __FILE__ empty require_once do xor return parent clone use __CLASS__ __LINE__ else break print eval new catch __METHOD__ case exception default die require __FUNCTION__ enddeclare final try match switch continue endfor endif declare unset true false goto instanceof insteadof __DIR__ __NAMESPACE__ yield finally",
+    "keywords": "__CLASS__ __DIR__ __FILE__ __FUNCTION__ __COMPILER_HALT_OFFSET__ __LINE__ __METHOD__ __NAMESPACE__ __TRAIT__ die echo exit include include_once print require require_once array abstract and as binary bool boolean break callable case catch class clone const continue declare default do double else elseif empty enddeclare endfor endforeach endif endswitch endwhile enum eval extends final finally float for foreach from global goto if implements instanceof insteadof int integer interface isset iterable list match|0 mixed new never object or private protected public readonly real return string switch throw trait try unset use var void while xor yield false FALSE null NULL true TRUE __PHP_Incomplete_Class parent php_user_filter self static stdClass",
     "contains": [
         {
             "className": "php-attribute",
@@ -131,10 +131,47 @@
             "begin": "\\$+[a-zA-Z_-ÿ][a-zA-Z0-9_-ÿ]*"
         },
         {
-            "className": "operator",
-            "begin": "(::|->)",
-            "end": "[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*",
-            "excludeEnd": true
+            "begin": "\\b(?!fn\\b|function\\b|__CLASS__\\b|__DIR__\\b|__FILE__\\b|__FUNCTION__\\b|__COMPILER_HALT_OFFSET__\\b|__LINE__\\b|__METHOD__\\b|__NAMESPACE__\\b|__TRAIT__\\b|die\\b|echo\\b|exit\\b|include\\b|include_once\\b|print\\b|require\\b|require_once\\b|array\\b|abstract\\b|and\\b|as\\b|binary\\b|bool\\b|boolean\\b|break\\b|callable\\b|case\\b|catch\\b|class\\b|clone\\b|const\\b|continue\\b|declare\\b|default\\b|do\\b|double\\b|else\\b|elseif\\b|empty\\b|enddeclare\\b|endfor\\b|endforeach\\b|endif\\b|endswitch\\b|endwhile\\b|enum\\b|eval\\b|extends\\b|final\\b|finally\\b|float\\b|for\\b|foreach\\b|from\\b|global\\b|goto\\b|if\\b|implements\\b|instanceof\\b|insteadof\\b|int\\b|integer\\b|interface\\b|isset\\b|iterable\\b|list\\b|match\\b|mixed\\b|new\\b|never\\b|object\\b|or\\b|private\\b|protected\\b|public\\b|readonly\\b|real\\b|return\\b|string\\b|switch\\b|throw\\b|trait\\b|try\\b|unset\\b|use\\b|var\\b|void\\b|while\\b|xor\\b|yield|Countable\\b|OuterIterator\\b|RecursiveIterator\\b|SeekableIterator\\b|ArrayAccess\\b|BackedEnum\\b|Generator\\b|Iterator\\b|IteratorAggregate\\b|Serializable\\b|Stringable\\b|Throwable\\b|Traversable\\b|UnitEnum\\b|__PHP_Incomplete_Class\\b|parent\\b|php_user_filter\\b|self\\b|static\\b)[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*(?![A-Za-z0-9])(?![$])[ \\t\\n]*(?=(?=\\())",
+            "end": "\\)",
+            "returnBegin": true,
+            "contains": [
+                {
+                    "className": "title invoke__",
+                    "begin": "[a-zA-Z0-9_\\x7f-\\xff]\\w*",
+                    "relevance": 0
+                },
+                {
+                    "begin": "\\(",
+                    "endsWithParent": true,
+                    "keywords": "true false null new array string bool boolean float callable int integer iterable mixed never object FALSE NULL TRUE self static stdClass",
+                    "contains": [
+                        {
+                            "className": "attr",
+                            "begin": "[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*(?![A-Za-z0-9])(?![$])(?=:)(?=(?!::))"
+                        },
+                        {
+                            "$ref": "#contains.8",
+                            "_": "variable"
+                        },
+                        {
+                            "$ref": "#contains.10.contains.1.contains.2",
+                            "_": "comment"
+                        },
+                        {
+                            "$ref": "#contains.10.contains.1.contains.3",
+                            "_": "string"
+                        },
+                        {
+                            "$ref": "#contains.10.contains.1.contains.4",
+                            "_": "number"
+                        },
+                        {
+                            "$ref": "#contains.9",
+                            "_": "invoke"
+                        }
+                    ]
+                }
+            ]
         },
         {
             "className": "function",
@@ -152,7 +189,7 @@
                     "className": "params",
                     "begin": "\\(",
                     "end": "\\)",
-                    "keywords": "true false null new array",
+                    "keywords": "true false null new array string bool boolean float callable int integer iterable mixed never object FALSE NULL TRUE self static stdClass",
                     "contains": [
                         "self",
                         {
