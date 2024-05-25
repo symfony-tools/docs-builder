@@ -354,7 +354,7 @@
             "illegal": "[\\.']",
             "contains": [
                 {
-                    "$ref": "#contains.10.contains.0"
+                    "$ref": "#contains.10.contains.1"
                 }
             ]
         },
@@ -363,7 +363,7 @@
             "end": ";",
             "contains": [
                 {
-                    "$ref": "#contains.10.contains.0"
+                    "$ref": "#contains.10.contains.1"
                 }
             ]
         },
