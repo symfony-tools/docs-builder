@@ -150,6 +150,36 @@
                             "begin": "[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*(?![A-Za-z0-9])(?![$])(?=:)(?=(?!::))"
                         },
                         {
+                            "variants": [
+                                {
+                                    "begin": "::(?=(?!class\\b))[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*(?![A-Za-z0-9])(?![$])\\b(?!\\()",
+                                    "returnBegin": true,
+                                    "contains": [
+                                        {
+                                            "begin": "::"
+                                        },
+                                        {
+                                            "className": "variable constant_",
+                                            "begin": "[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*(?![A-Za-z0-9])(?![$])\\b(?!\\()"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "begin": "::class",
+                                    "returnBegin": true,
+                                    "contains": [
+                                        {
+                                            "begin": "::"
+                                        },
+                                        {
+                                            "className": "variable language_",
+                                            "begin": "class"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
                             "$ref": "#contains.8",
                             "_": "variable"
                         },
@@ -291,6 +321,9 @@
                     ]
                 }
             ]
+        },
+        {
+            "$ref": "#contains.9.contains.1.contains.1"
         },
         {
             "className": "class",
