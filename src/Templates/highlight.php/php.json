@@ -8,7 +8,7 @@
         "php7"
     ],
     "case_insensitive": true,
-    "keywords": "and include_once list abstract global private echo interface as static endswitch array null if endwhile or const for endforeach self var while isset public protected exit foreach throw elseif include __FILE__ empty require_once do xor return parent clone use __CLASS__ __LINE__ else break print eval new catch __METHOD__ case exception default die require __FUNCTION__ enddeclare final try match switch continue endfor endif declare unset true false goto instanceof insteadof __DIR__ __NAMESPACE__ yield finally",
+    "keywords": "PHP_VERSION PHP_MAJOR_VERSION PHP_MINOR_VERSION PHP_RELEASE_VERSION PHP_VERSION_ID PHP_EXTRA_VERSION ZEND_THREAD_SAFE ZEND_DEBUG_BUILD PHP_ZTS PHP_DEBUG PHP_MAXPATHLEN PHP_OS PHP_OS_FAMILY PHP_SAPI PHP_EOL PHP_INT_MAX PHP_INT_MIN PHP_INT_SIZE PHP_FLOAT_DIG PHP_FLOAT_EPSILON PHP_FLOAT_MIN PHP_FLOAT_MAX DEFAULT_INCLUDE_PATH PEAR_INSTALL_DIR PEAR_EXTENSION_DIR PHP_EXTENSION_DIR PHP_PREFIX PHP_BINDIR PHP_BINARY PHP_MANDIR PHP_LIBDIR PHP_DATADIR PHP_SYSCONFDIR PHP_LOCALSTATEDIR PHP_CONFIG_FILE_PATH PHP_CONFIG_FILE_SCAN_DIR PHP_SHLIB_SUFFIX PHP_FD_SETSIZE E_ERROR E_WARNING E_PARSE E_NOTICE E_CORE_ERROR E_CORE_WARNING E_COMPILE_ERROR E_COMPILE_WARNING E_USER_ERROR E_USER_WARNING E_USER_NOTICE E_RECOVERABLE_ERROR E_DEPRECATED E_USER_DEPRECATED E_ALL E_STRICT __COMPILER_HALT_OFFSET__ PHP_WINDOWS_EVENT_CTRL_C PHP_WINDOWS_EVENT_CTRL_BREAK PHP_CLI_PROCESS_TITLE STDERR STDIN STDOUT __CLASS__ __DIR__ __FILE__ __FUNCTION__ __LINE__ __METHOD__ __NAMESPACE__ __TRAIT__ die echo exit include include_once print require require_once abstract and as binary break case catch class clone const continue declare default do double else elseif empty enddeclare endfor endforeach endif endswitch endwhile enum eval extends final finally for foreach from global goto if implements instanceof insteadof interface isset list match|0 new or parent private protected public readonly return switch throw trait try unset use var void while xor yield array bool boolean callable float int integer iterable mixed never numeric object real string resource self static false FALSE null NULL true TRUE",
     "contains": [
         {
             "className": "meta",
@@ -26,9 +26,10 @@
                 {
                     "begin": "\\(",
                     "end": "\\)",
-                    "keywords": "true false null new array",
+                    "keywords": "array bool boolean float int integer new real string false FALSE null NULL true TRUE PHP_VERSION PHP_MAJOR_VERSION PHP_MINOR_VERSION PHP_RELEASE_VERSION PHP_VERSION_ID PHP_EXTRA_VERSION ZEND_THREAD_SAFE ZEND_DEBUG_BUILD PHP_ZTS PHP_DEBUG PHP_MAXPATHLEN PHP_OS PHP_OS_FAMILY PHP_SAPI PHP_EOL PHP_INT_MAX PHP_INT_MIN PHP_INT_SIZE PHP_FLOAT_DIG PHP_FLOAT_EPSILON PHP_FLOAT_MIN PHP_FLOAT_MAX DEFAULT_INCLUDE_PATH PEAR_INSTALL_DIR PEAR_EXTENSION_DIR PHP_EXTENSION_DIR PHP_PREFIX PHP_BINDIR PHP_BINARY PHP_MANDIR PHP_LIBDIR PHP_DATADIR PHP_SYSCONFDIR PHP_LOCALSTATEDIR PHP_CONFIG_FILE_PATH PHP_CONFIG_FILE_SCAN_DIR PHP_SHLIB_SUFFIX PHP_FD_SETSIZE E_ERROR E_WARNING E_PARSE E_NOTICE E_CORE_ERROR E_CORE_WARNING E_COMPILE_ERROR E_COMPILE_WARNING E_USER_ERROR E_USER_WARNING E_USER_NOTICE E_RECOVERABLE_ERROR E_DEPRECATED E_USER_DEPRECATED E_ALL E_STRICT __COMPILER_HALT_OFFSET__ PHP_WINDOWS_EVENT_CTRL_C PHP_WINDOWS_EVENT_CTRL_BREAK PHP_CLI_PROCESS_TITLE STDERR STDIN STDOUT __CLASS__ __DIR__ __FILE__ __FUNCTION__ __LINE__ __METHOD__ __NAMESPACE__ __TRAIT__",
                     "contains": {
-                        "$ref": "#contains.11.contains.1.contains"
+                        "$ref": "#contains.10.contains.3.contains",
+                        "_": "params"
                     }
                 },
                 {
@@ -137,39 +138,124 @@
         },
         {
             "className": "variable",
-            "begin": "\\$this\\b"
+            "begin": "\\$+[a-zA-Z_-ÿ][a-zA-Z0-9_-ÿ]*",
+            "returnBegin": true,
+            "contains": [
+                {
+                    "className": "variable-other-marker",
+                    "begin": "\\$"
+                },
+                {
+                    "begin": "\\$*[a-zA-Z_-ÿ][a-zA-Z0-9_-ÿ]*"
+                }
+            ]
         },
         {
-            "className": "variable",
-            "begin": "\\$+[a-zA-Z_-ÿ][a-zA-Z0-9_-ÿ]*"
-        },
-        {
-            "className": "operator",
-            "begin": "(::|->)",
-            "end": "[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*",
-            "excludeEnd": true
+            "begin": "\\b(?!fn\\b|function\\b|__CLASS__\\b|__DIR__\\b|__FILE__\\b|__FUNCTION__\\b|__COMPILER_HALT_OFFSET__\\b|__LINE__\\b|__METHOD__\\b|__NAMESPACE__\\b|__TRAIT__\\b|die\\b|echo\\b|exit\\b|include\\b|include_once\\b|print\\b|require\\b|require_once\\b|array\\b|abstract\\b|and\\b|as\\b|binary\\b|bool\\b|boolean\\b|break\\b|callable\\b|case\\b|catch\\b|class\\b|clone\\b|const\\b|continue\\b|declare\\b|default\\b|do\\b|double\\b|else\\b|elseif\\b|empty\\b|enddeclare\\b|endfor\\b|endforeach\\b|endif\\b|endswitch\\b|endwhile\\b|enum\\b|eval\\b|extends\\b|final\\b|finally\\b|float\\b|for\\b|foreach\\b|from\\b|global\\b|goto\\b|if\\b|implements\\b|instanceof\\b|insteadof\\b|int\\b|integer\\b|interface\\b|isset\\b|iterable\\b|list\\b|match\\b|mixed\\b|new\\b|never\\b|object\\b|or\\b|private\\b|protected\\b|public\\b|readonly\\b|real\\b|return\\b|string\\b|switch\\b|throw\\b|trait\\b|try\\b|unset\\b|use\\b|var\\b|void\\b|while\\b|xor\\b|yield|Countable\\b|OuterIterator\\b|RecursiveIterator\\b|SeekableIterator\\b|ArrayAccess\\b|BackedEnum\\b|Generator\\b|Iterator\\b|IteratorAggregate\\b|Serializable\\b|Stringable\\b|Throwable\\b|Traversable\\b|UnitEnum\\b|__PHP_Incomplete_Class\\b|parent\\b|php_user_filter\\b|self\\b|static\\b)[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*(?![A-Za-z0-9])(?![$])[ \\t\\n]*(?=(?=\\())",
+            "end": "\\)",
+            "returnBegin": true,
+            "contains": [
+                {
+                    "className": "title invoke__",
+                    "begin": "[a-zA-Z0-9_\\x7f-\\xff]\\w*",
+                    "relevance": 0
+                },
+                {
+                    "begin": "\\(",
+                    "endsWithParent": true,
+                    "keywords": "array bool boolean float int integer new real string false FALSE null NULL true TRUE PHP_VERSION PHP_MAJOR_VERSION PHP_MINOR_VERSION PHP_RELEASE_VERSION PHP_VERSION_ID PHP_EXTRA_VERSION ZEND_THREAD_SAFE ZEND_DEBUG_BUILD PHP_ZTS PHP_DEBUG PHP_MAXPATHLEN PHP_OS PHP_OS_FAMILY PHP_SAPI PHP_EOL PHP_INT_MAX PHP_INT_MIN PHP_INT_SIZE PHP_FLOAT_DIG PHP_FLOAT_EPSILON PHP_FLOAT_MIN PHP_FLOAT_MAX DEFAULT_INCLUDE_PATH PEAR_INSTALL_DIR PEAR_EXTENSION_DIR PHP_EXTENSION_DIR PHP_PREFIX PHP_BINDIR PHP_BINARY PHP_MANDIR PHP_LIBDIR PHP_DATADIR PHP_SYSCONFDIR PHP_LOCALSTATEDIR PHP_CONFIG_FILE_PATH PHP_CONFIG_FILE_SCAN_DIR PHP_SHLIB_SUFFIX PHP_FD_SETSIZE E_ERROR E_WARNING E_PARSE E_NOTICE E_CORE_ERROR E_CORE_WARNING E_COMPILE_ERROR E_COMPILE_WARNING E_USER_ERROR E_USER_WARNING E_USER_NOTICE E_RECOVERABLE_ERROR E_DEPRECATED E_USER_DEPRECATED E_ALL E_STRICT __COMPILER_HALT_OFFSET__ PHP_WINDOWS_EVENT_CTRL_C PHP_WINDOWS_EVENT_CTRL_BREAK PHP_CLI_PROCESS_TITLE STDERR STDIN STDOUT __CLASS__ __DIR__ __FILE__ __FUNCTION__ __LINE__ __METHOD__ __NAMESPACE__ __TRAIT__",
+                    "contains": [
+                        {
+                            "className": "attr",
+                            "begin": "[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*(?![A-Za-z0-9])(?![$])(?=:)(?=(?!::))"
+                        },
+                        {
+                            "variants": [
+                                {
+                                    "begin": "::(?=(?!class\\b))[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*(?![A-Za-z0-9])(?![$])\\b(?!\\()",
+                                    "returnBegin": true,
+                                    "contains": [
+                                        {
+                                            "begin": "::"
+                                        },
+                                        {
+                                            "className": "variable constant_",
+                                            "begin": "[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*(?![A-Za-z0-9])(?![$])\\b(?!\\()"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "begin": "::class",
+                                    "returnBegin": true,
+                                    "contains": [
+                                        {
+                                            "begin": "::"
+                                        },
+                                        {
+                                            "className": "variable language_",
+                                            "begin": "class"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "$ref": "#contains.8",
+                            "_": "variable"
+                        },
+                        {
+                            "$ref": "#contains.10.contains.3.contains.2",
+                            "_": "comment"
+                        },
+                        {
+                            "$ref": "#contains.10.contains.3.contains.3",
+                            "_": "string"
+                        },
+                        {
+                            "$ref": "#contains.10.contains.3.contains.4",
+                            "_": "number"
+                        },
+                        {
+                            "$ref": "#contains.10",
+                            "_": "closure"
+                        },
+                        {
+                            "$ref": "#contains.9",
+                            "_": "invoke"
+                        }
+                    ]
+                }
+            ]
         },
         {
             "className": "function",
-            "beginKeywords": "function",
+            "beginKeywords": "fn function",
             "end": "[;{]",
             "excludeEnd": true,
             "illegal": "\\$|\\[|%",
             "contains": [
+                {
+                    "beginKeywords": "use"
+                },
                 {
                     "className": "title",
                     "begin": "[a-zA-Z_]\\w*",
                     "relevance": 0
                 },
                 {
+                    "begin": "=>",
+                    "endsParent": true
+                },
+                {
                     "className": "params",
                     "begin": "\\(",
                     "end": "\\)",
-                    "keywords": "true false null new array",
+                    "keywords": "array bool boolean callable float int integer iterable mixed never numeric object real string resource self static false FALSE null NULL true TRUE",
                     "contains": [
                         "self",
                         {
-                            "$ref": "#contains.9"
+                            "$ref": "#contains.8",
+                            "_": "variable"
                         },
                         {
                             "className": "comment",
@@ -254,27 +340,42 @@
                             ]
                         },
                         {
-                            "$ref": "#contains.0"
+                            "$ref": "#contains.0",
+                            "_": "simple-attribute"
                         },
                         {
-                            "$ref": "#contains.1"
+                            "$ref": "#contains.1",
+                            "_": "attribute"
                         }
                     ]
                 }
             ]
         },
         {
+            "$ref": "#contains.9.contains.1.contains.1",
+            "_": "constant"
+        },
+        {
             "className": "class",
-            "beginKeywords": "class interface trait enum",
-            "end": "{",
+            "variants": [
+                {
+                    "beginKeywords": "enum",
+                    "illegal": "[($\"]"
+                },
+                {
+                    "beginKeywords": "class interface trait",
+                    "illegal": "[:($\"]"
+                }
+            ],
+            "end": "\\{",
             "excludeEnd": true,
-            "illegal": "[:\\(\\$\"]",
             "contains": [
                 {
                     "beginKeywords": "extends implements"
                 },
                 {
-                    "$ref": "#contains.11.contains.0"
+                    "$ref": "#contains.10.contains.1",
+                    "_": "title"
                 }
             ]
         },
@@ -284,7 +385,8 @@
             "illegal": "[\\.']",
             "contains": [
                 {
-                    "$ref": "#contains.11.contains.0"
+                    "$ref": "#contains.10.contains.1",
+                    "_": "title"
                 }
             ]
         },
@@ -293,7 +395,8 @@
             "end": ";",
             "contains": [
                 {
-                    "$ref": "#contains.11.contains.0"
+                    "$ref": "#contains.10.contains.1",
+                    "_": "title"
                 }
             ]
         },
@@ -301,10 +404,12 @@
             "begin": "=>"
         },
         {
-            "$ref": "#contains.11.contains.1.contains.3"
+            "$ref": "#contains.10.contains.3.contains.3",
+            "_": "string"
         },
         {
-            "$ref": "#contains.11.contains.1.contains.4"
+            "$ref": "#contains.10.contains.3.contains.4",
+            "_": "number"
         }
     ]
 }

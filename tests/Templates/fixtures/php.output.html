@@ -11,10 +11,10 @@
      *
      * <span class="hljs-doctag">@Route</span>("/blog/{slug}", name="blog_list")
      */</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">list</span><span class="hljs-params">(UrlGeneratorInterface <span class="hljs-variable">$urlGenerator</span>, string <span class="hljs-variable">$slug</span>)</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">list</span><span class="hljs-params">(UrlGeneratorInterface <span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>urlGenerator</span>, <span class="hljs-keyword">string</span> <span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>slug</span>)</span>
     </span>{
-        <span class="hljs-keyword">return</span> <span class="hljs-variable">$this</span><span class="hljs-operator">-&gt;</span>render(<span class="hljs-string">'foo/bar.html.twig'</span>, [
-            <span class="hljs-string">'key'</span> =&gt; <span class="hljs-variable">$value</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>this</span>-&gt;<span class="hljs-title invoke__">render</span>(<span class="hljs-string">'foo/bar.html.twig'</span>, [
+            <span class="hljs-string">'key'</span> =&gt; <span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>value</span>
         ]
     }
 }
