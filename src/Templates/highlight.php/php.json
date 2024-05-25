@@ -20,7 +20,7 @@
                     "end": "\\)",
                     "keywords": "true false null new array",
                     "contains": {
-                        "$ref": "#contains.10.contains.1.contains"
+                        "$ref": "#contains.10.contains.3.contains"
                     }
                 }
             ]
@@ -154,16 +154,20 @@
                             "_": "variable"
                         },
                         {
-                            "$ref": "#contains.10.contains.1.contains.2",
+                            "$ref": "#contains.10.contains.3.contains.2",
                             "_": "comment"
                         },
                         {
-                            "$ref": "#contains.10.contains.1.contains.3",
+                            "$ref": "#contains.10.contains.3.contains.3",
                             "_": "string"
                         },
                         {
-                            "$ref": "#contains.10.contains.1.contains.4",
+                            "$ref": "#contains.10.contains.3.contains.4",
                             "_": "number"
+                        },
+                        {
+                            "$ref": "#contains.10",
+                            "_": "closure"
                         },
                         {
                             "$ref": "#contains.9",
@@ -175,15 +179,22 @@
         },
         {
             "className": "function",
-            "beginKeywords": "function",
+            "beginKeywords": "fn function",
             "end": "[;{]",
             "excludeEnd": true,
             "illegal": "\\$|\\[|%",
             "contains": [
                 {
+                    "beginKeywords": "use"
+                },
+                {
                     "className": "title",
                     "begin": "[a-zA-Z_]\\w*",
                     "relevance": 0
+                },
+                {
+                    "begin": "=>",
+                    "endsParent": true
                 },
                 {
                     "className": "params",
@@ -319,10 +330,10 @@
             "begin": "=>"
         },
         {
-            "$ref": "#contains.10.contains.1.contains.3"
+            "$ref": "#contains.10.contains.3.contains.3"
         },
         {
-            "$ref": "#contains.10.contains.1.contains.4"
+            "$ref": "#contains.10.contains.3.contains.4"
         }
     ]
 }
