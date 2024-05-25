@@ -294,16 +294,24 @@
         },
         {
             "className": "class",
-            "beginKeywords": "class interface trait enum",
-            "end": "{",
+            "variants": [
+                {
+                    "beginKeywords": "enum",
+                    "illegal": "[($\"]"
+                },
+                {
+                    "beginKeywords": "class interface trait",
+                    "illegal": "[:($\"]"
+                }
+            ],
+            "end": "\\{",
             "excludeEnd": true,
-            "illegal": "[:\\(\\$\"]",
             "contains": [
                 {
                     "beginKeywords": "extends implements"
                 },
                 {
-                    "$ref": "#contains.10.contains.0"
+                    "$ref": "#contains.10.contains.1"
                 }
             ]
         },
