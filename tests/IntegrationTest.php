@@ -115,8 +115,8 @@ class IntegrationTest extends AbstractIntegrationTest
         $expected = preg_replace('/<\!\-\- REMOVE(.)+\-\->/', '', $expected);
 
         $this->assertSame(
-            $indenter->indent($expected),
-            $indenter->indent(trim($actualCrawler->filter('body')->html()))
+            $this->normalize($indenter->indent($expected)),
+            $this->normalize($indenter->indent(trim($actualCrawler->filter('body')->html())))
         );
     }
 
@@ -349,6 +349,11 @@ culpa qui <em>officia deserunt</em> mollit anim id est laborum.</p>
 HTML;
 
         $this->assertSame($htmlString, (new DocBuilder())->buildString($rstString)->getStringResult());
+    }
+
+    private function normalize(string $str): string
+    {
+        return preg_replace('/\s+$/m', '', $str);
     }
 
     private function createIndenter(): Indenter
