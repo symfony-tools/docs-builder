@@ -11,17 +11,30 @@
     "keywords": "and include_once list abstract global private echo interface as static endswitch array null if endwhile or const for endforeach self var while isset public protected exit foreach throw elseif include __FILE__ empty require_once do xor return parent clone use __CLASS__ __LINE__ else break print eval new catch __METHOD__ case exception default die require __FUNCTION__ enddeclare final try match switch continue endfor endif declare unset true false goto instanceof insteadof __DIR__ __NAMESPACE__ yield finally",
     "contains": [
         {
-            "className": "php-attribute",
-            "begin": "#\\[\\s*(\\\\?[A-Z][A-Za-z0-9_\\x7f-\\xff]+|\\\\?[A-Z]+(?=[A-Z][a-z0-9_\\x7f-\\xff])){1,}(?![A-Za-z0-9])(?![$])",
+            "className": "meta",
+            "begin": "#\\[\\s*(\\\\?[A-Z][A-Za-z0-9_\\x7f-\\xff]+)+\\]"
+        },
+        {
+            "begin": "#\\[\\s*(\\\\?[A-Z][A-Za-z0-9_\\x7f-\\xff]+)+(?![A-Za-z0-9])(?![$])",
             "end": "]",
+            "returnBegin": true,
             "contains": [
+                {
+                    "className": "meta",
+                    "begin": "#\\[\\s*(\\\\?[A-Z][A-Za-z0-9_\\x7f-\\xff]+)+(?![A-Za-z0-9])(?![$])"
+                },
                 {
                     "begin": "\\(",
                     "end": "\\)",
                     "keywords": "true false null new array",
                     "contains": {
-                        "$ref": "#contains.10.contains.1.contains"
+                        "$ref": "#contains.11.contains.1.contains"
                     }
+                },
+                {
+                    "className": "meta",
+                    "begin": "]",
+                    "endsParent": true
                 }
             ]
         },
@@ -50,7 +63,7 @@
                     "begin": "<\\?(php)?|\\?>"
                 },
                 {
-                    "$ref": "#contains.1.contains.0"
+                    "$ref": "#contains.2.contains.0"
                 },
                 {
                     "className": "doctag",
@@ -69,7 +82,7 @@
                     "begin": "@[A-Za-z]+"
                 },
                 {
-                    "$ref": "#contains.1.contains.0"
+                    "$ref": "#contains.2.contains.0"
                 },
                 {
                     "className": "doctag",
@@ -84,7 +97,7 @@
             "end": false,
             "contains": [
                 {
-                    "$ref": "#contains.1.contains.0"
+                    "$ref": "#contains.2.contains.0"
                 },
                 {
                     "className": "doctag",
@@ -120,7 +133,7 @@
             ]
         },
         {
-            "$ref": "#contains.2.contains.0"
+            "$ref": "#contains.3.contains.0"
         },
         {
             "className": "variable",
@@ -156,7 +169,7 @@
                     "contains": [
                         "self",
                         {
-                            "$ref": "#contains.8"
+                            "$ref": "#contains.9"
                         },
                         {
                             "className": "comment",
@@ -164,7 +177,7 @@
                             "end": "\\*/",
                             "contains": [
                                 {
-                                    "$ref": "#contains.1.contains.0"
+                                    "$ref": "#contains.2.contains.0"
                                 },
                                 {
                                     "className": "doctag",
@@ -177,10 +190,10 @@
                             "className": "string",
                             "contains": [
                                 {
-                                    "$ref": "#contains.5.contains.0"
+                                    "$ref": "#contains.6.contains.0"
                                 },
                                 {
-                                    "$ref": "#contains.2.contains.0"
+                                    "$ref": "#contains.3.contains.0"
                                 }
                             ],
                             "variants": [
@@ -199,7 +212,7 @@
                                     "illegal": null,
                                     "contains": [
                                         {
-                                            "$ref": "#contains.5.contains.0"
+                                            "$ref": "#contains.6.contains.0"
                                         }
                                     ]
                                 },
@@ -210,7 +223,7 @@
                                     "illegal": null,
                                     "contains": [
                                         {
-                                            "$ref": "#contains.5.contains.0"
+                                            "$ref": "#contains.6.contains.0"
                                         },
                                         {
                                             "className": "subst",
@@ -239,6 +252,12 @@
                                     "relevance": 0
                                 }
                             ]
+                        },
+                        {
+                            "$ref": "#contains.0"
+                        },
+                        {
+                            "$ref": "#contains.1"
                         }
                     ]
                 }
@@ -255,7 +274,7 @@
                     "beginKeywords": "extends implements"
                 },
                 {
-                    "$ref": "#contains.10.contains.0"
+                    "$ref": "#contains.11.contains.0"
                 }
             ]
         },
@@ -265,7 +284,7 @@
             "illegal": "[\\.']",
             "contains": [
                 {
-                    "$ref": "#contains.10.contains.0"
+                    "$ref": "#contains.11.contains.0"
                 }
             ]
         },
@@ -274,7 +293,7 @@
             "end": ";",
             "contains": [
                 {
-                    "$ref": "#contains.10.contains.0"
+                    "$ref": "#contains.11.contains.0"
                 }
             ]
         },
@@ -282,10 +301,10 @@
             "begin": "=>"
         },
         {
-            "$ref": "#contains.10.contains.1.contains.3"
+            "$ref": "#contains.11.contains.1.contains.3"
         },
         {
-            "$ref": "#contains.10.contains.1.contains.4"
+            "$ref": "#contains.11.contains.1.contains.4"
         }
     ]
 }

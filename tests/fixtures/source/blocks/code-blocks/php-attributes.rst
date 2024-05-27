@@ -53,4 +53,15 @@
             new Assert\Length(min: 10),
         ])]
         private $property12;
+
+        public function __construct(
+            #[TaggedIterator('app.handlers')]
+            iterable $handlers,
+        ) {
+        }
+
+        #[AsController]
+        public function someAction(#[CurrentUser] User $user)
+        {
+        }
     }
