@@ -1,0 +1,32 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-05-21T16:00:21Z
+
+This is so great! You now even highlight inlined attributes in controller arguments 😍
+
+I've just updated symfony.com to add this: `.hljs-php-attribute, .codeblock-php .hljs-meta { ... }` and I'll remove `.hljs-php-attribute` when the docs are rebuilt with this new version. So, everything is ready on that side.
+
+Thanks a lot!
+
+---------------------------------------------------------------------------
+
+by wouterj at 2024-05-21T21:04:05Z
+
+Thanks Javier :)
+Looking at the tests, this unfortunately this apparently broke other PHP syntax. Needs more investigation.
+
+---------------------------------------------------------------------------
+
+by wouterj at 2024-05-25T11:20:18Z
+
+This PR is ready to merge now. Fix was to reorder the syntax elements in the parameter list, no clue why but it seems to work (also checked by building the full docs locally).
+
+> I've just updated symfony.com to add this: `.hljs-php-attribute, .codeblock-php .hljs-meta { ... }` and I'll remove `.hljs-php-attribute` when the docs are rebuilt with this new version. So, everything is ready on that side.
+
+You might want to make it `.hljs-meta` (so without scoping to only PHP codeblocks). Meta is used for special meta syntax in other formats (e.g. the doctype in HTML/XML, `use strict` in JavaScript and anchors/references in Yaml).
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-05-27T08:44:42Z
+
+Great! Wouter, thanks again for this super nice contribution. I'm going to merge and tag a new release to use this on symfony.com ASAP.
