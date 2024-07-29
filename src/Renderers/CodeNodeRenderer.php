@@ -70,9 +70,6 @@ class CodeNodeRenderer implements NodeRenderer
 
             $highLighter = new Highlighter();
             $highlightedCode = $highLighter->highlight($languageMapping, $code)->value;
-
-            // this allows to highlight the $ in PHP variable names
-            $highlightedCode = str_replace('<span class="hljs-variable">$', '<span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>', $highlightedCode);
         }
 
         if ('terminal' === $language) {
