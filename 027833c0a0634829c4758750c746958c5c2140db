@@ -1,0 +1,30 @@
+---------------------------------------------------------------------------
+
+by wouterj at 2024-07-25T11:11:09Z
+
+@javiereguiluz I just rebased this PR and made it green. So it's ready for you to try out locally whenever you want :) (no pressure at all, things won't break)
+
+---------------------------------------------------------------------------
+
+by OskarStark at 2024-07-25T11:13:30Z
+
+Wo, I love it, thanks @wouterj !
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-07-26T15:59:55Z
+
+Wouter, thanks a lot for this great work. What a nice addition to the PHP highlighting 🙇🙇
+
+I've been playing with it locally and it works exactly as expected:
+
+* It improves many edge cases that previously weren't highlighted...
+* ... without breaking any of the existing highlighting
+
+A before/after example using one of the same examples that you showed:
+
+![image](https://github.com/user-attachments/assets/6d16448e-c403-4cb6-ba8b-c12247d07b72)
+
+-----
+
+So, we can totally merge this and start using it in production. Thanks!
