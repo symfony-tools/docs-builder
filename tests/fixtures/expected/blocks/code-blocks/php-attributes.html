@@ -90,7 +90,7 @@
                 <span class="hljs-variable">
                     <span class="hljs-variable-other-marker">$</span> property3</span>
                 ;
-                <span class="hljs-meta">#[AttributeName</span>(<span class="hljs-string">'value'</span>, option: <span class="hljs-string">'value'</span>)<span class="hljs-meta">]</span>
+                <span class="hljs-meta">#[AttributeName</span>(<span class="hljs-string">'value'</span>, <span class="hljs-attr">option</span>: <span class="hljs-string">'value'</span>)<span class="hljs-meta">]</span>
                 <span class="hljs-keyword">private</span>
                 <span class="hljs-variable">
                     <span class="hljs-variable-other-marker">$</span> property4</span>
@@ -102,7 +102,7 @@
                 ;
                 <span class="hljs-meta">#[AttributeName</span>(
                     <span class="hljs-string">'value'</span>,
-                    option: <span class="hljs-string">'value'</span>
+                    <span class="hljs-attr">option</span>: <span class="hljs-string">'value'</span>
                 )<span class="hljs-meta">]</span>
                 <span class="hljs-keyword">private</span>
                 <span class="hljs-variable">
@@ -115,32 +115,32 @@
                 ;
                 <span class="hljs-meta">#[Assert\AttributeName</span>(
                     <span class="hljs-string">'value'</span>,
-                    option: <span class="hljs-string">'value'</span>
+                    <span class="hljs-attr">option</span>: <span class="hljs-string">'value'</span>
                 )<span class="hljs-meta">]</span>
                 <span class="hljs-keyword">private</span>
                 <span class="hljs-variable">
                     <span class="hljs-variable-other-marker">$</span> property8</span>
                 ;
-                <span class="hljs-meta">#[Route</span>(<span class="hljs-string">'/blog/{page&lt;\d+&gt;}'</span>, name: <span class="hljs-string">'blog_list'</span>)<span class="hljs-meta">]</span>
+                <span class="hljs-meta">#[Route</span>(<span class="hljs-string">'/blog/{page&lt;\d+&gt;}'</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">'blog_list'</span>)<span class="hljs-meta">]</span>
                 <span class="hljs-keyword">private</span>
                 <span class="hljs-variable">
                 <span class="hljs-variable-other-marker">$</span> property9</span>
                 ;
                 <span class="hljs-meta">#[Assert\GreaterThanOrEqual</span>(
-                    value: <span class="hljs-number">18</span>,
+                    <span class="hljs-attr">value</span>: <span class="hljs-number">18</span>,
                 )<span class="hljs-meta">]</span>
                 <span class="hljs-keyword">private</span>
                 <span class="hljs-variable">
                 <span class="hljs-variable-other-marker">$</span> property10</span>
                 ;
-                <span class="hljs-meta">#[ORM\CustomIdGenerator</span>(class: <span class="hljs-string">'doctrine.uuid_generator'</span>)<span class="hljs-meta">]</span>
+                <span class="hljs-meta">#[ORM\CustomIdGenerator</span>(<span class="hljs-attr">class</span>: <span class="hljs-string">'doctrine.uuid_generator'</span>)<span class="hljs-meta">]</span>
                 <span class="hljs-keyword">private</span>
                 <span class="hljs-variable">
                 <span class="hljs-variable-other-marker">$</span> property11</span>
                 ;
                 <span class="hljs-meta">#[Assert\AtLeastOneOf</span>([
-                    <span class="hljs-keyword">new</span> Assert\Regex(<span class="hljs-string">'/#/'</span>),
-                    <span class="hljs-keyword">new</span> Assert\Length(min: <span class="hljs-number">10</span>),
+                    <span class="hljs-keyword">new</span> Assert\<span class="hljs-title invoke__">Regex</span>(<span class="hljs-string">'/#/'</span>),
+                    <span class="hljs-keyword">new</span> Assert\<span class="hljs-title invoke__">Length</span>(<span class="hljs-attr">min</span>: <span class="hljs-number">10</span>),
                 ])<span class="hljs-meta">]</span>
                 <span class="hljs-keyword">private</span>
                 <span class="hljs-variable">
