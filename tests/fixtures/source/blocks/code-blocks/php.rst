@@ -47,3 +47,10 @@
             $this->loadUser(...)
         );
     }
+
+.. code-block:: php
+
+    public function __construct(
+        private string $username
+    ) {
+    }
