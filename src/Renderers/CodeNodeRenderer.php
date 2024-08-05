@@ -121,6 +121,7 @@ class CodeNodeRenderer implements NodeRenderer
         if (false === self::$isHighlighterConfigured) {
             Highlighter::registerLanguage('php', __DIR__.'/../Templates/highlight.php/php.json', true);
             Highlighter::registerLanguage('twig', __DIR__.'/../Templates/highlight.php/twig.json', true);
+            Highlighter::registerLanguage('yaml', __DIR__.'/../Templates/highlight.php/yaml.json', true);
         }
 
         self::$isHighlighterConfigured = true;
