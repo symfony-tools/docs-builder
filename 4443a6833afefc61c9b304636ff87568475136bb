@@ -1,0 +1,77 @@
+---------------------------------------------------------------------------
+
+by homersimpsons at 2024-08-01T21:24:57Z
+
+> The [highlight.js syntax file](https://github.com/highlightjs/highlight.js/blob/main/src/languages/yaml.js) has support for some more [number types](https://github.com/highlightjs/highlight.js/blob/main/src/languages/yaml.js#L79-L86) (especially timestamps, datetimes, etc.). Maybe we can also add those regexes (as a separate number item)? (given the Yaml component supports date strings)
+
+I can add those, but are they supported by `symfony/yaml`'s parser? I saw we were parsing dates but not sure about the exact syntax supported.
+
+---------------------------------------------------------------------------
+
+by homersimpsons at 2024-08-09T16:48:59Z
+
+Just tested it. Their regex is pretty eager:
+- It allows any year of 4 digit, I sticked with 2024 (I may have found a symfony bug without this constraint)
+- It allows having a fractional time part without having a time
+
+```php
+var_dump(Yaml::parse(<<<YAML
+v0: 2024-12-07 23:44:39.35677451141299410
+v1: 2024-02-3.671	-11
+v2: 2024-82T3:66:07		+36
+v3: 2024-07-05t6:39:20
+v4: 2024-01-30.000
+v5: 2024-09-03
+YAML
+, Yaml::PARSE_DATETIME));
+```
+
+will give the following, we can see that symfony won't handle all possible "dates":
+
+```
+array(6) {
+  'v0' =>
+  class DateTimeImmutable#4 (3) {
+    public $date =>
+    string(26) "2024-12-07 23:44:39.356774"
+    public $timezone_type =>
+    int(3)
+    public $timezone =>
+    string(3) "UTC"
+  }
+  'v1' =>
+  string(17) "2024-02-3.671     -11"
+  'v2' =>
+  string(20) "2024-82T3:66:07           +36"
+  'v3' =>
+  class DateTimeImmutable#5 (3) {
+    public $date =>
+    string(26) "2024-07-05 06:39:20.000000"
+    public $timezone_type =>
+    int(3)
+    public $timezone =>
+    string(3) "UTC"
+  }
+  'v4' =>
+  string(14) "2024-01-30.000"
+  'v5' =>
+  class DateTimeImmutable#6 (3) {
+    public $date =>
+    string(26) "2024-09-03 00:00:00.000000"
+    public $timezone_type =>
+    int(3)
+    public $timezone =>
+    string(3) "UTC"
+  }
+}
+```
+
+@wouterj Should I still use their regex or use [the one from symfony/yaml](https://github.com/symfony/yaml/blob/fa34c77015aa6720469db7003567b9f772492bf2/Inline.php#L810-L826)?
+
+---------------------------------------------------------------------------
+
+by homersimpsons at 2024-09-06T10:02:06Z
+
+@wouterj I used the regex from [`symfony/yaml`](https://github.com/symfony/yaml/blob/fa34c77015aa6720469db7003567b9f772492bf2/Inline.php#L810-L826). I had to clean it up so it works in JS (removed the capture groups), and I also removed the non-capture groups that are unused.
+
+The failure is probably not linked to my changes. I rebased on main, but I still have the error.
