@@ -42,6 +42,19 @@ class SpanNodeRenderer extends AbstractSpanNodeRenderer
         $this->symfonyVersion = $symfonyVersion;
     }
 
+    public function render(): string
+    {
+        // Work around "~" being parsed as non-breaking space by rst-parser,
+        // while this is not part of the specification.
+        $spanValue = $this->span->getValue();
+        $spanValue = str_replace('~', '__TILDE__', $spanValue);
+        $this->span->setValue($spanValue);
+
+        $rendered = parent::render();
+
+        return str_replace('__TILDE__', '~', $rendered);
+    }
+
     /** @inheritDoc */
     public function link(?string $url, string $title, array $attributes = []): string
     {
