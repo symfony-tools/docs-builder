@@ -1,7 +1,5 @@
-{% apply spaceless %}
-    <ul class="toctree toctree-level-{{ toc_deep_level ?? 1 }} toctree-length-{{ tocItems|length }}">
-        {% for tocItem in tocItems %}
-            {% include "toc-item.html.twig" with { toc_deep_level: 1 } %}
-        {% endfor %}
-    </ul>
-{% endapply %}
+<ul class="toctree toctree-level-{{ toc_deep_level ?? 1 }} toctree-length-{{ tocItems|length }}">
+    {% for tocItem in tocItems %}
+        {% include "toc-item.html.twig" with { toc_deep_level: 1 } %}
+    {% endfor %}
+</ul>
