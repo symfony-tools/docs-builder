@@ -1,0 +1,37 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-09-11T09:54:43Z
+
+doctrine/rst-parser parses `~` as a non-breaking space. this was introduced in https://github.com/doctrine/rst-parser/pull/42 but I have no idea where this comes from. I see no mention of non-breaking spaces in the reStructuredText documentation on the Sphinx website or on https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-09-11T09:55:38Z
+
+even worse, I see no way of *escaping* a `~` in the rst-parser library.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-09-11T10:22:11Z
+
+Maybe it would make sense to investigate migrating to `phpdocumentor/guides` as the implementation of the docs-builder
+
+---------------------------------------------------------------------------
+
+by wouterj at 2024-09-11T13:25:06Z
+
+> Maybe it would make sense to investigate migrating to `phpdocumentor/guides` as the implementation of the docs-builder
+
+We're already working on this (see https://github.com/wouterj/symfony-docs-guides), but more work is needed here (especially around ordering documents).
+
+---------------------------------------------------------------------------
+
+by wouterj at 2024-09-11T13:52:57Z
+
+I've pushed a not-so-nice workaround to this PR. I don't see any other way to escape the tilde, and it should be safe given this is the Symfony docs specific builder.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-09-11T15:36:32Z
+
+Thanks @wouterj for this contribution. Yes, I think this is a reasonable solution while we keep using the old RST parser. Thanks!
