@@ -47,6 +47,11 @@ class SpanNodeRenderer extends AbstractSpanNodeRenderer
         // Work around "~" being parsed as non-breaking space by rst-parser,
         // while this is not part of the specification.
         $spanValue = $this->span->getValue();
+
+        if (str_contains($spanValue, '__TILDE__')) {
+            throw new \Exception('Cannot render content containing the text "__TILDE__" as it is used as a special placeholder in the build.');
+        }
+
         $spanValue = str_replace('~', '__TILDE__', $spanValue);
         $this->span->setValue($spanValue);
 
