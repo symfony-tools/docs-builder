@@ -20,7 +20,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   coverage: none
-                  php-version: 7.4
+                  php-version: 8.3
                   tools: composer:v2
                   ini-values: date.timezone=UTC
 
@@ -37,7 +37,7 @@ jobs:
                 # add here only the PHP versions and OS used in GitHub CI (for tests)
                 # and on the symfony.com server (where the Symfony Docs are built)
                 operating-system: ['ubuntu-latest']
-                php-version: ['7.4', '8.3']
+                php-version: ['8.3']
 
         steps:
             - name: 'Checkout code'
