@@ -1,6 +1,30 @@
-<div translate="no" data-loc="1" class="notranslate codeblock codeblock-length-sm codeblock-twig">
+<div translate="no" data-loc="9" class="notranslate codeblock codeblock-length-sm codeblock-twig">
     <div class="codeblock-scroll">
-        <pre class="codeblock-lines">1</pre>
-        <pre class="codeblock-code"><code><span class="hljs-comment">{# some code #}</span></code></pre>
+        <pre class="codeblock-lines">1
+2
+3
+4
+5
+6
+7
+8
+9</pre>
+        <pre class="codeblock-code">
+            <code>
+                <span class="hljs-comment">{# some code #}</span>
+                <span class="xml"></span>
+                <span class="hljs-template-tag">
+                    {%
+                        <span class="hljs-name"><span class="hljs-keyword">set</span></span> some_var = 'some value' <span class="hljs-comment"># some inline comment</span>
+                    %}
+                </span>
+                <span class="xml"></span>
+                <span class="hljs-template-variable">{{
+                    <span class="hljs-comment"># another inline comment</span>
+                    'Lorem Ipsum'|uppercase
+                    <span class="hljs-comment"># final inline comment</span>
+                }}</span>
+            </code>
+        </pre>
     </div>
 </div>
