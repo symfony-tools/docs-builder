@@ -298,6 +298,10 @@ class IntegrationTest extends AbstractIntegrationTest
             'blockName' => 'code-blocks/php-attributes',
         ];
 
+        yield 'code-block-php-nested-comments' => [
+            'blockName' => 'code-blocks/php-nested-comments',
+        ];
+
         yield 'code-block-text' => [
             'blockName' => 'code-blocks/text',
         ];
