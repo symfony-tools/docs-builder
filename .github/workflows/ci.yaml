@@ -37,7 +37,7 @@ jobs:
                 # add here only the PHP versions and OS used in GitHub CI (for tests)
                 # and on the symfony.com server (where the Symfony Docs are built)
                 operating-system: ['ubuntu-latest']
-                php-version: ['8.3']
+                php-version: ['8.3', '8.4']
 
         steps:
             - name: 'Checkout code'
