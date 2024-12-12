@@ -2,7 +2,7 @@
     Overridden so we can control the path to the image based on our copying logic.
     See CopyImagesListener.
 #}
-{% set wrap_image_with_browser = 'with-browser' in imageNode.options.class ?? '' %}
+{% set wrap_image_with_browser = 'with-browser' in (imageNode.options.class ?? '') %}
 {% if wrap_image_with_browser %}<div class="with-browser">{% endif %}
 <img src="{{ imageNode.value }}" {% for key, value in imageNode.options %}{{ key }}="{{ value }}" {% endfor %}/>
 {% if wrap_image_with_browser %}</div>{% endif %}
