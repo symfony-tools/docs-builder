@@ -32,7 +32,7 @@ class SpanNodeRenderer extends AbstractSpanNodeRenderer
         SpanNode $span,
         BaseSpanNodeRenderer $decoratedSpanNodeRenderer,
         ?UrlChecker $urlChecker = null,
-        string $symfonyVersion = null
+        ?string $symfonyVersion = null
     )
     {
         parent::__construct($environment, $span);
