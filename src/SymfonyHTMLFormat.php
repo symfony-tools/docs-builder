@@ -29,7 +29,7 @@ final class SymfonyHTMLFormat implements Format
     private $urlChecker;
     private $symfonyVersion;
 
-    public function __construct(TemplateRenderer $templateRenderer, Format $HTMLFormat, ?UrlChecker $urlChecker = null, string $symfonyVersion = null)
+    public function __construct(TemplateRenderer $templateRenderer, Format $HTMLFormat, ?UrlChecker $urlChecker = null, ?string $symfonyVersion = null)
     {
         $this->templateRenderer = $templateRenderer;
         $this->htmlFormat = $HTMLFormat;
