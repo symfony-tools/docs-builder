@@ -204,7 +204,15 @@
                             "_": "variable"
                         },
                         {
-                            "$ref": "#contains.10.contains.3.contains.2",
+                            "$ref": "#contains.3",
+                            "_": "comment"
+                        },
+                        {
+                            "$ref": "#contains.4",
+                            "_": "comment"
+                        },
+                        {
+                            "$ref": "#contains.5",
                             "_": "comment"
                         },
                         {
@@ -258,19 +266,8 @@
                             "_": "variable"
                         },
                         {
-                            "className": "comment",
-                            "begin": "/\\*",
-                            "end": "\\*/",
-                            "contains": [
-                                {
-                                    "$ref": "#contains.2.contains.0"
-                                },
-                                {
-                                    "className": "doctag",
-                                    "begin": "(?:TODO|FIXME|NOTE|BUG|XXX):",
-                                    "relevance": 0
-                                }
-                            ]
+                            "$ref": "#contains.5",
+                            "_": "comment"
                         },
                         {
                             "className": "string",
