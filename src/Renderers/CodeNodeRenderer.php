@@ -77,6 +77,17 @@ class CodeNodeRenderer implements NodeRenderer
             $highlightedCode = preg_replace('/^C:\\\&gt; /m', '<span class="hljs-prompt">C:\&gt; </span>', $highlightedCode);
         }
 
+        if ('diff' === $language) {
+            // remove the '+' and '-' signs so they can be added with css
+            $highlightedCode = str_replace([
+                '<span class="hljs-deletion">-',
+                '<span class="hljs-addition">+',
+            ], [
+                '<span class="hljs-deletion"> ',
+                '<span class="hljs-addition"> ',
+            ], $highlightedCode);
+        }
+
         $numOfLines = \count(preg_split('/\r\n|\r|\n/', $highlightedCode));
         $lineNumbers = implode("\n", range(1, $numOfLines));
 
