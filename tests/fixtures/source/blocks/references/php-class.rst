@@ -1,4 +1,4 @@
 
 :phpclass:`ArrayAccess`
 
-:phpclass:`BcMath\Number`
+:phpclass:`BcMath\\Number`
