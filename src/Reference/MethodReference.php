@@ -30,20 +30,19 @@ class MethodReference extends Reference
 
     public function resolve(Environment $environment, string $data): ResolvedReference
     {
-        $className = explode('::', $data)[0];
-        $className = str_replace('\\\\', '\\', $className);
-
-        if (!u($data)->containsAny('::')) {
+        $data = u($data);
+        if (!$data->containsAny('::')) {
             throw new \RuntimeException(sprintf('Malformed method reference "%s" in file "%s"', $data, $environment->getCurrentFileName()));
         }
 
-        $methodName = explode('::', $data)[1];
+        [$className, $methodName] = $data->split('::', 2);
+        $className = $className->replace('\\\\', '\\');
 
         $scrollTextFragment = sprintf('#:~:text=%s', rawurlencode('function '.$methodName));
         return new ResolvedReference(
             $environment->getCurrentFileName(),
             $methodName.'()',
-            sprintf('%s/%s.php%s', $this->symfonyRepositoryUrl, str_replace('\\', '/', $className), $scrollTextFragment),
+            sprintf('%s/%s.php%s', $this->symfonyRepositoryUrl, $className->replace('\\', '/'), $scrollTextFragment),
             [],
             [
                 'title' => sprintf('%s::%s()', $className, $methodName),

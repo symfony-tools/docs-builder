@@ -12,6 +12,7 @@ namespace SymfonyDocsBuilder\Reference;
 use Doctrine\RST\Environment;
 use Doctrine\RST\References\Reference;
 use Doctrine\RST\References\ResolvedReference;
+use function Symfony\Component\String\u;
 
 class PhpMethodReference extends Reference
 {
@@ -29,15 +30,21 @@ class PhpMethodReference extends Reference
 
     public function resolve(Environment $environment, string $data): ResolvedReference
     {
-        [$class, $method] = explode('::', $data, 2);
+        $data = u($data);
+        if (!$data->containsAny('::')) {
+            throw new \RuntimeException(sprintf('Malformed method reference "%s" in file "%s"', $data, $environment->getCurrentFileName()));
+        }
+
+        [$className, $methodName] = $data->split('::', 2);
+        $className = $className->replace('\\\\', '\\');
 
         return new ResolvedReference(
             $environment->getCurrentFileName(),
-            $data.'()',
-            sprintf('%s/%s.%s.php', $this->phpDocUrl, strtolower($class), strtolower($method)),
+            $methodName.'()',
+            sprintf('%s/%s.%s.php', $this->phpDocUrl, $className->replace('\\', '-')->lower(), $methodName->lower()),
             [],
             [
-                'title' => $class,
+                'title' => sprintf('%s::%s()', $className, $methodName),
             ]
         );
     }
