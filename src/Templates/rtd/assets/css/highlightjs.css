@@ -66,3 +66,16 @@ Visual Studio-like style based on original C# coloring by Jason Diamond <jason@d
 .hljs-strong {
   font-weight: bold;
 }
+
+.hljs-addition::before,
+.hljs-deletion::before {
+  position: absolute;
+}
+
+.hljs-addition::before {
+  content: '+';
+}
+
+.hljs-deletion::before {
+  content: '-';
+}
