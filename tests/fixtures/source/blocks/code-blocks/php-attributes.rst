@@ -61,7 +61,7 @@
         }
 
         #[AsController]
-        public function someAction(#[CurrentUser] User $user)
+        public function someAction(#[CurrentUser, AttributeName('value')] User $user)
         {
         }
     }
