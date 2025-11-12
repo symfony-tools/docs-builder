@@ -12,30 +12,29 @@
     "contains": [
         {
             "className": "meta",
-            "begin": "#\\[\\s*(\\\\?[A-Z][A-Za-z0-9_\\x7f-\\xff]+)+\\]"
-        },
-        {
-            "begin": "#\\[\\s*(\\\\?[A-Z][A-Za-z0-9_\\x7f-\\xff]+)+(?![A-Za-z0-9])(?![$])",
+            "begin": "#\\[\\s*(?=\\w)",
             "end": "]",
-            "returnBegin": true,
             "contains": [
                 {
-                    "className": "meta",
-                    "begin": "#\\[\\s*(\\\\?[A-Z][A-Za-z0-9_\\x7f-\\xff]+)+(?![A-Za-z0-9])(?![$])"
-                },
-                {
-                    "begin": "\\(",
-                    "end": "\\)",
-                    "keywords": "array bool boolean float int integer new real string false FALSE null NULL true TRUE PHP_VERSION PHP_MAJOR_VERSION PHP_MINOR_VERSION PHP_RELEASE_VERSION PHP_VERSION_ID PHP_EXTRA_VERSION ZEND_THREAD_SAFE ZEND_DEBUG_BUILD PHP_ZTS PHP_DEBUG PHP_MAXPATHLEN PHP_OS PHP_OS_FAMILY PHP_SAPI PHP_EOL PHP_INT_MAX PHP_INT_MIN PHP_INT_SIZE PHP_FLOAT_DIG PHP_FLOAT_EPSILON PHP_FLOAT_MIN PHP_FLOAT_MAX DEFAULT_INCLUDE_PATH PEAR_INSTALL_DIR PEAR_EXTENSION_DIR PHP_EXTENSION_DIR PHP_PREFIX PHP_BINDIR PHP_BINARY PHP_MANDIR PHP_LIBDIR PHP_DATADIR PHP_SYSCONFDIR PHP_LOCALSTATEDIR PHP_CONFIG_FILE_PATH PHP_CONFIG_FILE_SCAN_DIR PHP_SHLIB_SUFFIX PHP_FD_SETSIZE E_ERROR E_WARNING E_PARSE E_NOTICE E_CORE_ERROR E_CORE_WARNING E_COMPILE_ERROR E_COMPILE_WARNING E_USER_ERROR E_USER_WARNING E_USER_NOTICE E_RECOVERABLE_ERROR E_DEPRECATED E_USER_DEPRECATED E_ALL E_STRICT __COMPILER_HALT_OFFSET__ PHP_WINDOWS_EVENT_CTRL_C PHP_WINDOWS_EVENT_CTRL_BREAK PHP_CLI_PROCESS_TITLE STDERR STDIN STDOUT __CLASS__ __DIR__ __FILE__ __FUNCTION__ __LINE__ __METHOD__ __NAMESPACE__ __TRAIT__",
-                    "contains": {
-                        "$ref": "#contains.9.contains.1.contains",
-                        "_": "params"
-                    }
-                },
-                {
-                    "className": "meta",
-                    "begin": "]",
-                    "endsParent": true
+                    "variants": [
+                        {
+                            "begin": "\\s*(\\\\?[A-Z][A-Za-z0-9_\\x7f-\\xff]+)+(?=\\()",
+                            "contains": [
+                                {
+                                    "begin": "\\(",
+                                    "end": "\\)",
+                                    "keywords": "array bool boolean float int integer new real string false FALSE null NULL true TRUE PHP_VERSION PHP_MAJOR_VERSION PHP_MINOR_VERSION PHP_RELEASE_VERSION PHP_VERSION_ID PHP_EXTRA_VERSION ZEND_THREAD_SAFE ZEND_DEBUG_BUILD PHP_ZTS PHP_DEBUG PHP_MAXPATHLEN PHP_OS PHP_OS_FAMILY PHP_SAPI PHP_EOL PHP_INT_MAX PHP_INT_MIN PHP_INT_SIZE PHP_FLOAT_DIG PHP_FLOAT_EPSILON PHP_FLOAT_MIN PHP_FLOAT_MAX DEFAULT_INCLUDE_PATH PEAR_INSTALL_DIR PEAR_EXTENSION_DIR PHP_EXTENSION_DIR PHP_PREFIX PHP_BINDIR PHP_BINARY PHP_MANDIR PHP_LIBDIR PHP_DATADIR PHP_SYSCONFDIR PHP_LOCALSTATEDIR PHP_CONFIG_FILE_PATH PHP_CONFIG_FILE_SCAN_DIR PHP_SHLIB_SUFFIX PHP_FD_SETSIZE E_ERROR E_WARNING E_PARSE E_NOTICE E_CORE_ERROR E_CORE_WARNING E_COMPILE_ERROR E_COMPILE_WARNING E_USER_ERROR E_USER_WARNING E_USER_NOTICE E_RECOVERABLE_ERROR E_DEPRECATED E_USER_DEPRECATED E_ALL E_STRICT __COMPILER_HALT_OFFSET__ PHP_WINDOWS_EVENT_CTRL_C PHP_WINDOWS_EVENT_CTRL_BREAK PHP_CLI_PROCESS_TITLE STDERR STDIN STDOUT __CLASS__ __DIR__ __FILE__ __FUNCTION__ __LINE__ __METHOD__ __NAMESPACE__ __TRAIT__",
+                                    "contains": {
+                                        "$ref": "#contains.8.contains.1.contains",
+                                        "_": "params"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "begin": "\\s*(\\\\?[A-Z][A-Za-z0-9_\\x7f-\\xff]+)+(?!\\()"
+                        }
+                    ]
                 }
             ]
         },
@@ -64,7 +63,7 @@
                     "begin": "<\\?(php)?|\\?>"
                 },
                 {
-                    "$ref": "#contains.2.contains.0"
+                    "$ref": "#contains.1.contains.0"
                 },
                 {
                     "className": "doctag",
@@ -83,7 +82,7 @@
                     "begin": "@[A-Za-z]+"
                 },
                 {
-                    "$ref": "#contains.2.contains.0"
+                    "$ref": "#contains.1.contains.0"
                 },
                 {
                     "className": "doctag",
@@ -98,7 +97,7 @@
             "end": false,
             "contains": [
                 {
-                    "$ref": "#contains.2.contains.0"
+                    "$ref": "#contains.1.contains.0"
                 },
                 {
                     "className": "doctag",
@@ -134,7 +133,7 @@
             ]
         },
         {
-            "$ref": "#contains.3.contains.0"
+            "$ref": "#contains.2.contains.0"
         },
         {
             "className": "variable",
@@ -200,8 +199,12 @@
                             ]
                         },
                         {
-                            "$ref": "#contains.8",
+                            "$ref": "#contains.7",
                             "_": "variable"
+                        },
+                        {
+                            "$ref": "#contains.2",
+                            "_": "comment"
                         },
                         {
                             "$ref": "#contains.3",
@@ -212,23 +215,19 @@
                             "_": "comment"
                         },
                         {
-                            "$ref": "#contains.5",
-                            "_": "comment"
-                        },
-                        {
-                            "$ref": "#contains.10.contains.3.contains.3",
+                            "$ref": "#contains.9.contains.3.contains.3",
                             "_": "string"
                         },
                         {
-                            "$ref": "#contains.10.contains.3.contains.4",
+                            "$ref": "#contains.9.contains.3.contains.4",
                             "_": "number"
                         },
                         {
-                            "$ref": "#contains.10",
+                            "$ref": "#contains.9",
                             "_": "closure"
                         },
                         {
-                            "$ref": "#contains.9",
+                            "$ref": "#contains.8",
                             "_": "invoke"
                         }
                     ]
@@ -262,21 +261,21 @@
                     "contains": [
                         "self",
                         {
-                            "$ref": "#contains.8",
+                            "$ref": "#contains.7",
                             "_": "variable"
                         },
                         {
-                            "$ref": "#contains.5",
+                            "$ref": "#contains.4",
                             "_": "comment"
                         },
                         {
                             "className": "string",
                             "contains": [
                                 {
-                                    "$ref": "#contains.6.contains.0"
+                                    "$ref": "#contains.5.contains.0"
                                 },
                                 {
-                                    "$ref": "#contains.3.contains.0"
+                                    "$ref": "#contains.2.contains.0"
                                 }
                             ],
                             "variants": [
@@ -295,7 +294,7 @@
                                     "illegal": null,
                                     "contains": [
                                         {
-                                            "$ref": "#contains.6.contains.0"
+                                            "$ref": "#contains.5.contains.0"
                                         }
                                     ]
                                 },
@@ -306,7 +305,7 @@
                                     "illegal": null,
                                     "contains": [
                                         {
-                                            "$ref": "#contains.6.contains.0"
+                                            "$ref": "#contains.5.contains.0"
                                         },
                                         {
                                             "className": "subst",
@@ -338,10 +337,6 @@
                         },
                         {
                             "$ref": "#contains.0",
-                            "_": "simple-attribute"
-                        },
-                        {
-                            "$ref": "#contains.1",
                             "_": "attribute"
                         }
                     ]
@@ -349,7 +344,7 @@
             ]
         },
         {
-            "$ref": "#contains.9.contains.1.contains.1",
+            "$ref": "#contains.8.contains.1.contains.1",
             "_": "constant"
         },
         {
@@ -371,7 +366,7 @@
                     "beginKeywords": "extends implements"
                 },
                 {
-                    "$ref": "#contains.10.contains.1",
+                    "$ref": "#contains.9.contains.1",
                     "_": "title"
                 }
             ]
@@ -382,7 +377,7 @@
             "illegal": "[\\.']",
             "contains": [
                 {
-                    "$ref": "#contains.10.contains.1",
+                    "$ref": "#contains.9.contains.1",
                     "_": "title"
                 }
             ]
@@ -392,7 +387,7 @@
             "end": ";",
             "contains": [
                 {
-                    "$ref": "#contains.10.contains.1",
+                    "$ref": "#contains.9.contains.1",
                     "_": "title"
                 }
             ]
@@ -401,11 +396,11 @@
             "begin": "=>"
         },
         {
-            "$ref": "#contains.10.contains.3.contains.3",
+            "$ref": "#contains.9.contains.3.contains.3",
             "_": "string"
         },
         {
-            "$ref": "#contains.10.contains.3.contains.4",
+            "$ref": "#contains.9.contains.3.contains.4",
             "_": "number"
         }
     ]
