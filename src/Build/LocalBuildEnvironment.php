@@ -11,16 +11,17 @@
 
 namespace SymfonyTools\GuidesExtension\Build;
 
-use Flyfinder\Finder;
 use League\Flysystem\Adapter\Local;
-use League\Flysystem\Filesystem;
+use League\Flysystem\Filesystem as LeagueFilesystem;
+use phpDocumentor\FileSystem\FileSystem;
+use phpDocumentor\FileSystem\FlysystemV3\FlysystemV3;
 
 final class LocalBuildEnvironment implements BuildEnvironment
 {
     private string $sourceDir;
-    private ?Filesystem $sourceFilesystem = null;
+    private ?LeagueFilesystem $sourceFilesystem = null;
     private string $outputDir;
-    private ?Filesystem $outputFilesystem = null;
+    private ?LeagueFilesystem $outputFilesystem = null;
 
     public function __construct()
     {
@@ -44,13 +45,13 @@ final class LocalBuildEnvironment implements BuildEnvironment
         $this->outputDir = $outputDir;
     }
 
-    public function getSourceFilesystem(): Filesystem
+    public function getSourceFilesystem(): FileSystem
     {
-        return $this->sourceFilesystem ??= (new Filesystem(new Local($this->sourceDir)))->addPlugin(new Finder());
+        return $this->sourceFilesystem ??= new FlysystemV3(new LeagueFilesystem(new Local($this->sourceDir)));
     }
 
-    public function getOutputFilesystem(): Filesystem
+    public function getOutputFilesystem(): FileSystem
     {
-        return $this->outputFilesystem ??= new Filesystem(new Local($this->outputDir));
+        return $this->outputFilesystem ??= new FlysystemV3(new LeagueFilesystem(new Local($this->outputDir)));
     }
 }
