@@ -2,7 +2,7 @@
 
 namespace SymfonyTools\GuidesExtension\Tests;
 
-use League\Flysystem\Adapter\Local;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use Monolog\Handler\TestHandler;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
@@ -63,7 +63,7 @@ class HtmlIntegrationTest extends TestCase
     /** @dataProvider provideProjects */
     public function testProjects(string $directory)
     {
-        $buildEnvironment = new DynamicBuildEnvironment(new Local(__DIR__.'/fixtures/source/'.$directory));
+        $buildEnvironment = new DynamicBuildEnvironment(new LocalFilesystemAdapter(__DIR__.'/fixtures/source/'.$directory));
         
         $kernel = DocsKernel::create([new TestExtension()]);
         $kernel->get(DocBuilder::class)->build($buildEnvironment);

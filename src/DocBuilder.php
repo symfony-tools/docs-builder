@@ -12,6 +12,7 @@
 namespace SymfonyTools\GuidesExtension;
 
 use League\Tactician\CommandBus;
+use SymfonyTools\GuidesExtension\Build\StringBuildEnvironment;
 use phpDocumentor\Guides\Compiler\CompilerContext;
 use phpDocumentor\Guides\Handlers\CompileDocumentsCommand;
 use phpDocumentor\Guides\Handlers\ParseDirectoryCommand;
@@ -61,13 +62,12 @@ final class DocBuilder
 
     public function buildString(string $contents): string
     {
-        $buildEnvironment = new MemoryBuildEnvironment();
-        $buildEnvironment->getSourceFilesystem()->write('/index.rst', $contents);
+        $buildEnvironment = new StringBuildEnvironment($contents);
 
         $this->build($buildEnvironment);
 
-        $output = $buildEnvironment->getOutputFilesystem()->read('/index.html');
-        if (false === $output) {
+        $output = $buildEnvironment->getOutput();
+        if (null === $output) {
             throw new \LogicException('Cannot build HTML from the provided reStructuredText: no HTML output found.');
         }
 

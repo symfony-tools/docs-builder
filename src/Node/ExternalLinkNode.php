@@ -12,6 +12,7 @@
 namespace SymfonyTools\GuidesExtension\Node;
 
 use phpDocumentor\Guides\Nodes\Inline\AbstractLinkInlineNode;
+use phpDocumentor\Guides\Nodes\Inline\PlainTextInlineNode;
 
 class ExternalLinkNode extends AbstractLinkInlineNode
 {
@@ -20,7 +21,7 @@ class ExternalLinkNode extends AbstractLinkInlineNode
         string $text,
         private string $title,
     ) {
-        parent::__construct('external-link', $url, $text);
+        parent::__construct('external-link', $url, [new PlainTextInlineNode($text)]);
     }
 
     public function getTitle(): string
