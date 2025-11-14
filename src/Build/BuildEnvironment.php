@@ -11,11 +11,11 @@
 
 namespace SymfonyTools\GuidesExtension\Build;
 
-use League\Flysystem\Filesystem;
+use phpDocumentor\FileSystem\FileSystem;
 
 interface BuildEnvironment
 {
-    public function getSourceFilesystem(): Filesystem;
+    public function getSourceFilesystem(): FileSystem;
 
-    public function getOutputFilesystem(): Filesystem;
+    public function getOutputFilesystem(): FileSystem;
 }

@@ -11,7 +11,7 @@
 
 namespace SymfonyTools\GuidesExtension\TextRole;
 
-use phpDocumentor\Guides\Nodes\Inline\InlineNode;
+use phpDocumentor\Guides\Nodes\Inline\InlineNodeInterface;
 use phpDocumentor\Guides\RestructuredText\Parser\DocumentParserContext;
 use phpDocumentor\Guides\RestructuredText\TextRoles\TextRole;
 use SymfonyTools\GuidesExtension\Build\BuildConfig;
@@ -24,7 +24,7 @@ class PhpClassRole implements TextRole
     ) {
     }
 
-    public function processNode(DocumentParserContext $documentParserContext, string $role, string $content, string $rawContent): InlineNode
+    public function processNode(DocumentParserContext $documentParserContext, string $role, string $content, string $rawContent): InlineNodeInterface
     {
         $url = 'https://php.net/class.'.strtolower($content);
 

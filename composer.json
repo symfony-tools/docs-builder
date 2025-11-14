@@ -36,7 +36,7 @@
         "twig/string-extra": "^3.6"
     },
     "require-dev": {
-        "league/flysystem-memory": "1.*",
+        "league/flysystem-memory": "3.*",
         "symfony/phpunit-bridge": "^5.2 || ^6.0",
         "symfony/process": "^5.2 || ^6.0",
         "symfony/var-dumper": "^6.2"
