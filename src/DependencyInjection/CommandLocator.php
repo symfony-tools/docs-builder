@@ -16,19 +16,20 @@ use League\Tactician\Handler\Locator\HandlerLocator;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class CommandLocator implements HandlerLocator
+final class CommandLocator implements HandlerLocator
 {
     public function __construct(
-        private ContainerInterface $commands
+        private ContainerInterface $commands,
     ) {
     }
 
+    #[\Override]
     public function getHandlerForCommand($commandName): object
     {
         try {
             return $this->commands->get($commandName);
         } catch (NotFoundExceptionInterface) {
-            throw new MissingHandlerException(sprintf('No handler found for command "%s"', $commandName));
+            throw new MissingHandlerException(\sprintf('No handler found for command "%s"', $commandName));
         }
     }
 }

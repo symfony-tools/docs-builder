@@ -12,7 +12,6 @@
 namespace SymfonyTools\GuidesExtension;
 
 use League\Tactician\CommandBus;
-use SymfonyTools\GuidesExtension\Build\StringBuildEnvironment;
 use phpDocumentor\Guides\Compiler\CompilerContext;
 use phpDocumentor\Guides\Handlers\CompileDocumentsCommand;
 use phpDocumentor\Guides\Handlers\ParseDirectoryCommand;
@@ -22,7 +21,7 @@ use phpDocumentor\Guides\RenderContext;
 use phpDocumentor\Guides\Twig\Theme\ThemeManager;
 use SymfonyTools\GuidesExtension\Build\BuildConfig;
 use SymfonyTools\GuidesExtension\Build\BuildEnvironment;
-use SymfonyTools\GuidesExtension\Build\MemoryBuildEnvironment;
+use SymfonyTools\GuidesExtension\Build\StringBuildEnvironment;
 
 final class DocBuilder
 {

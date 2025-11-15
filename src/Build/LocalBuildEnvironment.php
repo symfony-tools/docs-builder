@@ -11,30 +11,37 @@
 
 namespace SymfonyTools\GuidesExtension\Build;
 
-use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem as LeagueFilesystem;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use phpDocumentor\FileSystem\FileSystem;
 use phpDocumentor\FileSystem\FlysystemV3\FlysystemV3;
 
 final class LocalBuildEnvironment implements BuildEnvironment
 {
-    private string $sourceDir;
-    private ?LeagueFilesystem $sourceFilesystem = null;
-    private string $outputDir;
-    private ?LeagueFilesystem $outputFilesystem = null;
+    private ?string $sourceDir = null;
+    private ?FileSystem $sourceFilesystem = null;
+    private ?string $outputDir = null;
+    private ?FileSystem $outputFilesystem = null;
 
     public function __construct()
     {
-        $this->sourceDir = getcwd();
-        $this->outputDir = $this->sourceDir.'/_output';
+        if ($cwd = getcwd()) {
+            $this->setSourceDir($cwd);
+        }
     }
 
     public function setSourceDir(string $sourceDir): void
     {
-        if ($sourceDir !== $this->sourceDir) {
-            $this->sourceFilesystem = null;
+        if ($sourceDir === $this->sourceDir) {
+            return;
         }
+
         $this->sourceDir = $sourceDir;
+        $this->sourceFilesystem = null;
+
+        if (null == $this->outputDir) {
+            $this->setOutputDir($sourceDir.'/_output');
+        }
     }
 
     public function setOutputDir(string $outputDir): void
@@ -45,13 +52,23 @@ final class LocalBuildEnvironment implements BuildEnvironment
         $this->outputDir = $outputDir;
     }
 
+    #[\Override]
     public function getSourceFilesystem(): FileSystem
     {
-        return $this->sourceFilesystem ??= new FlysystemV3(new LeagueFilesystem(new Local($this->sourceDir)));
+        if (null === $this->sourceDir) {
+            throw new \BadMethodCallException('Cannot get source filesystem: no source directory set.');
+        }
+
+        return $this->sourceFilesystem ??= new FlysystemV3(new LeagueFilesystem(new LocalFilesystemAdapter($this->sourceDir)));
     }
 
+    #[\Override]
     public function getOutputFilesystem(): FileSystem
     {
-        return $this->outputFilesystem ??= new FlysystemV3(new LeagueFilesystem(new Local($this->outputDir)));
+        if (null === $this->outputDir) {
+            throw new \BadMethodCallException('Cannot get output filesystem: no output directory set.');
+        }
+
+        return $this->outputFilesystem ??= new FlysystemV3(new LeagueFilesystem(new LocalFilesystemAdapter($this->outputDir)));
     }
 }

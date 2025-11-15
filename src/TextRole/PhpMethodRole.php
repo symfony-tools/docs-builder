@@ -17,13 +17,14 @@ use phpDocumentor\Guides\RestructuredText\TextRoles\TextRole;
 use SymfonyTools\GuidesExtension\Build\BuildConfig;
 use SymfonyTools\GuidesExtension\Node\ExternalLinkNode;
 
-class PhpMethodRole implements TextRole
+final class PhpMethodRole implements TextRole
 {
     public function __construct(
-        private BuildConfig $buildConfig
+        private BuildConfig $buildConfig,
     ) {
     }
 
+    #[\Override]
     public function processNode(DocumentParserContext $documentParserContext, string $role, string $content, string $rawContent): InlineNodeInterface
     {
         [$fqcn, $method] = explode('::', $content, 2) + ['', ''];
@@ -34,11 +35,13 @@ class PhpMethodRole implements TextRole
         return new ExternalLinkNode($url, $content, $content);
     }
 
+    #[\Override]
     public function getName(): string
     {
         return 'phpmethod';
     }
 
+    #[\Override]
     public function getAliases(): array
     {
         return [];
