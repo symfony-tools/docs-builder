@@ -10,8 +10,13 @@
 >
     <projectFiles>
         <directory name="src" />
+        <directory name="config" />
         <ignoreFiles>
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>
+
+    <issueHandlers>
+        <ImplicitToStringCast errorLevel="suppress" />
+    </issueHandlers>
 </psalm>

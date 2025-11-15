@@ -19,27 +19,30 @@ use SymfonyTools\GuidesExtension\Node\ExternalLinkNode;
 
 use function Symfony\Component\String\u;
 
-class NamespaceRole implements TextRole
+final class NamespaceRole implements TextRole
 {
     public function __construct(
-        private BuildConfig $buildConfig
+        private BuildConfig $buildConfig,
     ) {
     }
 
+    #[\Override]
     public function processNode(DocumentParserContext $documentParserContext, string $role, string $content, string $rawContent): InlineNodeInterface
     {
         $fqcn = u($content)->replace('\\\\', '\\');
 
-        $url = sprintf($this->buildConfig->getSymfonyRepositoryUrl(), $fqcn->replace('\\', '/'));
+        $url = \sprintf($this->buildConfig->getSymfonyRepositoryUrl(), $fqcn->replace('\\', '/'));
 
         return new ExternalLinkNode($url, (string) $fqcn->afterLast('\\'), (string) $fqcn);
     }
 
+    #[\Override]
     public function getName(): string
     {
         return 'namespace';
     }
 
+    #[\Override]
     public function getAliases(): array
     {
         return [];

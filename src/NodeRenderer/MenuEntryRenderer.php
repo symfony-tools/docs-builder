@@ -22,7 +22,7 @@ use phpDocumentor\Guides\TemplateRenderer;
 /**
  * @implements NodeRenderer<MenuEntryNode>
  */
-class MenuEntryRenderer implements NodeRenderer
+final class MenuEntryRenderer implements NodeRenderer
 {
     public function __construct(
         private TemplateRenderer $renderer,
@@ -30,15 +30,17 @@ class MenuEntryRenderer implements NodeRenderer
     ) {
     }
 
+    #[\Override]
     public function supports(string $nodeFqcn): bool
     {
         return MenuEntryNode::class === $nodeFqcn || is_a($nodeFqcn, MenuEntryNode::class, true);
     }
 
+    #[\Override]
     public function render(Node $node, RenderContext $renderContext): string
     {
         if (!$node instanceof MenuEntryNode) {
-            throw new \LogicException(sprintf('"%s" can only render menu entry nodes, got "%s".', __CLASS__, get_debug_type($node)));
+            throw new \LogicException(\sprintf('"%s" can only render menu entry nodes, got "%s".', __CLASS__, get_debug_type($node)));
         }
 
         $url = $this->urlGenerator->generateCanonicalOutputUrl(

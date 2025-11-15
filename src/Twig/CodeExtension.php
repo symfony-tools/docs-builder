@@ -16,13 +16,14 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
-class CodeExtension extends AbstractExtension
+final class CodeExtension extends AbstractExtension
 {
     public function __construct(
-        private BuildConfig $buildConfig
+        private BuildConfig $buildConfig,
     ) {
     }
 
+    #[\Override]
     public function getFilters(): array
     {
         return [
@@ -30,6 +31,7 @@ class CodeExtension extends AbstractExtension
         ];
     }
 
+    #[\Override]
     public function getFunctions(): array
     {
         return [
@@ -37,7 +39,7 @@ class CodeExtension extends AbstractExtension
         ];
     }
 
-    public function fqcn(string $fqcn): string
+    private function fqcn(string $fqcn): string
     {
         // some browsers can't break long <code> properly, so we inject a
         // `<wbr>` (word-break HTML tag) after some characters to help break those

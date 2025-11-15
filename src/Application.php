@@ -15,15 +15,16 @@ use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Application extends SymfonyApplication
+final class Application extends SymfonyApplication
 {
     public function __construct(
-        private ?OutputInterface $output = null
+        private ?OutputInterface $output = null,
     ) {
         parent::__construct('Symfony Docs Builder');
     }
 
-    public function run(InputInterface $input = null, OutputInterface $output = null): int
+    #[\Override]
+    public function run(?InputInterface $input = null, ?OutputInterface $output = null): int
     {
         return parent::run($input, $output ?? $this->output);
     }

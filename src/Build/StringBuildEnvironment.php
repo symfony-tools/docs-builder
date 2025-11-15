@@ -26,11 +26,13 @@ final class StringBuildEnvironment implements BuildEnvironment
         $this->filesystem->put('index.rst', $contents);
     }
 
+    #[\Override]
     public function getSourceFilesystem(): FileSystem
     {
         return $this->filesystem;
     }
 
+    #[\Override]
     public function getOutputFilesystem(): FileSystem
     {
         return $this->filesystem;
@@ -40,6 +42,6 @@ final class StringBuildEnvironment implements BuildEnvironment
     {
         $output = $this->filesystem->read('/index.html');
 
-        return $output ?: null;
-  }
+        return false === $output ? null : $output;
+    }
 }
