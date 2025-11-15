@@ -17,10 +17,11 @@ use phpDocumentor\Guides\Code\Highlighter\HighlightResult;
 final class SymfonyHighlighter implements Highlighter
 {
     public function __construct(
-        private Highlighter $highlighter
+        private Highlighter $highlighter,
     ) {
     }
 
+    #[\Override]
     public function __invoke(string $language, string $code, array $debugInformation): HighlightResult
     {
         $result = ($this->highlighter)($language, $code, $debugInformation);
@@ -32,8 +33,8 @@ final class SymfonyHighlighter implements Highlighter
         }
 
         if ('terminal' === $language) {
-            $code = preg_replace('/^\$ /m', '<span class="hljs-prompt">$ </span>', $code);
-            $code = preg_replace('/^C:\\\&gt; /m', '<span class="hljs-prompt">C:\&gt; </span>', $code);
+            $code = preg_replace('/^\$ /m', '<span class="hljs-prompt">$ </span>', $code) ?? $code;
+            $code = preg_replace('/^C:\\\&gt; /m', '<span class="hljs-prompt">C:\&gt; </span>', $code) ?? $code;
         }
 
         return new HighlightResult($result->language, $code);

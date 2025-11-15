@@ -16,12 +16,13 @@ use Twig\TwigTest;
 
 use function Symfony\Component\String\u;
 
-class UrlExtension extends AbstractExtension
+final class UrlExtension extends AbstractExtension
 {
+    #[\Override]
     public function getTests(): array
     {
         return [
-            new TwigTest('safe_url', [$this, 'isSafeUrl']),
+            new TwigTest('safe_url', $this->isSafeUrl(...)),
         ];
     }
 
@@ -29,7 +30,7 @@ class UrlExtension extends AbstractExtension
      * If the URL is considered safe, it's opened in the same browser tab;
      * otherwise it's opened in a new tab and with some strict security options.
      */
-    public function isSafeUrl(string $url): bool
+    private function isSafeUrl(string $url): bool
     {
         // The following are considered Symfony URLs:
         //   * https://symfony.com/[...]

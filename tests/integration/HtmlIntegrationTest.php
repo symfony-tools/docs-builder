@@ -4,6 +4,7 @@ namespace SymfonyTools\GuidesExtension\Tests;
 
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use Monolog\Handler\TestHandler;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -17,7 +18,7 @@ use phpDocumentor\Guides\DependencyInjection\TestExtension;
 
 class HtmlIntegrationTest extends TestCase
 {
-    /** @dataProvider provideBlocks */
+    #[DataProvider('provideBlocks')]
     public function testBlocks(string $sourceFile, string $expectedFile)
     {
         $expectedContents = file_get_contents($expectedFile);
@@ -33,13 +34,13 @@ class HtmlIntegrationTest extends TestCase
             $generated = new \DOMDocument();
             $generated->loadHTML($generatedContents, \LIBXML_NOERROR);
             $generated->preserveWhiteSpace = false;
-            $generatedHtml = $this->sanitizeHTML($generated->saveHTML());
+            $generatedHtml = self::sanitizeHTML($generated->saveHTML());
 
             $expected = new \DOMDocument();
             $expectedContents = "<!DOCTYPE html>\n<html>\n<body>\n".$expectedContents."\n</body>\n</html>";
             $expected->loadHTML($expectedContents, \LIBXML_NOERROR);
             $expected->preserveWhiteSpace = false;
-            $expectedHtml = $this->sanitizeHTML($expected->saveHTML());
+            $expectedHtml = self::sanitizeHTML($expected->saveHTML());
 
             $this->assertEquals($expectedHtml, $generatedHtml);
         } catch (ExpectationFailedException $e) {
@@ -60,7 +61,7 @@ class HtmlIntegrationTest extends TestCase
         }
     }
 
-    /** @dataProvider provideProjects */
+    #[DataProvider('provideProjects')]
     public function testProjects(string $directory)
     {
         $buildEnvironment = new DynamicBuildEnvironment(new LocalFilesystemAdapter(__DIR__.'/fixtures/source/'.$directory));
@@ -76,8 +77,8 @@ class HtmlIntegrationTest extends TestCase
 
         try {
             foreach ((new Finder())->files()->notName('skip')->in($expectedDirectory) as $file) {
-                $expected = $this->sanitizeHTML($file->getContents());
-                $actual = $this->sanitizeHTML($buildEnvironment->getOutputFilesystem()->read($file->getRelativePathname()));
+                $expected = self::sanitizeHTML($file->getContents());
+                $actual = self::sanitizeHTML($buildEnvironment->getOutputFilesystem()->read($file->getRelativePathname()));
 
                 $this->assertEquals($expected, $actual, 'File: '.$file->getRelativePathname());
             }
@@ -92,7 +93,7 @@ class HtmlIntegrationTest extends TestCase
         $this->assertFalse($skip, 'Test passes while marked as SKIP.');
     }
 
-    public function provideProjects(): iterable
+    public static function provideProjects(): iterable
     {
         foreach ((new Finder())->directories()->in(__DIR__.'/fixtures/source')->depth(0) as $dir) {
             if ('blocks' === $dir->getBasename()) {
@@ -103,7 +104,7 @@ class HtmlIntegrationTest extends TestCase
         }
     }
 
-    private function sanitizeHTML(string $html): string
+    private static function sanitizeHTML(string $html): string
     {
         $html = implode("\n", array_map('trim', explode("\n", $html)));
         $html = preg_replace('# +#', ' ', $html);

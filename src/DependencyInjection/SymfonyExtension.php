@@ -17,13 +17,15 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
-class SymfonyExtension extends Extension implements PrependExtensionInterface
+final class SymfonyExtension extends Extension implements PrependExtensionInterface
 {
+    #[\Override]
     public function getAlias(): string
     {
         return 'symfony';
     }
 
+    #[\Override]
     public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new PhpFileLoader($container, new FileLocator(\dirname(__DIR__, 2).'/config'));
@@ -32,6 +34,7 @@ class SymfonyExtension extends Extension implements PrependExtensionInterface
         $loader->load('renderer.php');
     }
 
+    #[\Override]
     public function prepend(ContainerBuilder $container): void
     {
         $templatesDir = \dirname(__DIR__, 2).'/resources/templates';

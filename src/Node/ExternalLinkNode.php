@@ -14,7 +14,7 @@ namespace SymfonyTools\GuidesExtension\Node;
 use phpDocumentor\Guides\Nodes\Inline\AbstractLinkInlineNode;
 use phpDocumentor\Guides\Nodes\Inline\PlainTextInlineNode;
 
-class ExternalLinkNode extends AbstractLinkInlineNode
+final class ExternalLinkNode extends AbstractLinkInlineNode
 {
     public function __construct(
         string $url,

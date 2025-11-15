@@ -19,28 +19,31 @@ use SymfonyTools\GuidesExtension\Node\ExternalLinkNode;
 
 use function Symfony\Component\String\u;
 
-class MethodRole implements TextRole
+final class MethodRole implements TextRole
 {
     public function __construct(
-        private BuildConfig $buildConfig
+        private BuildConfig $buildConfig,
     ) {
     }
 
+    #[\Override]
     public function processNode(DocumentParserContext $documentParserContext, string $role, string $content, string $rawContent): InlineNodeInterface
     {
         [$fqcn, $method] = u($content)->replace('\\\\', '\\')->split('::', 2);
 
-        $filename = sprintf('%s.php#:~:text=%s', $fqcn->replace('\\', '/'), rawurlencode('function '.$method));
-        $url = sprintf($this->buildConfig->getSymfonyRepositoryUrl(), $filename);
+        $filename = \sprintf('%s.php#:~:text=%s', $fqcn->replace('\\', '/'), rawurlencode('function '.$method));
+        $url = \sprintf($this->buildConfig->getSymfonyRepositoryUrl(), $filename);
 
         return new ExternalLinkNode($url, $method.'()', $fqcn.'::'.$method.'()');
     }
 
+    #[\Override]
     public function getName(): string
     {
         return 'method';
     }
 
+    #[\Override]
     public function getAliases(): array
     {
         return [];

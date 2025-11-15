@@ -21,7 +21,7 @@ use SymfonyTools\GuidesExtension\Highlighter\SymfonyHighlighter;
 /**
  * @implements NodeRenderer<CodeNode>
  */
-class CodeNodeRenderer implements NodeRenderer
+final class CodeNodeRenderer implements NodeRenderer
 {
     public function __construct(
         private TemplateRenderer $renderer,
@@ -29,15 +29,17 @@ class CodeNodeRenderer implements NodeRenderer
     ) {
     }
 
+    #[\Override]
     public function supports(string $nodeFqcn): bool
     {
         return CodeNode::class === $nodeFqcn || is_a($nodeFqcn, CodeNode::class, true);
     }
 
+    #[\Override]
     public function render(Node $node, RenderContext $renderContext): string
     {
         if (!$node instanceof CodeNode) {
-            throw new \LogicException(sprintf('"%s" can only render code nodes, got "%s".', __CLASS__, get_debug_type($node)));
+            throw new \LogicException(\sprintf('"%s" can only render code nodes, got "%s".', __CLASS__, get_debug_type($node)));
         }
 
         $language = $node->getLanguage() ?? 'text';
@@ -46,7 +48,9 @@ class CodeNodeRenderer implements NodeRenderer
         $languages = array_unique([$language, $highlight->language]);
         $code = $highlight->code;
 
-        $numOfLines = \count(preg_split('/\R/', trim($code)));
+        $codeLines = preg_split('/\R/', trim($code));
+        \assert(\is_array($codeLines));
+        $numOfLines = \count($codeLines);
         $lineNumbers = implode("\n", range(1, $numOfLines));
 
         return $this->renderer->renderTemplate(
