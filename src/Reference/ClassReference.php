@@ -32,19 +32,33 @@ class ClassReference extends Reference
     {
         $className = u($data)->replace('\\\\', '\\');
 
+        /**
+         * Symfony AI classes require some special handling because of its monorepo structure. Example:
+         *
+         *     input: Symfony\AI\Agent\Memory\StaticMemoryProvider
+         *     output: https://github.com/symfony/ai/blob/main/src/agent/src/Memory/StaticMemoryProvider.php
+         */
         if (str_starts_with($className, 'Symfony\\AI\\')) {
-            // Example:
-            // input: Symfony\AI\Agent\Memory\StaticMemoryProvider
-            // output: https://github.com/symfony/ai/blob/main/src/agent/src/Memory/StaticMemoryProvider.php
-
             $classPath = $className->after('Symfony\\AI\\');
             [$monorepoSubRepository, $classRelativePath] = $classPath->split('\\', 2);
             // because of monorepo structure, the first part of the classpath needs to be slugged
             // 'Agent' -> 'agent', 'AiBundle' -> 'ai-bundle', etc.
-            $monorepoSubRepository = u($monorepoSubRepository)->snake('-')->lower();
-            $classRelativePath = u($classRelativePath)->replace('\\', '/');
+            $monorepoSubRepository = $monorepoSubRepository->snake('-')->lower();
+            $classRelativePath = $classRelativePath->replace('\\', '/');
 
             $url = \sprintf('https://github.com/symfony/ai/blob/main/src/%s/src/%s.php', $monorepoSubRepository, $classRelativePath);
+        /**
+         * Symfony UX classes require some special handling because of its monorepo structure. Example:
+         *
+         *     input: Symfony\UX\Chartjs\Twig\ChartExtension
+         *     output: https://github.com/symfony/ux/blob/2.x/src/Chartjs/src/Twig/ChartExtension.php
+         */
+        } elseif (str_starts_with($className, 'Symfony\\UX\\')) {
+            $classPath = $className->after('Symfony\\UX\\');
+            [$monorepoSubRepository, $classRelativePath] = $classPath->split('\\', 2);
+            $classRelativePath = $classRelativePath->replace('\\', '/');
+
+            $url = \sprintf('https://github.com/symfony/ux/blob/2.x/src/%s/src/%s.php', $monorepoSubRepository, $classRelativePath);
         } else {
             $url = sprintf('%s/%s.php', $this->symfonyRepositoryUrl, $className->replace('\\', '/'));
         }
