@@ -1,87 +1,75 @@
 <?php
 
+/*
+ * This file is part of the Guides SymfonyExtension package.
+ *
+ * (c) Wouter de Jong
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SymfonyDocsBuilder;
 
-use Doctrine\RST\Builder;
-use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\Filesystem\Filesystem;
-use SymfonyDocsBuilder\CI\MissingFilesChecker;
-use SymfonyDocsBuilder\Generator\HtmlForPdfGenerator;
-use SymfonyDocsBuilder\Generator\JsonGenerator;
+use League\Tactician\CommandBus;
+use phpDocumentor\Guides\Compiler\CompilerContext;
+use phpDocumentor\Guides\Handlers\CompileDocumentsCommand;
+use phpDocumentor\Guides\Handlers\ParseDirectoryCommand;
+use phpDocumentor\Guides\Handlers\RenderDocumentCommand;
+use phpDocumentor\Guides\Nodes\DocumentNode;
+use phpDocumentor\Guides\RenderContext;
+use phpDocumentor\Guides\Twig\Theme\ThemeManager;
+use SymfonyDocsBuilder\Build\BuildConfig;
+use SymfonyDocsBuilder\Build\BuildEnvironment;
+use SymfonyDocsBuilder\Build\StringBuildEnvironment;
 
 final class DocBuilder
 {
-    public function build(BuildConfig $config): BuildResult
-    {
-        $filesystem = new Filesystem();
-        if (!$config->isBuildCacheEnabled() && $filesystem->exists($config->getOutputDir())) {
-            $filesystem->remove($config->getOutputDir());
-        }
-        $filesystem->mkdir($config->getOutputDir());
-
-        $configFileParser = new ConfigFileParser($config, new NullOutput());
-        $configFileParser->processConfigFile($config->getContentDir());
-
-        $builder = new Builder(KernelFactory::createKernel($config));
-        $builder->build($config->getContentDir(), $config->getOutputDir());
-
-        $buildResult = new BuildResult($builder);
-
-        $missingFilesChecker = new MissingFilesChecker($config);
-        $missingFiles = $missingFilesChecker->getMissingFiles();
-        foreach ($missingFiles as $missingFile) {
-            $buildResult->appendError(sprintf('Missing file "%s"', $missingFile));
-        }
-
-        if (!$buildResult->isSuccessful()) {
-            $buildResult->prependError(sprintf('Build errors from "%s"', date('Y-m-d h:i:s')));
-            $filesystem->dumpFile($config->getOutputDir().'/build_errors.txt', implode("\n", $buildResult->getErrors()));
-        }
-
-        if ($config->isContentAString()) {
-            $htmlFilePath = $config->getOutputDir().'/index.html';
-            if (is_file($htmlFilePath)) {
-                // generated HTML contents are a full HTML page, so we need to
-                // extract the contents of the <body> tag
-                $crawler = new Crawler(file_get_contents($htmlFilePath));
-                $buildResult->setStringResult(trim($crawler->filter('body')->html()));
-            }
-        } elseif ($config->getSubdirectoryToBuild()) {
-            $metas = $buildResult->getMetadata();
-            $htmlForPdfGenerator = new HtmlForPdfGenerator($metas, $config);
-            $htmlForPdfGenerator->generateHtmlForPdf();
-        } elseif ($config->generateJsonFiles()) {
-            $metas = $buildResult->getMetadata();
-            $jsonGenerator = new JsonGenerator($metas, $config);
-            $buildResult->setJsonResults($jsonGenerator->generateJson($builder->getIndexName()));
-        }
-
-        return $buildResult;
+    public function __construct(
+        private CommandBus $commandBus,
+        private ThemeManager $themeManager,
+        private BuildConfig $buildConfig,
+    ) {
     }
 
-    public function buildString(string $contents): BuildResult
+    public function build(BuildEnvironment $buildEnvironment): void
     {
-        $filesystem = new Filesystem();
-        $tmpDir = sys_get_temp_dir().'/doc_builder_build_string_'.random_int(1, 100000000);
-        if ($filesystem->exists($tmpDir)) {
-            $filesystem->remove($tmpDir);
+        $this->themeManager->useTheme('symfonycom');
+
+        $projectNode = $this->buildConfig->createProjectNode();
+
+        /** @var list<DocumentNode> $documents */
+        $documents = $this->commandBus->handle(new ParseDirectoryCommand($buildEnvironment->getSourceFilesystem(), '/', 'rst', $projectNode));
+
+        $documents = $this->commandBus->handle(new CompileDocumentsCommand($documents, new CompilerContext($projectNode)));
+
+        foreach ($documents as $document) {
+            $this->commandBus->handle(new RenderDocumentCommand(
+                $document,
+                RenderContext::forDocument(
+                    $document,
+                    $documents,
+                    $buildEnvironment->getSourceFilesystem(),
+                    $buildEnvironment->getOutputFilesystem(),
+                    '/',
+                    'html',
+                    $projectNode
+                )
+            ));
         }
-        $filesystem->mkdir($tmpDir);
+    }
 
-        $filesystem->dumpFile($tmpDir.'/index.rst', $contents);
+    public function buildString(string $contents): string
+    {
+        $buildEnvironment = new StringBuildEnvironment($contents);
 
-        $buildConfig = (new BuildConfig())
-            ->setContentIsString()
-            ->setContentDir($tmpDir)
-            ->setOutputDir($tmpDir.'/output')
-            ->disableBuildCache()
-            ->disableJsonFileGeneration()
-        ;
+        $this->build($buildEnvironment);
 
-        $buildResult = $this->build($buildConfig);
-        $filesystem->remove($tmpDir);
+        $output = $buildEnvironment->getOutput();
+        if (null === $output) {
+            throw new \LogicException('Cannot build HTML from the provided reStructuredText: no HTML output found.');
+        }
 
-        return $buildResult;
+        return $output;
     }
 }

@@ -1,0 +1,120 @@
+<?php
+
+namespace SymfonyDocsBuilder\Tests;
+
+use League\Flysystem\Local\LocalFilesystemAdapter;
+use Monolog\Handler\TestHandler;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
+use SymfonyDocsBuilder\Build\DynamicBuildEnvironment;
+use SymfonyDocsBuilder\DocBuilder;
+use SymfonyDocsBuilder\DocsKernel;
+use SymfonyDocsBuilder\Test\HtmlAsserter;
+use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\Finder\Finder;
+use phpDocumentor\Guides\DependencyInjection\TestExtension;
+
+class HtmlIntegrationTest extends TestCase
+{
+    #[DataProvider('provideBlocks')]
+    public function testBlocks(string $sourceFile, string $expectedFile)
+    {
+        $expectedContents = file_get_contents($expectedFile);
+        $skip = false;
+        if (str_starts_with($expectedContents, 'SKIP')) {
+            $skip = trim(substr(strstr($expectedContents, "\n", true), 4));
+            $expectedContents = strstr($expectedContents, "\n");
+        }
+
+        $kernel = DocsKernel::create([new TestExtension()]);
+        try {
+            $generatedContents = $kernel->get(DocBuilder::class)->buildString(file_get_contents($sourceFile));
+            $generated = new \DOMDocument();
+            $generated->loadHTML($generatedContents, \LIBXML_NOERROR);
+            $generated->preserveWhiteSpace = false;
+            $generatedHtml = self::sanitizeHTML($generated->saveHTML());
+
+            $expected = new \DOMDocument();
+            $expectedContents = "<!DOCTYPE html>\n<html>\n<body>\n".$expectedContents."\n</body>\n</html>";
+            $expected->loadHTML($expectedContents, \LIBXML_NOERROR);
+            $expected->preserveWhiteSpace = false;
+            $expectedHtml = self::sanitizeHTML($expected->saveHTML());
+
+            $this->assertEquals($expectedHtml, $generatedHtml);
+        } catch (ExpectationFailedException $e) {
+            if (false !== $skip) {
+                $this->markTestIncomplete($skip);
+            }
+
+            throw $e;
+        }
+
+        $this->assertFalse($skip, 'Test passes while marked as SKIP.');
+    }
+
+    public static function provideBlocks(): iterable
+    {
+        foreach ((new Finder())->files()->in(__DIR__.'/fixtures/source/blocks') as $file) {
+            yield $file->getRelativePathname() => [$file->getRealPath(), __DIR__.'/fixtures/expected/blocks/'.str_replace('.rst', '.html', $file->getRelativePathname())];
+        }
+    }
+
+    #[DataProvider('provideProjects')]
+    public function testProjects(string $directory)
+    {
+        $buildEnvironment = new DynamicBuildEnvironment(new LocalFilesystemAdapter(__DIR__.'/fixtures/source/'.$directory));
+        
+        $kernel = DocsKernel::create([new TestExtension()]);
+        $kernel->get(DocBuilder::class)->build($buildEnvironment);
+
+        $expectedDirectory = __DIR__.'/fixtures/expected/'.$directory;
+        $skip = false;
+        if (file_exists($expectedDirectory.'/skip')) {
+            $skip = file_get_contents($expectedDirectory.'/skip');
+        }
+
+        try {
+            foreach ((new Finder())->files()->notName('skip')->in($expectedDirectory) as $file) {
+                $expected = self::sanitizeHTML($file->getContents());
+                $actual = self::sanitizeHTML($buildEnvironment->getOutputFilesystem()->read($file->getRelativePathname()));
+
+                $this->assertEquals($expected, $actual, 'File: '.$file->getRelativePathname());
+            }
+        } catch (ExpectationFailedException $e) {
+            if (false !== $skip) {
+                $this->markTestIncomplete($skip);
+            }
+
+            throw $e;
+        }
+
+        $this->assertFalse($skip, 'Test passes while marked as SKIP.');
+    }
+
+    public static function provideProjects(): iterable
+    {
+        foreach ((new Finder())->directories()->in(__DIR__.'/fixtures/source')->depth(0) as $dir) {
+            if ('blocks' === $dir->getBasename()) {
+                continue;
+            }
+
+            yield $dir->getBasename() => [$dir->getBasename()];
+        }
+    }
+
+    private static function sanitizeHTML(string $html): string
+    {
+        $html = implode("\n", array_map('trim', explode("\n", $html)));
+        $html = preg_replace('# +#', ' ', $html);
+        $html = preg_replace('#(?<!\w) <#', '<', $html);
+        $html = preg_replace('#> (?!\w)#', '>', $html);
+        $html = preg_replace('#\R+#', "\n", $html);
+
+        $html = substr($html, strpos($html, '<body>') + 6);
+        $html = substr($html, 0, strpos($html, '</body>'));
+
+        return trim($html);
+    }
+}
