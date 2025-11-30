@@ -14,24 +14,42 @@
         }
     },
     "require": {
-        "php": ">=8.3",
+        "php": ">=8.2",
         "ext-json": "*",
         "ext-curl": "*",
-        "doctrine/rst-parser": "^0.5",
-        "scrivo/highlight.php": "^9.18.1",
-        "symfony/filesystem": "^5.2 || ^6.0 || ^7.0",
-        "symfony/finder": "^5.2 || ^6.0 || ^7.0",
-        "symfony/dom-crawler": "^5.2 || ^6.0 || ^7.0",
-        "symfony/css-selector": "^5.2 || ^6.0 || ^7.0",
-        "symfony/console": "^5.2 || ^6.0 || ^7.0",
-        "symfony/http-client": "^5.2 || ^6.0 || ^7.0",
-        "twig/twig": "^2.14 || ^3.3"
+        "phpdocumentor/guides": "^1.9",
+        "phpdocumentor/guides-cli": "^1.9",
+        "phpdocumentor/guides-code": "^1.7",
+        "phpdocumentor/guides-restructured-text": "^1.9",
+        "scrivo/highlight.php": "^9.12.0",
+        "symfony/config": "^6.0",
+        "symfony/filesystem": "^6.0",
+        "symfony/finder": "^6.0",
+        "symfony/event-dispatcher": "^6.0",
+        "symfony/dependency-injection": "^6.0",
+        "symfony/dom-crawler": "^6.0",
+        "symfony/css-selector": "^6.0",
+        "symfony/console": "^6.0",
+        "symfony/http-client": "^6.0",
+        "symfony/string": "^6.0",
+        "twig/twig": "^3.3",
+        "twig/string-extra": "^3.6"
     },
     "require-dev": {
-        "gajus/dindent": "^2.0",
-        "symfony/phpunit-bridge": "^5.2 || ^6.0 || ^7.0",
-        "symfony/process": "^5.2 || ^6.0 || ^7.0",
-        "masterminds/html5": "^2.7"
+        "league/flysystem-memory": "^3.0",
+        "symfony/phpunit-bridge": "^7.4@dev",
+        "symfony/process": "^6.0",
+        "symfony/var-dumper": "^6.2"
     },
-    "bin": ["bin/docs-builder"]
+    "scripts": {
+        "test": "SYMFONY_PHPUNIT_VERSION=12 simple-phpunit",
+        "psalm": [
+            "composer update --no-scripts --working-dir=tools/psalm",
+            "./tools/psalm/vendor/bin/psalm"
+        ],
+        "cs": [
+            "composer update --no-scripts --working-dir=tools/php-cs-fixer",
+            "./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix"
+        ]
+    }
 }

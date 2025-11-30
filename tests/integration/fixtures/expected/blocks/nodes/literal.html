@@ -1,0 +1,22 @@
+<p>here is some php code from literal:</p>
+<div translate="no" data-loc="7" class="notranslate codeblock codeblock-length-sm codeblock-php">
+    <div class="codeblock-scroll">
+        <pre class="codeblock-lines">1
+2
+3
+4
+5
+6
+7</pre>
+        <pre class="codeblock-code"><code><span class="hljs-comment">// config/routes.php</span>
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">Symfony</span>\<span class="hljs-title">Component</span>\<span class="hljs-title">Routing</span>\<span class="hljs-title">Loader</span>\<span class="hljs-title">Configurator</span>;
+
+<span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(RoutingConfigurator <span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>routes</span>)</span> </span>{
+    <span class="hljs-variable"><span class="hljs-variable-other-marker">$</span>routes</span><span class="hljs-operator">-&gt;</span>add(<span class="hljs-string">'about_us'</span>, [<span class="hljs-string">'nl'</span> =&gt; <span class="hljs-string">'/over-ons'</span>, <span class="hljs-string">'en'</span> =&gt; <span class="hljs-string">'/about-us'</span>])
+        <span class="hljs-operator">-&gt;</span>controller(<span class="hljs-string">'App\Controller\CompanyController::about'</span>);
+};</code></pre>
+    </div>
+</div>
+<p>The CRUD controller of <code translate="no" class="notranslate">App\Entity\Example</code> must implement
+the <code translate="no" class="notranslate">EasyCorp<wbr>\Bundle<wbr>\EasyAdminBundle<wbr>\Contracts<wbr>\Controller<wbr>\CrudControllerInterface</code>,
+but you can also extend from the <code translate="no" class="notranslate">AbstractCrudController</code> class.</p>
