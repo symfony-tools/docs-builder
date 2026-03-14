@@ -50,6 +50,7 @@ final class SymfonyExtension extends Extension implements PrependExtensionInterf
             'languages' => [
                 'php' => \dirname(__DIR__, 2).'/resources/highlight.php/php.json',
                 'twig' => \dirname(__DIR__, 2).'/resources/highlight.php/twig.json',
+                'yaml' => \dirname(__DIR__, 2).'/resources/highlight.php/yaml.json',
             ],
             'aliases' => [
                 'caddy' => 'plaintext',

@@ -29,7 +29,11 @@ final class MethodRole implements TextRole
     #[\Override]
     public function processNode(DocumentParserContext $documentParserContext, string $role, string $content, string $rawContent): InlineNodeInterface
     {
-        [$fqcn, $method] = u($content)->replace('\\\\', '\\')->split('::', 2);
+        $content = u($content);
+        if (!$content->containsAny('::')) {
+            throw new \RuntimeException(sprintf('Malformed method reference "%s"', $content));
+        }
+        [$fqcn, $method] = $content->replace('\\\\', '\\')->split('::', 2);
 
         $filename = \sprintf('%s.php#:~:text=%s', $fqcn->replace('\\', '/'), rawurlencode('function '.$method));
         $url = \sprintf($this->buildConfig->getSymfonyRepositoryUrl(), $filename);
