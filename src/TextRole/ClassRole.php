@@ -31,7 +31,36 @@ final class ClassRole implements TextRole
     {
         $fqcn = u($content)->replace('\\\\', '\\');
 
-        $url = \sprintf($this->buildConfig->getSymfonyRepositoryUrl(), $fqcn->replace('\\', '/').'.php');
+        if (str_starts_with($fqcn, 'Symfony\\AI\\')) {
+            /**
+             * Symfony AI classes require some special handling because of its monorepo structure. Example:
+             *
+             *     input: Symfony\AI\Agent\Memory\StaticMemoryProvider
+             *     output: https://github.com/symfony/ai/blob/main/src/agent/src/Memory/StaticMemoryProvider.php
+             */
+            $classPath = $fqcn->after('Symfony\\AI\\');
+            [$monorepoSubRepository, $classRelativePath] = $classPath->split('\\', 2);
+            // because of monorepo structure, the first part of the classpath needs to be slugged
+            // 'Agent' -> 'agent', 'AiBundle' -> 'ai-bundle', etc.
+            $monorepoSubRepository = $monorepoSubRepository->snake('-')->lower();
+            $classRelativePath = $classRelativePath->replace('\\', '/');
+
+            $url = \sprintf('https://github.com/symfony/ai/blob/main/src/%s/src/%s.php', $monorepoSubRepository, $classRelativePath);
+        } elseif (str_starts_with($fqcn, 'Symfony\\UX\\')) {
+            /**
+             * Symfony UX classes require some special handling because of its monorepo structure. Example:
+             *
+             *     input: Symfony\UX\Chartjs\Twig\ChartExtension
+             *     output: https://github.com/symfony/ux/blob/2.x/src/Chartjs/src/Twig/ChartExtension.php
+             */
+            $classPath = $fqcn->after('Symfony\\UX\\');
+            [$monorepoSubRepository, $classRelativePath] = $classPath->split('\\', 2);
+            $classRelativePath = $classRelativePath->replace('\\', '/');
+
+            $url = \sprintf('https://github.com/symfony/ux/blob/2.x/src/%s/src/%s.php', $monorepoSubRepository, $classRelativePath);
+        } else {
+            $url = \sprintf($this->buildConfig->getSymfonyRepositoryUrl(), $fqcn->replace('\\', '/').'.php');
+        }
 
         return new ExternalLinkNode($url, (string) $fqcn->afterLast('\\'), (string) $fqcn);
     }
