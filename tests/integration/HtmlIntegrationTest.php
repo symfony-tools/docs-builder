@@ -1,6 +1,6 @@
 <?php
 
-namespace SymfonyTools\GuidesExtension\Tests;
+namespace SymfonyTools\DocsBuilder\GuidesExtension\Tests;
 
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use Monolog\Handler\TestHandler;
@@ -8,10 +8,10 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use SymfonyTools\GuidesExtension\Build\DynamicBuildEnvironment;
-use SymfonyTools\GuidesExtension\DocBuilder;
-use SymfonyTools\GuidesExtension\DocsKernel;
-use SymfonyTools\GuidesExtension\Test\HtmlAsserter;
+use SymfonyTools\DocsBuilder\GuidesExtension\Build\DynamicBuildEnvironment;
+use SymfonyTools\DocsBuilder\GuidesExtension\DocBuilder;
+use SymfonyTools\DocsBuilder\GuidesExtension\DocsKernel;
+use SymfonyTools\DocsBuilder\GuidesExtension\Test\HtmlAsserter;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Finder\Finder;
 use phpDocumentor\Guides\DependencyInjection\TestExtension;
