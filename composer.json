@@ -5,12 +5,14 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "SymfonyTools\\DocsBuilder\\": "src"
+            "SymfonyTools\\DocsBuilder\\GuidesExtension\\": "src/GuidesExtension/src",
+            "SymfonyDocsBuilder\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "SymfonyTools\\DocsBuilder\\Tests\\": "tests"
+            "SymfonyTools\\DocsBuilder\\Tests\\": "tests",
+            "SymfonyDocsBuilder\\Tests\\": "tests"
         }
     },
     "require": {
