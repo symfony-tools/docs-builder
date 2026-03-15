@@ -11,19 +11,39 @@
 
 namespace SymfonyTools\DocsBuilder\GuidesExtension\Twig;
 
+use SymfonyTools\DocsBuilder\GuidesExtension\Build\BuildConfig;
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 use Twig\TwigTest;
 
 use function Symfony\Component\String\u;
 
 final class UrlExtension extends AbstractExtension
 {
+    public function __construct(
+        private BuildConfig $buildConfig,
+    )
+    {}
+
     #[\Override]
     public function getTests(): array
     {
         return [
             new TwigTest('safe_url', $this->isSafeUrl(...)),
         ];
+    }
+
+    #[\Override]
+    public function getFilters(): array
+    {
+        return [
+            new TwigFilter('replace_version', $this->replaceSymfonyVersion(...)),
+        ];
+    }
+
+    private function replaceSymfonyVersion(string $url): string
+    {
+        return u($url)->replace('{version}', $this->buildConfig->getSymfonyVersion())->toString();;
     }
 
     /*
