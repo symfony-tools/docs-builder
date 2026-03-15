@@ -3,7 +3,7 @@
        class: (node.classes ? node.classes|join(' ') ~ ' ') ~ 'reference ' ~ (node.url is safe_url ? 'internal' : 'external')
    }|filter(v => v != '')
 -%}
-<a href="{{ node.url }}"
+<a href="{{ node.url | replace_version }}"
     {%- for name, value in attributes %} {{ name }}="{{ value }}"{% endfor -%}
     {%- if node.url is not safe_url %} rel="external noopener noreferrer" target="_blank"{% endif -%}
 >
