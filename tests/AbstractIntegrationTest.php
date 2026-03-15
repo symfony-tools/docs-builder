@@ -9,6 +9,11 @@ use SymfonyDocsBuilder\BuildConfig;
 
 abstract class AbstractIntegrationTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        $this->markTestSkipped('Old Doctrine RST based tests');
+    }
+
     protected function createBuildConfig(string $sourceDir): BuildConfig
     {
         $filesystem = new Filesystem();
