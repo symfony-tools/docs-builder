@@ -95,7 +95,7 @@ class HtmlIntegrationTest extends TestCase
 
     public static function provideProjects(): iterable
     {
-        foreach ((new Finder())->directories()->in(__DIR__.'/fixtures/source')->depth(0) as $dir) {
+        foreach ((new Finder())->directories()->in(__DIR__.'/fixtures/source')->exclude(['build-pdf', 'json'])->depth(0) as $dir) {
             if ('blocks' === $dir->getBasename()) {
                 continue;
             }
