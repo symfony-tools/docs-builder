@@ -17,6 +17,8 @@ use phpDocumentor\Guides\RestructuredText\TextRoles\TextRole;
 use SymfonyTools\DocsBuilder\GuidesExtension\Build\BuildConfig;
 use SymfonyTools\DocsBuilder\GuidesExtension\Node\ExternalLinkNode;
 
+use function Symfony\Component\String\u;
+
 final class PhpClassRole implements TextRole
 {
     public function __construct(
@@ -27,9 +29,10 @@ final class PhpClassRole implements TextRole
     #[\Override]
     public function processNode(DocumentParserContext $documentParserContext, string $role, string $content, string $rawContent): InlineNodeInterface
     {
-        $url = 'https://php.net/class.'.strtolower($content);
+        $fqcn = u($content);
+        $url = 'https://php.net/class.'.$fqcn->lower()->replace('\\', '-');
 
-        return new ExternalLinkNode($url, $content, $content);
+        return new ExternalLinkNode($url, $fqcn->afterLast('\\'), $content);
     }
 
     #[\Override]
