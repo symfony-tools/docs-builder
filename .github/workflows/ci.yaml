@@ -51,8 +51,8 @@ jobs:
                   tools: composer:v2
                   ini-values: date.timezone=UTC
 
-            -   name: Install Composer Dependencies
-                run: composer install --no-progress
+            - name: Install Composer Dependencies
+              run: composer install --no-progress
 
-            -   name: PHPUnit
-                run: vendor/bin/simple-phpunit
+            - name: PHPUnit
+              run: composer test
