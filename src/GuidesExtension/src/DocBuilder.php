@@ -15,9 +15,9 @@ use League\Tactician\CommandBus;
 use phpDocumentor\Guides\Compiler\CompilerContext;
 use phpDocumentor\Guides\Handlers\CompileDocumentsCommand;
 use phpDocumentor\Guides\Handlers\ParseDirectoryCommand;
-use phpDocumentor\Guides\Handlers\RenderDocumentCommand;
+use phpDocumentor\Guides\Handlers\RenderCommand;
 use phpDocumentor\Guides\Nodes\DocumentNode;
-use phpDocumentor\Guides\RenderContext;
+use phpDocumentor\Guides\Renderer\TypeRendererFactory;
 use phpDocumentor\Guides\Twig\Theme\ThemeManager;
 use SymfonyTools\DocsBuilder\GuidesExtension\Build\BuildConfig;
 use SymfonyTools\DocsBuilder\GuidesExtension\Build\BuildEnvironment;
@@ -27,6 +27,7 @@ final class DocBuilder
 {
     public function __construct(
         private CommandBus $commandBus,
+        private TypeRendererFactory $rendererFactory,
         private ThemeManager $themeManager,
         private BuildConfig $buildConfig,
     ) {
@@ -42,21 +43,16 @@ final class DocBuilder
         $documents = $this->commandBus->handle(new ParseDirectoryCommand($buildEnvironment->getSourceFilesystem(), '/', 'rst', $projectNode));
 
         $documents = $this->commandBus->handle(new CompileDocumentsCommand($documents, new CompilerContext($projectNode)));
-
-        foreach ($documents as $document) {
-            $this->commandBus->handle(new RenderDocumentCommand(
-                $document,
-                RenderContext::forDocument(
-                    $document,
-                    $documents,
-                    $buildEnvironment->getSourceFilesystem(),
-                    $buildEnvironment->getOutputFilesystem(),
-                    '/',
-                    'html',
-                    $projectNode
-                )
-            ));
-        }
+        
+        $this->rendererFactory->getRenderSet($this->buildConfig->outputFormat)->render(
+            new RenderCommand(
+                $this->buildConfig->format,
+                $documents,
+                $buildEnvironment->getSourceFilesystem(),
+                $buildEnvironment->getOutputFilesystem(),
+                $projectNode
+            )
+        );
     }
 
     public function buildString(string $contents): string
