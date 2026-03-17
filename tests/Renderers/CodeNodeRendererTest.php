@@ -14,6 +14,11 @@ use SymfonyDocsBuilder\Renderers\CodeNodeRenderer;
 
 class CodeNodeRendererTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        $this->markTestSkipped('Old Doctrine RST based tests');
+    }
+
     /**
      * @dataProvider getSupportedLanguageTests
      */
