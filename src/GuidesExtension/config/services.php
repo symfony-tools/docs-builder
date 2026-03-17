@@ -14,7 +14,6 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use SymfonyTools\DocsBuilder\GuidesExtension\Build\BuildConfig;
 use SymfonyTools\DocsBuilder\GuidesExtension\DocBuilder;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 return static function (ContainerConfigurator $container) {
@@ -23,7 +22,7 @@ return static function (ContainerConfigurator $container) {
 
         ->set(EventDispatcherInterface::class, EventDispatcher::class)
 
-        ->set(BuildConfig::class)
+        ->set(BuildConfig::class)->public()
 
         ->set(DocBuilder::class)->public()
     ;

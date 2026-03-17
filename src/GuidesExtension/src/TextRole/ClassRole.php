@@ -59,7 +59,7 @@ final class ClassRole implements TextRole
 
             $url = \sprintf('https://github.com/symfony/ux/blob/2.x/src/%s/src/%s.php', $monorepoSubRepository, $classRelativePath);
         } else {
-            $url = \sprintf($this->buildConfig->getSymfonyRepositoryUrl(), $fqcn->replace('\\', '/').'.php');
+            $url = \sprintf($this->buildConfig->symfonyRepositoryUrl, $fqcn->replace('\\', '/').'.php');
         }
 
         return new ExternalLinkNode($url, (string) $fqcn->afterLast('\\'), (string) $fqcn);

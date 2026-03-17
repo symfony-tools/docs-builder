@@ -17,6 +17,7 @@ use SymfonyTools\DocsBuilder\GuidesExtension\NodeRenderer\MenuEntryRenderer;
 use SymfonyTools\DocsBuilder\GuidesExtension\Node\ExternalLinkNode;
 use SymfonyTools\DocsBuilder\GuidesExtension\Twig\CodeExtension;
 use SymfonyTools\DocsBuilder\GuidesExtension\Twig\UrlExtension;
+use SymfonyTools\DocsBuilder\GuidesExtension\Renderer\JsonRenderer;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extra\String\StringExtension;
 use phpDocumentor\Guides\Code\Highlighter\Highlighter;
@@ -42,5 +43,9 @@ return static function (ContainerConfigurator $container) {
 
         ->set(SymfonyHighlighter::class)
             ->decorate(Highlighter::class)
+
+        ->set(JsonRenderer::class)
+            ->arg('$nodeRendererFactory', service('phpdoc.guides.noderenderer.factory.json'))
+            ->tag('phpdoc.renderer.typerenderer', ['format' => 'json', 'noderender_tag' => 'phpdoc.guides.noderenderer.html'])
     ;
 };

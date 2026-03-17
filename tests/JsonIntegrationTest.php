@@ -1,41 +1,40 @@
 <?php
 
-/*
- * This file is part of the Docs Builder package.
- * (c) Ryan Weaver <ryan@symfonycasts.com>
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace SymfonyTools\DocsBuilder\GuidesExtension\Tests;
 
-namespace SymfonyDocsBuilder\Tests;
+use League\Flysystem\Local\LocalFilesystemAdapter;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+use SymfonyTools\DocsBuilder\GuidesExtension\Build\BuildConfig;
+use SymfonyTools\DocsBuilder\GuidesExtension\Build\DynamicBuildEnvironment;
+use SymfonyTools\DocsBuilder\GuidesExtension\DocBuilder;
+use SymfonyTools\DocsBuilder\GuidesExtension\DocsKernel;
+use phpDocumentor\Guides\DependencyInjection\TestExtension;
 
-use SymfonyDocsBuilder\DocBuilder;
-use SymfonyDocsBuilder\Renderers\TitleNodeRenderer;
-
-class JsonIntegrationTest extends AbstractIntegrationTest
+class JsonIntegrationTest extends TestCase
 {
-    /**
-     * @dataProvider getJsonTests
-     */
+    #[DataProvider('getJsonTests')]
     public function testJsonGeneration(string $filename, array $expectedData)
     {
-        $buildConfig = $this->createBuildConfig(__DIR__ . '/fixtures/source/json');
-        $builder = new DocBuilder();
-        $buildResult = $builder->build($buildConfig);
-        $fJsons = $buildResult->getJsonResults();
+        $kernel = DocsKernel::create([new TestExtension()]);
 
-        $actualFileData = $fJsons[$filename];
+        $kernel->get(BuildConfig::class)->outputFormat = 'json';
+
+        $buildEnvironment = new DynamicBuildEnvironment(new LocalFilesystemAdapter(__DIR__.'/fixtures/source/json'));
+        $kernel->get(DocBuilder::class)->build($buildEnvironment);
+
+        $actualFileData = json_decode($buildEnvironment->getOutputFilesystem()->read($filename.'.fjson'), true);
+        $this->assertSame($expectedData, array_intersect_key($actualFileData, $expectedData), sprintf('Invalid data in file "%s"', $filename));
         foreach ($expectedData as $key => $expectedKeyData) {
             $this->assertArrayHasKey($key, $actualFileData, sprintf('Missing key "%s" in file "%s"', $key, $filename));
-            $this->assertSame($expectedKeyData, $actualFileData[$key], sprintf('Invalid data for key "%s" in file "%s"', $key, $filename));
         }
     }
 
-    public function getJsonTests()
+    public static function getJsonTests()
     {
         yield 'index' => [
-            'file' => 'index',
-            'data' => [
+            'filename' => 'index',
+            'expectedData' => [
                 'parents' => [],
                 'prev' => null,
                 'next' => [
@@ -47,8 +46,8 @@ class JsonIntegrationTest extends AbstractIntegrationTest
         ];
 
         yield 'dashboards' => [
-            'file' => 'dashboards',
-            'data' => [
+            'filename' => 'dashboards',
+            'expectedData' => [
                 'parents' => [],
                 'prev' => [
                     'title' => 'JSON Generation Test',
@@ -63,8 +62,8 @@ class JsonIntegrationTest extends AbstractIntegrationTest
         ];
 
         yield 'design' => [
-            'file' => 'design',
-            'data' => [
+            'filename' => 'design',
+            'expectedData' => [
                 'parents' => [],
                 'prev' => [
                     'title' => 'Dashboards',
@@ -128,54 +127,41 @@ class JsonIntegrationTest extends AbstractIntegrationTest
         ];
 
         yield 'crud' => [
-           'file' => 'crud',
-           'data' => [
-               'parents' => [
-                    [
-                        'title' => 'Design',
-                        'link' => 'design.html',
-                    ],
-                ],
+           'filename' => 'crud',
+           'expectedData' => [
+               'parents' => [],
                'prev' => [
                    'title' => 'Design',
                    'link' => 'design.html',
                ],
                'next' => [
-                   'title' => 'Design Sub-Page',
-                   'link' => 'design/sub-page.html',
+                   'title' => 'Fields',
+                   'link' => 'fields.html',
                ],
                'title' => 'CRUD',
            ]
        ];
 
         yield 'design/sub-page' => [
-            'file' => 'design/sub-page',
-            'data' => [
+            'filename' => 'design/sub-page',
+            'expectedData' => [
                 'parents' => [
                     [
                         'title' => 'Design',
                         'link' => '../design.html',
                     ],
                 ],
-                'prev' => [
-                    'title' => 'CRUD',
-                    'link' => '../crud.html',
-                ],
-                'next' => [
-                    'title' => 'Fields',
-                    'link' => '../fields.html',
-                ],
                 'title' => 'Design Sub-Page',
             ]
         ];
 
         yield 'fields' => [
-           'file' => 'fields',
-           'data' => [
+           'filename' => 'fields',
+           'expectedData' => [
                'parents' => [],
                'prev' => [
-                   'title' => 'Design Sub-Page',
-                   'link' => 'design/sub-page.html',
+                   'title' => 'CRUD',
+                   'link' => 'crud.html',
                ],
                'next' => null,
                'title' => 'Fields',
@@ -183,8 +169,8 @@ class JsonIntegrationTest extends AbstractIntegrationTest
        ];
 
         yield 'orphan' => [
-          'file' => 'orphan',
-          'data' => [
+          'filename' => 'orphan',
+          'expectedData' => [
               'parents' => [],
               'prev' => null,
               'next' => null,

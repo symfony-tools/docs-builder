@@ -31,7 +31,7 @@ final class NamespaceRole implements TextRole
     {
         $fqcn = u($content)->replace('\\\\', '\\');
 
-        $url = \sprintf($this->buildConfig->getSymfonyRepositoryUrl(), $fqcn->replace('\\', '/'));
+        $url = \sprintf($this->buildConfig->symfonyRepositoryUrl, $fqcn->replace('\\', '/'));
 
         return new ExternalLinkNode($url, (string) $fqcn->afterLast('\\'), (string) $fqcn);
     }

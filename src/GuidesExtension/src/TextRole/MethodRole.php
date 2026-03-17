@@ -36,7 +36,7 @@ final class MethodRole implements TextRole
         [$fqcn, $method] = $content->replace('\\\\', '\\')->split('::', 2);
 
         $filename = \sprintf('%s.php#:~:text=%s', $fqcn->replace('\\', '/'), rawurlencode('function '.$method));
-        $url = \sprintf($this->buildConfig->getSymfonyRepositoryUrl(), $filename);
+        $url = \sprintf($this->buildConfig->symfonyRepositoryUrl, $filename);
 
         return new ExternalLinkNode($url, $method.'()', $fqcn.'::'.$method.'()');
     }

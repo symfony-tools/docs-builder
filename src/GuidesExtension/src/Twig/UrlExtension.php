@@ -43,7 +43,7 @@ final class UrlExtension extends AbstractExtension
 
     private function replaceSymfonyVersion(string $url): string
     {
-        return u($url)->replace('{version}', $this->buildConfig->getSymfonyVersion())->toString();;
+        return u($url)->replace('{version}', $this->buildConfig->symfonyVersion)->toString();;
     }
 
     /*
