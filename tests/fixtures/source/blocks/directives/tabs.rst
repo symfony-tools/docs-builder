@@ -1,4 +1,3 @@
-
 .. tabs:: UX Installation
 
     .. tab:: Webpack Encore
