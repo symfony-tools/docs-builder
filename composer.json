@@ -39,12 +39,12 @@
     },
     "require-dev": {
         "league/flysystem-memory": "^3.0",
-        "symfony/phpunit-bridge": "^8.0",
         "symfony/process": "^8.0",
-        "symfony/var-dumper": "^8.0"
+        "symfony/var-dumper": "^8.0",
+        "phpunit/phpunit": "^12"
     },
     "scripts": {
-        "test": "SYMFONY_PHPUNIT_VERSION=12 simple-phpunit",
+        "test": "phpunit",
         "psalm": [
             "composer update --no-scripts --working-dir=tools/psalm",
             "./tools/psalm/vendor/bin/psalm"
