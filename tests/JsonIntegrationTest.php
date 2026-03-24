@@ -18,7 +18,7 @@ class JsonIntegrationTest extends TestCase
     {
         $kernel = DocsKernel::create([new TestExtension()]);
 
-        $kernel->get(BuildConfig::class)->outputFormat = 'json';
+        $kernel->get(BuildConfig::class)->outputFormat = 'fjson';
 
         $buildEnvironment = new DynamicBuildEnvironment(new LocalFilesystemAdapter(__DIR__.'/fixtures/source/json'));
         $kernel->get(DocBuilder::class)->build($buildEnvironment);
@@ -42,6 +42,7 @@ class JsonIntegrationTest extends TestCase
                     'link' => 'dashboards.html',
                 ],
                 'title' => 'JSON Generation Test',
+                'current_page_name' => 'index',
             ]
         ];
 
@@ -58,6 +59,7 @@ class JsonIntegrationTest extends TestCase
                     'link' => 'design.html',
                 ],
                 'title' => 'Dashboards',
+                'current_page_name' => 'dashboards',
             ]
         ];
 
@@ -74,6 +76,7 @@ class JsonIntegrationTest extends TestCase
                     'link' => 'crud.html',
                 ],
                 'title' => 'Design',
+                'current_page_name' => 'design',
                 'toc_options' => [
                     'maxDepth' => 2,
                     'numVisibleItems' => 5,
@@ -129,16 +132,17 @@ class JsonIntegrationTest extends TestCase
         yield 'crud' => [
            'filename' => 'crud',
            'expectedData' => [
-               'parents' => [],
-               'prev' => [
-                   'title' => 'Design',
-                   'link' => 'design.html',
-               ],
-               'next' => [
-                   'title' => 'Fields',
-                   'link' => 'fields.html',
-               ],
-               'title' => 'CRUD',
+                'parents' => [],
+                'prev' => [
+                    'title' => 'Design',
+                    'link' => 'design.html',
+                ],
+                'next' => [
+                    'title' => 'Fields',
+                    'link' => 'fields.html',
+                ],
+                'title' => 'CRUD',
+                'current_page_name' => 'crud',
            ]
        ];
 
@@ -152,6 +156,7 @@ class JsonIntegrationTest extends TestCase
                     ],
                 ],
                 'title' => 'Design Sub-Page',
+                'current_page_name' => 'sub-page',
             ]
         ];
 
@@ -165,17 +170,19 @@ class JsonIntegrationTest extends TestCase
                ],
                'next' => null,
                'title' => 'Fields',
+                'current_page_name' => 'fields',
            ]
        ];
 
         yield 'orphan' => [
-          'filename' => 'orphan',
-          'expectedData' => [
-              'parents' => [],
-              'prev' => null,
-              'next' => null,
-              'title' => 'Orphan',
-          ]
+            'filename' => 'orphan',
+            'expectedData' => [
+                'parents' => [],
+                'prev' => null,
+                'next' => null,
+                'title' => 'Orphan',
+                'current_page_name' => 'orphan',
+            ]
       ];
     }
 }

@@ -54,9 +54,16 @@ final class JsonRenderer implements TypeRenderer
                 $context->getDestinationPath().'/'.$context->getCurrentFileName().'.fjson',
                 json_encode([
                     'parents' => [],
+                    'toc' => [],
+                    'toc_options' => [
+                        'maxDepth' => 2,
+                        'numVisibleItems' => 0,
+                        'size' => 'sm',
+                    ],
                     'prev' => $this->getDocumentData($context, $prevDocument),
                     'next' => $this->getDocumentData($context, $nextDocument),
                     'title' => $documentNode->getTitle()?->toString() ?? '',
+                    'current_page_name' => $context->getCurrentFileName(),
                     'body' => $html,
                 ], \JSON_PRETTY_PRINT)
             );
