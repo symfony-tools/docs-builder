@@ -45,7 +45,7 @@ return static function (ContainerConfigurator $container) {
             ->decorate(Highlighter::class)
 
         ->set(JsonRenderer::class)
-            ->arg('$nodeRendererFactory', service('phpdoc.guides.noderenderer.factory.json'))
-            ->tag('phpdoc.renderer.typerenderer', ['format' => 'json', 'noderender_tag' => 'phpdoc.guides.noderenderer.html'])
+            ->arg('$nodeRendererFactory', service('phpdoc.guides.noderenderer.factory.fjson'))
+            ->tag('phpdoc.renderer.typerenderer', ['format' => 'fjson', 'noderender_tag' => 'phpdoc.guides.noderenderer.html'])
     ;
 };
