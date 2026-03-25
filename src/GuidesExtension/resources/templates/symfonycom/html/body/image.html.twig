@@ -1,0 +1,5 @@
+{% set wrap_image_with_browser = 'with-browser' in node.classes %}
+{% set src = node.value is external_target ? node.value : asset(node.value) %}
+{% if wrap_image_with_browser %}<div class="with-browser">{% endif %}
+<img src="{{ src }}" {% for name, val in node.options %}{% if val %}{{ name }}="{{ val }}"{% endif %}{% endfor %} {% if node.classesString %}class="{{ node.classesString }}"{% endif %} />
+{% if wrap_image_with_browser %}</div>{% endif %}

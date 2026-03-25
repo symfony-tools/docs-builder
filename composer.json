@@ -5,33 +5,53 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
+            "SymfonyTools\\DocsBuilder\\GuidesExtension\\": "src/GuidesExtension/src",
             "SymfonyDocsBuilder\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
+            "SymfonyTools\\DocsBuilder\\Tests\\": "tests",
             "SymfonyDocsBuilder\\Tests\\": "tests"
         }
     },
     "require": {
-        "php": ">=8.3",
+        "php": ">=8.4",
         "ext-json": "*",
         "ext-curl": "*",
-        "doctrine/rst-parser": "^0.5",
-        "scrivo/highlight.php": "^9.18.1",
-        "symfony/filesystem": "^5.2 || ^6.0 || ^7.0 || ^8.0",
-        "symfony/finder": "^5.2 || ^6.0 || ^7.0 || ^8.0",
-        "symfony/dom-crawler": "^5.2 || ^6.0 || ^7.0 || ^8.0",
-        "symfony/css-selector": "^5.2 || ^6.0 || ^7.0 || ^8.0",
-        "symfony/console": "^5.2 || ^6.0 || ^7.0 || ^8.0",
-        "symfony/http-client": "^5.2 || ^6.0 || ^7.0 || ^8.0",
-        "twig/twig": "^2.14 || ^3.3"
+        "phpdocumentor/guides": "^1.10@dev",
+        "phpdocumentor/guides-cli": "^1.9",
+        "phpdocumentor/guides-code": "^1.7",
+        "phpdocumentor/guides-restructured-text": "^1.10@dev",
+        "scrivo/highlight.php": "^9.12.0",
+        "symfony/config": "^8.0",
+        "symfony/filesystem": "^8.0",
+        "symfony/finder": "^8.0",
+        "symfony/event-dispatcher": "^8.0",
+        "symfony/dependency-injection": "^8.0",
+        "symfony/dom-crawler": "^8.0",
+        "symfony/css-selector": "^8.0",
+        "symfony/console": "^8.0",
+        "symfony/http-client": "^8.0",
+        "symfony/string": "^8.0",
+        "twig/twig": "^3.3",
+        "twig/string-extra": "^3.6"
     },
     "require-dev": {
-        "gajus/dindent": "^2.0",
-        "symfony/phpunit-bridge": "^5.2 || ^6.0 || ^7.0 || ^8.0",
-        "symfony/process": "^5.2 || ^6.0 || ^7.0 || ^8.0",
-        "masterminds/html5": "^2.7"
+        "league/flysystem-memory": "^3.0",
+        "symfony/process": "^8.0",
+        "symfony/var-dumper": "^8.0",
+        "phpunit/phpunit": "^12"
     },
-    "bin": ["bin/docs-builder"]
+    "scripts": {
+        "test": "phpunit",
+        "psalm": [
+            "composer update --no-scripts --working-dir=tools/psalm",
+            "./tools/psalm/vendor/bin/psalm"
+        ],
+        "cs": [
+            "composer update --no-scripts --working-dir=tools/php-cs-fixer",
+            "./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix"
+        ]
+    }
 }

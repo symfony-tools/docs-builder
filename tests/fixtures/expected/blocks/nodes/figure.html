@@ -1,23 +1,22 @@
 <figure>
-    <!-- REMOVE: src is empty just because the test doesn't utilize the full stack, with CopyImagesListener -->
-    <img src="" alt="Symfony Logo" width="200px" />
+    <img src="images/logo.png" width="200px" alt="Symfony Logo">
 </figure>
 <p>I am a paragraph AFTER the figure. I should not be included as the
 caption for the above figure.</p>
-
 <figure>
-    <img src="" />
+    <img src="images/logo.png">
 
-    <figcaption><p>But I am a caption <em>for</em> the figure above.</p></figcaption>
+    <figcaption>
+        <p>But I am a caption <em>for</em> the figure above.</p>
+    </figcaption>
 </figure>
 
 <p>Some images use a special CSS class to wrap a fake browser around them:</p>
-<div class="with-browser">
-    <img src="" alt="A typical exception page in the development environment" align="center" class="some-class with-browser another-class">
+<div class="with-browser"><img src="images/exceptions-in-dev-environment.png" alt="A typical exception page in the development environment" align="center" class="some-class with-browser another-class">
 </div>
 
 <p>And RST figures use a different syntax to define their custom CSS classes:</p>
 
 <figure class="with-browser foo">
-    <img src="" alt="/" align="center">
+    <img src="images/logo.png" alt="/" align="center">
 </figure>

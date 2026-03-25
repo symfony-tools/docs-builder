@@ -21,6 +21,11 @@ use SymfonyDocsBuilder\Command\BuildDocsCommand;
 
 class BuildDocsCommandTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        $this->markTestSkipped('Old Doctrine RST based tests');
+    }
+
     public function testBuildDocsDefault()
     {
         $buildConfig = $this->createBuildConfig();

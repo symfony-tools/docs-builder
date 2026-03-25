@@ -1,0 +1,12 @@
+{% macro link(url, text, attributes = {}) %}
+{% set attributes = attributes|merge({
+       class: (attributes.class|default ? attributes.class ~ ' ') ~ 'reference ' ~ (url is safe_url ? 'internal' : 'external')
+   })
+%}
+<a href="{{ url }}"
+    {%- for name, value in attributes %} {{ name }}="{{ value }}"{% endfor -%}
+    {%- if url is not safe_url %} rel="external noopener noreferrer" target="_blank"{% endif -%}
+>
+    {{- text|raw -}}
+</a>
+{% endmacro %}
