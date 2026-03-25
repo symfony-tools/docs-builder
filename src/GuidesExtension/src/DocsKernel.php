@@ -46,6 +46,7 @@ final class DocsKernel
 
         $containerFactory->loadExtensionConfig(GuidesExtension::class, [
             'default_code_language' => 'php',
+            'links_are_relative' => true,
         ]);
 
         $containerFactory->loadExtensionConfig(ReStructuredTextExtension::class, [
