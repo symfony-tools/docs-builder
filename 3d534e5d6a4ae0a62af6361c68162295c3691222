@@ -1,0 +1,68 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2026-03-23T11:49:02Z
+
+Wouter, thanks for fixing this.
+
+FYI, below I reproduce the analysis made by Claude Code:
+
+-----
+
+**Root Cause: Catastrophic Backtracking**
+
+The bug is caused by catastrophic backtracking in PCRE, triggered by the interaction between the `case_insensitive: true` flag in `php.json` and the nested quantifiers in the attribute regex.
+
+**The regex in question**
+
+Inside the meta mode (PHP attributes `#[...]`), there are two variants:
+
+1. Variant 1 (for attributes with parens): `\s*(\\?[A-Z][A-Za-z0-9_\x7f-\xff]+)+(?=\()`
+2. Variant 2 (for attributes without parens): `\s*(\\?[A-Z][A-Za-z0-9_\x7f-\xff]+)+(?!\()`
+
+These are combined into a single mega-regex alternation by the highlight engine.
+
+**Why case_insensitive: true is the catalyst**
+
+The `php.json` grammar has `case_insensitive: true`, which adds the `i` flag to ALL compiled regexes. This makes `[A-Z]` match both uppercase AND lowercase letters.
+
+**Without `i` flag**: The group `(\\?[A-Z][A-Za-z0-9_]+)+` can only start a new repetition at uppercase letters. For `AsNativeConfigurationProvider`, only positions `A(0)`, `N(2)`, `C(8)`, `P(21)` are valid split points → ~2^3 = 8 backtracking attempts.
+
+**With `i` flag**: `[A-Z]` matches any letter, so EVERY character position can start a new group repetition →  ~2^28 ≈ 268 million backtracking attempts.
+
+**The chain of failure**
+
+1. The mega-regex tries variant 1 first: `(\\?[A-Z]...)+(?=\()`. It greedily matches `AsNativeConfigurationProvider`, then the lookahead `(?=\()` fails (next char is `]`, not `(`).
+2. PCRE backtracks, trying every possible way to split the 29-character name among group repetitions.  With the `i` flag, this is exponential.
+3. For names ≥28 characters, this exceeds PHP's `pcre.backtrack_limit` (default `1,000,000`). `preg_match` returns `FALSE`.
+4. The highlight engine's `RegEx::exec()` sees an empty result and returns `null`. The `Terminators::exec()` returns `null`. The main highlight loop breaks out — but `$this->top` is still the meta mode!
+5. The cleanup code at the end of `highlight()` closes any open spans, producing `</span>` at the very end of the output — which is why the entire rest of the file gets swallowed into the meta span.
+
+**Why shorter names work**
+
+- `AsMessageHandler` (16 chars) → backtracking fits within the limit
+- `AsNativeConfiguration` (21 chars) → still fits
+- `AsNativeConfigurationProvider` (29 chars) → exceeds the limit
+
+The threshold is around 28 characters.
+
+**Why removing `(?=\()` fixes it**
+
+Without the lookahead, variant 1's greedy match succeeds immediately — there's nothing to fail and trigger backtracking. The contains sub-rule (`begin: "\\("`) then handles the optional parentheses: `if (` follows, it matches; if not, the meta mode's `]` end simply closes the attribute. No exponential  behavior at all.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-03-23T13:14:00Z
+
+Damn 😅 Thanks for the explanation!
+
+---------------------------------------------------------------------------
+
+by wouterj at 2026-03-23T13:20:50Z
+
+Oh that makes sense, then we would need another fix and can probably simplify the variants into 1.
+
+---------------------------------------------------------------------------
+
+by wouterj at 2026-03-23T22:21:59Z
+
+Now with a nicer fix :)
