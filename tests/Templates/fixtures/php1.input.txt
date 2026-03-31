@@ -1,0 +1,52 @@
+// src/Native/AppNativeConfiguration.php
+namespace App\Native;
+
+use Symfony\UX\Native\Attribute\AsNativeConfiguration;
+use Symfony\UX\Native\Attribute\AsNativeConfigurationProvider;
+use Symfony\UX\Native\Configuration\Configuration;
+use Symfony\UX\Native\Configuration\Rule;
+
+#[AsNativeConfigurationProvider]
+final class AppNativeConfiguration
+{
+    #[AsNativeConfiguration('/config/ios_v1.json')]
+    public function iosV1(): Configuration
+    {
+        return new Configuration(
+            settings: [
+                'use_local_db' => true,
+                'cable' => [
+                    'script_url' => 'https://example.com/cable.js',
+                ],
+            ],
+            rules: [
+                new Rule(
+                    patterns: ['.*'],
+                    properties: [
+                        'context' => 'default',
+                        'pull_to_refresh_enabled' => true,
+                    ],
+                ),
+            ],
+        );
+    }
+
+    #[AsNativeConfiguration('/config/android_v1.json')]
+    public function androidV1(): Configuration
+    {
+        return new Configuration(
+            settings: [
+                'use_local_db' => false,
+            ],
+            rules: [
+                new Rule(
+                    patterns: ['/articles/.*'],
+                    properties: [
+                        'context' => 'default',
+                        'pull_to_refresh_enabled' => false,
+                    ],
+                ),
+            ],
+        );
+    }
+}

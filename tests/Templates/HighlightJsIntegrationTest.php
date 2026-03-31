@@ -42,6 +42,12 @@ class HighlightJsIntegrationTest extends TestCase
             'php.output.html',
         ];
 
+        yield 'php1' => [
+            'php',
+            'php1.input.txt',
+            'php1.output.html',
+        ];
+
         yield 'twig' => [
             'twig',
             'twig.input.txt',
