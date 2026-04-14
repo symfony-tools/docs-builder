@@ -1,4 +1,4 @@
-<div translate="no" data-loc="9" class="notranslate codeblock codeblock-length-sm codeblock-twig">
+<div translate="no" data-loc="14" class="notranslate codeblock codeblock-length-md codeblock-twig">
     <div class="codeblock-scroll">
         <pre class="codeblock-lines">1
 2
@@ -8,22 +8,52 @@
 6
 7
 8
-9</pre>
+9
+10
+11
+12
+13
+14</pre>
         <pre class="codeblock-code">
             <code>
                 <span class="hljs-comment">{# some code #}</span>
                 <span class="xml"></span>
                 <span class="hljs-template-tag">
                     {%
-                        <span class="hljs-name"><span class="hljs-keyword">set</span></span> some_var = 'some value' <span class="hljs-comment"># some inline comment</span>
+                    <span class="hljs-name">
+                        <span class="hljs-keyword">set</span>
+                    </span>
+                    some_var =
+                    <span class="hljs-string">'some value'</span>
+                    <span class="hljs-comment"># some inline comment</span>
                     %}
                 </span>
                 <span class="xml"></span>
-                <span class="hljs-template-variable">{{
+                <span class="hljs-template-variable">
+                    {{
                     <span class="hljs-comment"># another inline comment</span>
-                    'Lorem Ipsum'|uppercase
+                    <span class="hljs-string">'Lorem Ipsum'</span>
+                    |uppercase
                     <span class="hljs-comment"># final inline comment</span>
-                }}</span>
+                    }}
+                </span>
+                <span class="xml"></span>
+                <span class="hljs-comment">{# Both data-action values will be concatenated #}</span>
+                <span class="xml"></span>
+                <span class="hljs-template-tag">
+                    {%-
+                    <span class="hljs-name">
+                        <span class="hljs-keyword">set</span>
+                    </span>
+                    dialog_attrs = {
+                    <span class="hljs-string">'data-action'</span>
+                    :
+                    <span class="hljs-string">'click-&gt;dialog#open'</span>
+                    |html_attr_type(
+                    <span class="hljs-string">'sst'</span>
+                    ),
+} -%}
+                </span>
             </code>
         </pre>
     </div>
