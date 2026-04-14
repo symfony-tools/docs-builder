@@ -1,0 +1,12 @@
+---------------------------------------------------------------------------
+
+by stof at 2026-04-14T11:22:42Z
+
+I don't think this is the right fix. `# ` could also appear inside a string literal.
+And Twig does not require inline comments to start with a space.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2026-04-14T12:58:13Z
+
+You are right. I've proposed a different implementation.
