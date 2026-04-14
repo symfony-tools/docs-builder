@@ -39,6 +39,22 @@
                         "endsWithParent": true,
                         "contains": [
                             {
+                                "className": "string",
+                                "begin": "'",
+                                "end": "'",
+                                "contains": [
+                                    { "begin": "\\\\." }
+                                ]
+                            },
+                            {
+                                "className": "string",
+                                "begin": "\"",
+                                "end": "\"",
+                                "contains": [
+                                    { "begin": "\\\\." }
+                                ]
+                            },
+                            {
                                 "$ref": "#contains.1.contains.0"
                             },
                             {
@@ -62,7 +78,7 @@
                                 ]
                             },
                             {
-                                "$ref": "#contains.1.contains.1.starts.contains.1.contains.0"
+                                "$ref": "#contains.1.contains.1.starts.contains.3.contains.0"
                             }
                         ],
                         "relevance": 0
@@ -77,13 +93,19 @@
             "contains": [
                 "self",
                 {
-                    "$ref": "#contains.1.contains.0"
+                    "$ref": "#contains.1.contains.1.starts.contains.0"
                 },
                 {
                     "$ref": "#contains.1.contains.1.starts.contains.1"
                 },
                 {
-                    "$ref": "#contains.1.contains.1.starts.contains.1.contains.0"
+                    "$ref": "#contains.1.contains.0"
+                },
+                {
+                    "$ref": "#contains.1.contains.1.starts.contains.3"
+                },
+                {
+                    "$ref": "#contains.1.contains.1.starts.contains.3.contains.0"
                 }
             ]
         }
