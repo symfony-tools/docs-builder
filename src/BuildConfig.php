@@ -18,10 +18,14 @@ class BuildConfig
     private const PHP_DOC_URL = 'https://secure.php.net/manual/en';
     private const SYMFONY_REPOSITORY_URL = 'https://github.com/symfony/symfony/blob/{symfonyVersion}/src';
     private const SYMFONY_DOC_URL = 'https://symfony.com/doc/{symfonyVersion}';
+    private const SYMFONY_AI_REPOSITORY_URL = 'https://github.com/symfony/ai/blob/{symfonyAiVersion}/src';
+    private const SYMFONY_UX_REPOSITORY_URL = 'https://github.com/symfony/ux/blob/{symfonyUxVersion}/src';
 
     private $useBuildCache;
     private $theme;
     private $symfonyVersion;
+    private $symfonyAiVersion;
+    private $symfonyUxVersion;
     private $contentDir;
     private $outputDir;
     private $cacheDir;
@@ -40,6 +44,8 @@ class BuildConfig
         $this->useBuildCache = true;
         $this->theme = Configuration::THEME_DEFAULT;
         $this->symfonyVersion = '4.4';
+        $this->symfonyAiVersion = 'main';
+        $this->symfonyUxVersion = '2.x';
         $this->excludedPaths = [];
         $this->imagesPublicPrefix = '';
         $this->contentIsString = false;
@@ -73,6 +79,16 @@ class BuildConfig
         return $this->symfonyVersion;
     }
 
+    public function getSymfonyAiVersion(): string
+    {
+        return $this->symfonyAiVersion;
+    }
+
+    public function getSymfonyUxVersion(): string
+    {
+        return $this->symfonyUxVersion;
+    }
+
     public function getPhpDocUrl(): string
     {
         return self::PHP_DOC_URL;
@@ -81,6 +97,16 @@ class BuildConfig
     public function getSymfonyRepositoryUrl(): string
     {
         return str_replace('{symfonyVersion}', $this->getSymfonyVersion(), self::SYMFONY_REPOSITORY_URL);
+    }
+
+    public function getSymfonyAiRepositoryUrl(): string
+    {
+        return str_replace('{symfonyAiVersion}', $this->getSymfonyAiVersion(), self::SYMFONY_AI_REPOSITORY_URL);
+    }
+
+    public function getSymfonyUxRepositoryUrl(): string
+    {
+        return str_replace('{symfonyUxVersion}', $this->getSymfonyUxVersion(), self::SYMFONY_UX_REPOSITORY_URL);
     }
 
     public function getSymfonyDocUrl(): string
@@ -147,6 +173,20 @@ class BuildConfig
     public function setSymfonyVersion(string $version): self
     {
         $this->symfonyVersion = $version;
+
+        return $this;
+    }
+
+    public function setSymfonyAiVersion(string $version): self
+    {
+        $this->symfonyAiVersion = $version;
+
+        return $this;
+    }
+
+    public function setSymfonyUxVersion(string $version): self
+    {
+        $this->symfonyUxVersion = $version;
 
         return $this;
     }
