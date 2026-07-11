@@ -19,10 +19,15 @@ class Application
     private $application;
     private $buildConfig;
 
-    public function __construct(string $symfonyVersion)
+    public function __construct(?string $symfonyVersion = null)
     {
         $this->application = new BaseApplication();
         $this->buildConfig = new BuildConfig();
+
+        // when no version is given, the default of BuildConfig is kept
+        if (null !== $symfonyVersion) {
+            $this->buildConfig->setSymfonyVersion($symfonyVersion);
+        }
     }
 
     public function run(InputInterface $input): int
@@ -32,7 +37,7 @@ class Application
             null,
             InputOption::VALUE_REQUIRED,
             'The symfony version of the doc to parse.',
-            false === getenv('SYMFONY_VERSION') ? 'master' : getenv('SYMFONY_VERSION')
+            $this->buildConfig->getSymfonyVersion()
         );
         $this->application->getDefinition()->addOption($inputOption);
 
