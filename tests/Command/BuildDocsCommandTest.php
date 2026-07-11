@@ -40,6 +40,11 @@ class BuildDocsCommandTest extends TestCase
 
         $this->assertStringContainsString('[OK] Build complete', $output);
 
+        // the "parsing" and "rendering" progress bars both know how many files they have to handle
+        $this->assertStringContainsString('Start parsing 3 out-of-date rst files', $output);
+        $this->assertStringContainsString('Rendering 3 HTML files', $output);
+        $this->assertStringContainsString('3/3', $output);
+
         $this->assertTrue($filesystem->exists(sprintf('%s/_images/symfony-logo.png', $outputDir)));
 
         $output = $this->executeCommand(
