@@ -17,10 +17,14 @@ use function Symfony\Component\String\u;
 class ClassReference extends Reference
 {
     private $symfonyRepositoryUrl;
+    private $symfonyAiRepositoryUrl;
+    private $symfonyUxRepositoryUrl;
 
-    public function __construct(string $symfonyRepositoryUrl)
+    public function __construct(string $symfonyRepositoryUrl, string $symfonyAiRepositoryUrl, string $symfonyUxRepositoryUrl)
     {
         $this->symfonyRepositoryUrl = $symfonyRepositoryUrl;
+        $this->symfonyAiRepositoryUrl = $symfonyAiRepositoryUrl;
+        $this->symfonyUxRepositoryUrl = $symfonyUxRepositoryUrl;
     }
 
     public function getName(): string
@@ -46,7 +50,7 @@ class ClassReference extends Reference
             $monorepoSubRepository = $monorepoSubRepository->kebab()->lower();
             $classRelativePath = $classRelativePath->replace('\\', '/');
 
-            $url = \sprintf('https://github.com/symfony/ai/blob/main/src/%s/src/%s.php', $monorepoSubRepository, $classRelativePath);
+            $url = \sprintf('%s/%s/src/%s.php', $this->symfonyAiRepositoryUrl, $monorepoSubRepository, $classRelativePath);
         /**
          * Symfony UX classes require some special handling because of its monorepo structure. Example:
          *
@@ -58,7 +62,7 @@ class ClassReference extends Reference
             [$monorepoSubRepository, $classRelativePath] = $classPath->split('\\', 2);
             $classRelativePath = $classRelativePath->replace('\\', '/');
 
-            $url = \sprintf('https://github.com/symfony/ux/blob/2.x/src/%s/src/%s.php', $monorepoSubRepository, $classRelativePath);
+            $url = \sprintf('%s/%s/src/%s.php', $this->symfonyUxRepositoryUrl, $monorepoSubRepository, $classRelativePath);
         } else {
             $url = sprintf('%s/%s.php', $this->symfonyRepositoryUrl, $className->replace('\\', '/'));
         }

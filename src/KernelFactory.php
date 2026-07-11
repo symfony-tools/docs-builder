@@ -102,7 +102,11 @@ final class KernelFactory
     private static function getReferences(BuildConfig $buildConfig): array
     {
         return [
-            new SymfonyReferences\ClassReference($buildConfig->getSymfonyRepositoryUrl()),
+            new SymfonyReferences\ClassReference(
+                $buildConfig->getSymfonyRepositoryUrl(),
+                $buildConfig->getSymfonyAiRepositoryUrl(),
+                $buildConfig->getSymfonyUxRepositoryUrl()
+            ),
             new SymfonyReferences\MethodReference($buildConfig->getSymfonyRepositoryUrl()),
             new SymfonyReferences\NamespaceReference($buildConfig->getSymfonyRepositoryUrl()),
             new SymfonyReferences\PhpFunctionReference($buildConfig->getPhpDocUrl()),

@@ -75,6 +75,10 @@ class IntegrationTest extends AbstractIntegrationTest
             'folder' => 'toctree',
         ];
 
+        yield 'toctree-maxdepth' => [
+            'folder' => 'toctree-maxdepth',
+        ];
+
         yield 'ref-reference' => [
             'folder' => 'ref-reference',
         ];
