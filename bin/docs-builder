@@ -17,10 +17,10 @@ use Symfony\Component\Console\Input\ArgvInput;
 use SymfonyDocsBuilder\Application;
 
 $input       = new ArgvInput();
-$version = $input->getParameterOption(['--symfony-version'], false === getenv('SYMFONY_VERSION') ? 'master' : getenv('SYMFONY_VERSION'));
+$version = $input->getParameterOption(['--symfony-version'], getenv('SYMFONY_VERSION') ?: null);
 
-if (!$version) {
-    throw new \Exception('Please pass a --symfony-version= flag or set a SYMFONY_VERSION environment variable to 4.0, master, etc.');
+if ('' === $version) {
+    throw new \Exception('The --symfony-version= flag and the SYMFONY_VERSION environment variable cannot be empty. Pass a version such as 6.4, 7.4, etc.');
 }
 
 $application = new Application($version);
