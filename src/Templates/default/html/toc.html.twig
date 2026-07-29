@@ -1,4 +1,4 @@
-{% set toc_options = toc_options(tocItems) %}
+{% set toc_options = toc_options(tocItems, tocNode.depth) %}
 <div class="toctree-wrapper toc-size-{{ toc_options.size }}">
     {% include "toc-level.html.twig" %}
 </div>

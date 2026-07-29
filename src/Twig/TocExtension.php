@@ -14,6 +14,11 @@ use Twig\TwigFunction;
 
 class TocExtension extends AbstractExtension
 {
+    /**
+     * Same default as Doctrine\RST\Nodes\TocNode::DEFAULT_DEPTH.
+     */
+    private const DEFAULT_MAX_DEPTH = 2;
+
     public function getFunctions(): array
     {
         return [
@@ -21,13 +26,15 @@ class TocExtension extends AbstractExtension
         ];
     }
 
-    public static function getOptions(array $toc): array
+    /**
+     * $maxDepth defaults to the same value as the 'maxdepth' option of the
+     * 'toctree' directive, which is what the TOC of a page is built upon.
+     *
+     * @see https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html
+     */
+    public static function getOptions(array $toc, int $maxDepth = self::DEFAULT_MAX_DEPTH): array
     {
         $flattendToc = self::flattenToc($toc);
-        // FIXME: this hardcoded '2' value should instead be obtained
-        // automatically using the 'maxdepth' option of 'toctree' directive.
-        // See https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html
-        $maxDepth = 2;
         $numVisibleItems = 0;
         foreach ($flattendToc as $tocItem) {
             if ($tocItem['level'] > $maxDepth) {
