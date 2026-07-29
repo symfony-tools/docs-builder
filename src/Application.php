@@ -35,7 +35,16 @@ class Application
             false === getenv('SYMFONY_VERSION') ? 'master' : getenv('SYMFONY_VERSION')
         );
         $this->application->getDefinition()->addOption($inputOption);
-        $this->application->add(new BuildDocsCommand($this->buildConfig));
+
+        $command = new BuildDocsCommand($this->buildConfig);
+
+        // Application::add() was deprecated in Symfony 7.4 and removed in 8.0,
+        // in favor of Application::addCommand(), introduced in 7.4
+        if (method_exists($this->application, 'addCommand')) {
+            $this->application->addCommand($command);
+        } else {
+            $this->application->add($command);
+        }
 
         return $this->application->run($input);
     }
