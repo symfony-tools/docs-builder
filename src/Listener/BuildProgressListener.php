@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace SymfonyDocsBuilder\Listener;
 
 use Doctrine\Common\EventManager;
+use Doctrine\RST\Event\PostBuildRenderEvent;
+use Doctrine\RST\Event\PostNodeRenderEvent;
 use Doctrine\RST\Event\PostParseDocumentEvent;
 use Doctrine\RST\Event\PreBuildParseEvent;
 use Doctrine\RST\Event\PreBuildRenderEvent;
@@ -23,6 +25,8 @@ class BuildProgressListener
     private $io;
     private $progressBar;
     private $parsedFiles = [];
+    private $renderProgressBar;
+    private $renderedFiles = [];
 
     public function __construct(SymfonyStyle $io)
     {
@@ -44,9 +48,21 @@ class BuildProgressListener
             $this
         );
 
-        // tries to handle progress bar for "rendering"
+        // sets up the "rendering" progress bar
         $eventManager->addEventListener(
             [PreBuildRenderEvent::PRE_BUILD_RENDER],
+            $this
+        );
+
+        // advances the "rendering" progress bar
+        $eventManager->addEventListener(
+            [PostNodeRenderEvent::POST_NODE_RENDER],
+            $this
+        );
+
+        // finishes the "rendering" progress bar
+        $eventManager->addEventListener(
+            [PostBuildRenderEvent::POST_BUILD_RENDER],
             $this
         );
     }
@@ -73,13 +89,53 @@ class BuildProgressListener
         }
     }
 
-    public function preBuildRender()
+    /**
+     * Called after parsing: finishes the "parse" progress bar and
+     * initializes the "rendering" one.
+     */
+    public function preBuildRender(PreBuildRenderEvent $event)
     {
         // finishes the "parse" progress bar
         $this->progressBar->finish();
 
         $this->io->newLine(2);
-        $this->io->note('Rendering the HTML files...');
-        // TODO: create a proper progress bar for rendering
+
+        $renderCount = \count($event->getBuilder()->getDocuments()->getAll());
+        $this->io->note(sprintf('Rendering %d HTML files', $renderCount));
+
+        $this->renderProgressBar = new ProgressBar($this->io);
+        $this->renderProgressBar->setMaxSteps($renderCount);
+    }
+
+    /**
+     * The parser doesn't dispatch any event per rendered document, so the
+     * progress is tracked by looking at the file each rendered node belongs to.
+     */
+    public function postNodeRender(PostNodeRenderEvent $event): void
+    {
+        // nodes are also rendered before the "rendering" phase starts
+        if (null === $this->renderProgressBar) {
+            return;
+        }
+
+        $environment = $event->getRenderedNode()->getNode()->getEnvironment();
+
+        if (null === $environment) {
+            return;
+        }
+
+        $file = $environment->getCurrentFileName();
+
+        if (!\in_array($file, $this->renderedFiles, true)) {
+            $this->renderedFiles[] = $file;
+            $this->renderProgressBar->advance();
+        }
+    }
+
+    public function postBuildRender()
+    {
+        $this->renderProgressBar->finish();
+
+        $this->io->newLine(2);
     }
 }
