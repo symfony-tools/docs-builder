@@ -21,11 +21,13 @@ final class DynamicBuildEnvironment implements BuildEnvironment
 {
     private FileSystem $sourceFilesystem;
     private FileSystem $outputFilesystem;
+    private ?FileSystem $assetsFilesystem;
 
-    public function __construct(?FilesystemAdapter $sourceAdapter = null, ?FilesystemAdapter $outputAdapter = null)
+    public function __construct(?FilesystemAdapter $sourceAdapter = null, ?FilesystemAdapter $outputAdapter = null, ?FilesystemAdapter $assetsAdapter = null)
     {
         $this->sourceFilesystem = new FlysystemV3(new LeagueFilesystem($sourceAdapter ?? new InMemoryFilesystemAdapter()));
         $this->outputFilesystem = new FlysystemV3(new LeagueFilesystem($outputAdapter ?? new InMemoryFilesystemAdapter()));
+        $this->assetsFilesystem = null !== $assetsAdapter ? new FlysystemV3(new LeagueFilesystem($assetsAdapter)) : null;
     }
 
     #[\Override]
@@ -38,5 +40,11 @@ final class DynamicBuildEnvironment implements BuildEnvironment
     public function getOutputFilesystem(): FileSystem
     {
         return $this->outputFilesystem;
+    }
+
+    #[\Override]
+    public function getAssetFilesystem(): ?FileSystem
+    {
+        return $this->assetsFilesystem;
     }
 }

@@ -29,6 +29,7 @@ final class BuildConfig
 
     public function __construct(
         public string $symfonyVersion = '6.1',
+        public string $assetsBaseUri = '/',
     ) {
     }
 

@@ -38,6 +38,12 @@ final class StringBuildEnvironment implements BuildEnvironment
         return $this->filesystem;
     }
 
+    #[\Override]
+    public function getAssetFilesystem(): ?FileSystem
+    {
+        return null;
+    }
+
     public function getOutput(): ?string
     {
         $output = $this->filesystem->read('/index.html');

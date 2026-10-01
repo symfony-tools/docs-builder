@@ -18,6 +18,7 @@ use SymfonyTools\DocsBuilder\GuidesExtension\Node\ExternalLinkNode;
 use SymfonyTools\DocsBuilder\GuidesExtension\Twig\CodeExtension;
 use SymfonyTools\DocsBuilder\GuidesExtension\Twig\UrlExtension;
 use SymfonyTools\DocsBuilder\GuidesExtension\Renderer\JsonRenderer;
+use SymfonyTools\DocsBuilder\GuidesExtension\UrlGenerator\PathPrefixUrlGenerator;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extra\String\StringExtension;
 use phpDocumentor\Guides\Code\Highlighter\Highlighter;
@@ -36,6 +37,10 @@ return static function (ContainerConfigurator $container) {
 
         ->set(CodeNodeRenderer::class)
         ->set(MenuEntryRenderer::class)
+
+        ->set(PathPrefixUrlGenerator::class)
+            ->decorate('phpdoc.guides.assets_url_generator')
+            ->arg('$urlGenerator', service('.inner'))
 
         ->set('symfony.node_renderer.html.inline.external_link', TemplateNodeRenderer::class)
             ->arg('$template', 'inline/external-link.html.twig')

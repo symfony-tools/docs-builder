@@ -71,4 +71,10 @@ final class LocalBuildEnvironment implements BuildEnvironment
 
         return $this->outputFilesystem ??= new FlysystemV3(new LeagueFilesystem(new LocalFilesystemAdapter($this->outputDir)));
     }
+
+    #[\Override]
+    public function getAssetFilesystem(): ?FileSystem
+    {
+        return null;
+    }
 }
