@@ -11,13 +11,17 @@
 
 namespace SymfonyTools\DocsBuilder\GuidesExtension\DependencyInjection;
 
+use Monolog\Logger;
+use SymfonyTools\DocsBuilder\GuidesExtension\Logger\TraceHandler;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 
-final class SymfonyExtension extends Extension implements PrependExtensionInterface
+final class SymfonyExtension extends Extension implements PrependExtensionInterface, CompilerPassInterface
 {
     #[\Override]
     public function getAlias(): string
@@ -71,5 +75,16 @@ final class SymfonyExtension extends Extension implements PrependExtensionInterf
                 'vcl' => 'c',
             ],
         ]);
+    }
+
+    #[\Override]
+    public function process(ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition(Logger::class)) {
+            return;
+        }
+
+        $logger = $container->getDefinition(Logger::class);
+        $logger->addMethodCall('pushHandler', [new Reference(TraceHandler::class)]);
     }
 }

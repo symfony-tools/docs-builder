@@ -12,6 +12,8 @@
 namespace SymfonyTools\DocsBuilder\GuidesExtension;
 
 use League\Tactician\CommandBus;
+use SymfonyTools\DocsBuilder\GuidesExtension\Build\BuildResult;
+use SymfonyTools\DocsBuilder\GuidesExtension\Logger\TraceHandler;
 use phpDocumentor\Guides\Compiler\CompilerContext;
 use phpDocumentor\Guides\Handlers\CompileDocumentsCommand;
 use phpDocumentor\Guides\Handlers\ParseDirectoryCommand;
@@ -30,10 +32,11 @@ final class DocBuilder
         private TypeRendererFactory $rendererFactory,
         private ThemeManager $themeManager,
         private BuildConfig $buildConfig,
+        private TraceHandler $logStack,
     ) {
     }
 
-    public function build(BuildEnvironment $buildEnvironment): void
+    public function build(BuildEnvironment $buildEnvironment): BuildResult
     {
         $this->themeManager->useTheme('symfonycom');
 
@@ -53,6 +56,8 @@ final class DocBuilder
                 $projectNode
             )
         );
+
+        return new BuildResult($this->logStack->isEmpty(), $this->logStack->toString());
     }
 
     public function buildString(string $contents): string

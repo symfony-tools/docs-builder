@@ -12,8 +12,10 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\LogLevel;
 use SymfonyTools\DocsBuilder\GuidesExtension\Build\BuildConfig;
 use SymfonyTools\DocsBuilder\GuidesExtension\DocBuilder;
+use SymfonyTools\DocsBuilder\GuidesExtension\Logger\TraceHandler;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 return static function (ContainerConfigurator $container) {
@@ -21,6 +23,9 @@ return static function (ContainerConfigurator $container) {
         ->defaults()->autowire()
 
         ->set(EventDispatcherInterface::class, EventDispatcher::class)
+
+        ->set(TraceHandler::class)
+            ->arg('$level', LogLevel::WARNING)
 
         ->set(BuildConfig::class)->public()
 
