@@ -23,7 +23,6 @@ final class CodeExtension extends AbstractExtension
     ) {
     }
 
-    #[\Override]
     public function getFilters(): array
     {
         return [
@@ -31,7 +30,6 @@ final class CodeExtension extends AbstractExtension
         ];
     }
 
-    #[\Override]
     public function getFunctions(): array
     {
         return [

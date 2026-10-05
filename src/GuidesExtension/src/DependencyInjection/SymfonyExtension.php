@@ -23,13 +23,11 @@ use SymfonyTools\DocsBuilder\GuidesExtension\Logger\TraceHandler;
 
 final class SymfonyExtension extends Extension implements PrependExtensionInterface, CompilerPassInterface
 {
-    #[\Override]
     public function getAlias(): string
     {
         return 'symfony';
     }
 
-    #[\Override]
     public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new PhpFileLoader($container, new FileLocator(\dirname(__DIR__, 2).'/config'));
@@ -38,7 +36,6 @@ final class SymfonyExtension extends Extension implements PrependExtensionInterf
         $loader->load('renderer.php');
     }
 
-    #[\Override]
     public function prepend(ContainerBuilder $container): void
     {
         $templatesDir = \dirname(__DIR__, 2).'/resources/templates';
@@ -77,7 +74,6 @@ final class SymfonyExtension extends Extension implements PrependExtensionInterf
         ]);
     }
 
-    #[\Override]
     public function process(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition(Logger::class)) {

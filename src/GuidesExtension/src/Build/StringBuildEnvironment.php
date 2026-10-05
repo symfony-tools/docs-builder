@@ -26,19 +26,16 @@ final class StringBuildEnvironment implements BuildEnvironment
         $this->filesystem->put('index.rst', $contents);
     }
 
-    #[\Override]
     public function getSourceFilesystem(): FileSystem
     {
         return $this->filesystem;
     }
 
-    #[\Override]
     public function getOutputFilesystem(): FileSystem
     {
         return $this->filesystem;
     }
 
-    #[\Override]
     public function getAssetFilesystem(): ?FileSystem
     {
         return null;

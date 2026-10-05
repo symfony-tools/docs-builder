@@ -16,11 +16,10 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\LogRecord;
 
-class TraceHandler extends AbstractProcessingHandler
+final class TraceHandler extends AbstractProcessingHandler
 {
     private array $stack = [];
 
-    #[\Override]
     protected function write(LogRecord $record): void
     {
         $this->stack[] = (string) $record->formatted;

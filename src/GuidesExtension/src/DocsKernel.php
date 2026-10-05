@@ -116,7 +116,6 @@ final class DocsKernel
     private static function createDefaultExtension(): ExtensionInterface
     {
         return new class extends Extension {
-            #[\Override]
             public function load(array $configs, ContainerBuilder $container): void
             {
                 $container->register(Logger::class)->setArgument('$name', 'docs-builder');
@@ -126,7 +125,6 @@ final class DocsKernel
                 $container->setAlias(EventDispatcherInterface::class, new Alias(EventDispatcher::class));
             }
 
-            #[\Override]
             public function getAlias(): string
             {
                 return 'docs-builder';

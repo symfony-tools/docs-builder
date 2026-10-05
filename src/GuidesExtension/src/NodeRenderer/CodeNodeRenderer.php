@@ -29,13 +29,11 @@ final class CodeNodeRenderer implements NodeRenderer
     ) {
     }
 
-    #[\Override]
     public function supports(string $nodeFqcn): bool
     {
         return CodeNode::class === $nodeFqcn || is_a($nodeFqcn, CodeNode::class, true);
     }
 
-    #[\Override]
     public function render(Node $node, RenderContext $renderContext): string
     {
         if (!$node instanceof CodeNode) {

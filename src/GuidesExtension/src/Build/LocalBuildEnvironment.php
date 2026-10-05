@@ -52,7 +52,6 @@ final class LocalBuildEnvironment implements BuildEnvironment
         $this->outputDir = $outputDir;
     }
 
-    #[\Override]
     public function getSourceFilesystem(): FileSystem
     {
         if (null === $this->sourceDir) {
@@ -62,7 +61,6 @@ final class LocalBuildEnvironment implements BuildEnvironment
         return $this->sourceFilesystem ??= new FlysystemV3(new LeagueFilesystem(new LocalFilesystemAdapter($this->sourceDir)));
     }
 
-    #[\Override]
     public function getOutputFilesystem(): FileSystem
     {
         if (null === $this->outputDir) {
@@ -72,7 +70,6 @@ final class LocalBuildEnvironment implements BuildEnvironment
         return $this->outputFilesystem ??= new FlysystemV3(new LeagueFilesystem(new LocalFilesystemAdapter($this->outputDir)));
     }
 
-    #[\Override]
     public function getAssetFilesystem(): ?FileSystem
     {
         return null;

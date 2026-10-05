@@ -30,13 +30,11 @@ final class MenuEntryRenderer implements NodeRenderer
     ) {
     }
 
-    #[\Override]
     public function supports(string $nodeFqcn): bool
     {
         return MenuEntryNode::class === $nodeFqcn || is_a($nodeFqcn, MenuEntryNode::class, true);
     }
 
-    #[\Override]
     public function render(Node $node, RenderContext $renderContext): string
     {
         if (!$node instanceof MenuEntryNode) {

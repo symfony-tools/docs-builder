@@ -26,7 +26,6 @@ final class MethodRole implements TextRole
     ) {
     }
 
-    #[\Override]
     public function processNode(DocumentParserContext $documentParserContext, string $role, string $content, string $rawContent): InlineNodeInterface
     {
         $content = u($content);
@@ -41,13 +40,11 @@ final class MethodRole implements TextRole
         return new ExternalLinkNode($url, $method.'()', $fqcn.'::'.$method.'()');
     }
 
-    #[\Override]
     public function getName(): string
     {
         return 'method';
     }
 
-    #[\Override]
     public function getAliases(): array
     {
         return [];

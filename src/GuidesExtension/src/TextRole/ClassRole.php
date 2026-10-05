@@ -26,7 +26,6 @@ final class ClassRole implements TextRole
     ) {
     }
 
-    #[\Override]
     public function processNode(DocumentParserContext $documentParserContext, string $role, string $content, string $rawContent): InlineNodeInterface
     {
         $fqcn = u($content)->replace('\\\\', '\\');
@@ -65,13 +64,11 @@ final class ClassRole implements TextRole
         return new ExternalLinkNode($url, (string) $fqcn->afterLast('\\'), (string) $fqcn);
     }
 
-    #[\Override]
     public function getName(): string
     {
         return 'class';
     }
 
-    #[\Override]
     public function getAliases(): array
     {
         return [];

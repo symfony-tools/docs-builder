@@ -21,7 +21,6 @@ final class SymfonyHighlighter implements Highlighter
     ) {
     }
 
-    #[\Override]
     public function __invoke(string $language, string $code, array $debugInformation): HighlightResult
     {
         $result = ($this->highlighter)($language, $code, $debugInformation);

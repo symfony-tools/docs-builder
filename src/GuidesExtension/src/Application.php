@@ -23,7 +23,6 @@ final class Application extends SymfonyApplication
         parent::__construct('Symfony Docs Builder');
     }
 
-    #[\Override]
     public function run(?InputInterface $input = null, ?OutputInterface $output = null): int
     {
         return parent::run($input, $output ?? $this->output);

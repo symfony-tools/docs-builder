@@ -55,10 +55,10 @@ final class JsonRenderer implements TypeRenderer
             }
 
             $documentEntry = $documentNode->getDocumentEntry();
-            $toc = array_map(fn (SectionEntryNode $section): array => $this->getJsonToc($context, $documentEntry, $section), $documentEntry->getSections()[0]->getChildren());
+            $toc = array_filter(array_map(fn (SectionEntryNode $section): ?array => $this->getJsonToc($context, $documentEntry, $section), $documentEntry->getSections()[0]->getChildren()));
             $context->getDestination()->put(
                 $context->getDestinationPath().'/'.$context->getCurrentFileName().'.fjson',
-                json_encode([
+                (string) json_encode([
                     'parents' => [],
                     'toc' => $toc,
                     'toc_options' => [

@@ -23,7 +23,6 @@ final class CommandLocator implements HandlerLocator
     ) {
     }
 
-    #[\Override]
     public function getHandlerForCommand($commandName): object
     {
         try {

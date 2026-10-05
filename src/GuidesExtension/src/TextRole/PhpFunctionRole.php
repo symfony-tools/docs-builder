@@ -24,7 +24,6 @@ final class PhpFunctionRole implements TextRole
     ) {
     }
 
-    #[\Override]
     public function processNode(DocumentParserContext $documentParserContext, string $role, string $content, string $rawContent): InlineNodeInterface
     {
         $url = 'https://php.net/function.'.strtolower(str_replace('_', '-', $content));
@@ -33,13 +32,11 @@ final class PhpFunctionRole implements TextRole
         return new ExternalLinkNode($url, $content, $content);
     }
 
-    #[\Override]
     public function getName(): string
     {
         return 'phpfunction';
     }
 
-    #[\Override]
     public function getAliases(): array
     {
         return [];

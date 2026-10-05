@@ -25,7 +25,6 @@ final class UrlExtension extends AbstractExtension
     ) {
     }
 
-    #[\Override]
     public function getTests(): array
     {
         return [
@@ -33,7 +32,6 @@ final class UrlExtension extends AbstractExtension
         ];
     }
 
-    #[\Override]
     public function getFilters(): array
     {
         return [

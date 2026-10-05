@@ -11,7 +11,7 @@
 
 namespace SymfonyTools\DocsBuilder\GuidesExtension\Build;
 
-class BuildResult
+final class BuildResult
 {
     public function __construct(
         public readonly bool $success,

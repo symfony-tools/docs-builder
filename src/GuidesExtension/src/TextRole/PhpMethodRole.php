@@ -24,7 +24,6 @@ final class PhpMethodRole implements TextRole
     ) {
     }
 
-    #[\Override]
     public function processNode(DocumentParserContext $documentParserContext, string $role, string $content, string $rawContent): InlineNodeInterface
     {
         [$fqcn, $method] = explode('::', $content, 2) + ['', ''];
@@ -35,13 +34,11 @@ final class PhpMethodRole implements TextRole
         return new ExternalLinkNode($url, $content, $content);
     }
 
-    #[\Override]
     public function getName(): string
     {
         return 'phpmethod';
     }
 
-    #[\Override]
     public function getAliases(): array
     {
         return [];

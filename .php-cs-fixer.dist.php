@@ -29,6 +29,6 @@ return (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
     ->setFinder(
         (new PhpCsFixer\Finder())
-            ->in(__DIR__.'/src')
+            ->in(__DIR__.'/src/GuidesExtension/src/')
     )
 ;

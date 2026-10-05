@@ -26,7 +26,6 @@ final class PhpClassRole implements TextRole
     ) {
     }
 
-    #[\Override]
     public function processNode(DocumentParserContext $documentParserContext, string $role, string $content, string $rawContent): InlineNodeInterface
     {
         $fqcn = u($content);
@@ -35,13 +34,11 @@ final class PhpClassRole implements TextRole
         return new ExternalLinkNode($url, $fqcn->afterLast('\\'), $content);
     }
 
-    #[\Override]
     public function getName(): string
     {
         return 'phpclass';
     }
 
-    #[\Override]
     public function getAliases(): array
     {
         return [];
