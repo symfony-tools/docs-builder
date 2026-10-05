@@ -38,6 +38,7 @@ final class JsonRenderer implements TypeRenderer
             $renderCommand->getDestination(),
             $renderCommand->getDestinationPath(),
             $renderCommand->getOutputFormat(),
+            $renderCommand->getImageDestination(),
         )->withIterator($renderCommand->getDocumentIterator());
 
         foreach ($projectRenderContext->getIterator() as $documentNode) {

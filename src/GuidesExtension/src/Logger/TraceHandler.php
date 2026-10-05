@@ -31,6 +31,11 @@ class TraceHandler extends AbstractProcessingHandler
         return [] === $this->stack;
     }
 
+    public function reset(): void
+    {
+        $this->stack = [];
+    }
+
     public function toString(): string
     {
         return implode(PHP_EOL, $this->stack);

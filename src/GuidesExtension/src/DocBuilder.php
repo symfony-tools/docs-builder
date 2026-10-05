@@ -39,6 +39,7 @@ final class DocBuilder
     public function build(BuildEnvironment $buildEnvironment): BuildResult
     {
         $this->themeManager->useTheme('symfonycom');
+        $this->logStack->reset();
 
         $projectNode = $this->buildConfig->createProjectNode();
 
@@ -53,7 +54,9 @@ final class DocBuilder
                 $documents,
                 $buildEnvironment->getSourceFilesystem(),
                 $buildEnvironment->getOutputFilesystem(),
-                $projectNode
+                $projectNode,
+                '/',
+                $buildEnvironment->getAssetFilesystem(),
             )
         );
 
