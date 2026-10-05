@@ -14,6 +14,8 @@ namespace SymfonyTools\DocsBuilder\GuidesExtension\Renderer;
 use phpDocumentor\Guides\Handlers\RenderCommand;
 use phpDocumentor\Guides\NodeRenderers\NodeRendererFactory;
 use phpDocumentor\Guides\Nodes\DocumentNode;
+use phpDocumentor\Guides\Nodes\DocumentTree\DocumentEntryNode;
+use phpDocumentor\Guides\Nodes\DocumentTree\SectionEntryNode;
 use phpDocumentor\Guides\Nodes\Node;
 use phpDocumentor\Guides\RenderContext;
 use phpDocumentor\Guides\Renderer\TypeRenderer;
@@ -50,15 +52,17 @@ final class JsonRenderer implements TypeRenderer
                 $prevDocument = $context->getIterator()->previousNode();
                 $nextDocument = $context->getIterator()->nextNode();
             }
+
+            $documentEntry = $documentNode->getDocumentEntry();
+            $toc = array_map(fn (SectionEntryNode $section): array => $this->getJsonToc($context, $documentEntry, $section), $documentEntry->getSections()[0]->getChildren());
             $context->getDestination()->put(
                 $context->getDestinationPath().'/'.$context->getCurrentFileName().'.fjson',
                 json_encode([
                     'parents' => [],
-                    'toc' => [],
+                    'toc' => $toc,
                     'toc_options' => [
                         'maxDepth' => 2,
-                        'numVisibleItems' => 0,
-                        'size' => 'sm',
+                        'numVisibleItems' => array_sum(array_map(fn ($t) => 1 + count($t['children']), $toc)),
                     ],
                     'prev' => $this->getDocumentData($context, $prevDocument),
                     'next' => $this->getDocumentData($context, $nextDocument),
@@ -70,7 +74,25 @@ final class JsonRenderer implements TypeRenderer
         }
     }
 
-    private function getDocumentData($context, ?DocumentNode $document): ?array
+    private function getJsonToc(RenderContext $context, DocumentEntryNode $documentEntry, SectionEntryNode $sectionEntry): ?array
+    {
+        if ($sectionEntry->getTitle()->getLevel() > 3) {
+            return null;
+        }
+
+        $url = $this->urlGenerator->createFileUrl($context, $documentEntry->getFile());
+
+        return [
+            'level' => $sectionEntry->getTitle()->getLevel() - 1,
+            'url' => $url.'#'.$sectionEntry->getId(),
+            'page' => $documentEntry->getFile(),
+            'fragment' => $sectionEntry->getId(),
+            'title' => $sectionEntry->getTitle()->toString(),
+            'children' => array_filter(array_map(fn (SectionEntryNode $section): ?array => $this->getJsonToc($context, $documentEntry, $section), $sectionEntry->getChildren())),
+        ];
+    }
+
+    private function getDocumentData(RenderContext $context, ?DocumentNode $document): ?array
     {
         if (null === $document || $document->isOrphan()) {
             return null;
@@ -80,7 +102,7 @@ final class JsonRenderer implements TypeRenderer
 
         return [
             'title' => $document->getTitle()?->toString() ?? '',
-            'link' => substr($url, 0, strrpos($url, '.')).'.html',
+            'link' => $url,
         ];
     }
 }

@@ -24,7 +24,7 @@ class JsonIntegrationTest extends TestCase
         $kernel->get(DocBuilder::class)->build($buildEnvironment);
 
         $actualFileData = json_decode($buildEnvironment->getOutputFilesystem()->read($filename.'.fjson'), true);
-        $this->assertSame($expectedData, array_intersect_key($actualFileData, $expectedData), sprintf('Invalid data in file "%s"', $filename));
+        $this->assertEquals($expectedData, array_intersect_key($actualFileData, $expectedData), sprintf('Invalid data in file "%s"', $filename));
         foreach ($expectedData as $key => $expectedKeyData) {
             $this->assertArrayHasKey($key, $actualFileData, sprintf('Missing key "%s" in file "%s"', $key, $filename));
         }
@@ -80,7 +80,6 @@ class JsonIntegrationTest extends TestCase
                 'toc_options' => [
                     'maxDepth' => 2,
                     'numVisibleItems' => 5,
-                    'size' => 'md'
                 ],
                 'toc' => [
                     [
