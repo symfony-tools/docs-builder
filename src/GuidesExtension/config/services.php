@@ -13,10 +13,10 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LogLevel;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use SymfonyTools\DocsBuilder\GuidesExtension\Build\BuildConfig;
 use SymfonyTools\DocsBuilder\GuidesExtension\DocBuilder;
 use SymfonyTools\DocsBuilder\GuidesExtension\Logger\TraceHandler;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 return static function (ContainerConfigurator $container) {
     $container->services()

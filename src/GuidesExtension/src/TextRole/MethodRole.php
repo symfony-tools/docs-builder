@@ -31,7 +31,7 @@ final class MethodRole implements TextRole
     {
         $content = u($content);
         if (!$content->containsAny('::')) {
-            throw new \RuntimeException(sprintf('Malformed method reference "%s"', $content));
+            throw new \RuntimeException(\sprintf('Malformed method reference "%s"', $content));
         }
         [$fqcn, $method] = $content->replace('\\\\', '\\')->split('::', 2);
 

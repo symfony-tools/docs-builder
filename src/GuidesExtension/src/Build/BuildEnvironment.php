@@ -16,6 +16,8 @@ use phpDocumentor\FileSystem\FileSystem;
 interface BuildEnvironment
 {
     public function getSourceFilesystem(): FileSystem;
+
     public function getOutputFilesystem(): FileSystem;
+
     public function getAssetFilesystem(): ?FileSystem;
 }

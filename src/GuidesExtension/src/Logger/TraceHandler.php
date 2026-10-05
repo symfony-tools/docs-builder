@@ -38,7 +38,7 @@ class TraceHandler extends AbstractProcessingHandler
 
     public function toString(): string
     {
-        return implode(PHP_EOL, $this->stack);
+        return implode(\PHP_EOL, $this->stack);
     }
 
     protected function getDefaultFormatter(): FormatterInterface

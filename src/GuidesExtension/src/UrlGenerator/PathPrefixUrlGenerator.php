@@ -11,15 +11,15 @@
 
 namespace SymfonyTools\DocsBuilder\GuidesExtension\UrlGenerator;
 
-use SymfonyTools\DocsBuilder\GuidesExtension\Build\BuildConfig;
 use phpDocumentor\Guides\RenderContext;
 use phpDocumentor\Guides\Renderer\UrlGenerator\UrlGeneratorInterface;
+use SymfonyTools\DocsBuilder\GuidesExtension\Build\BuildConfig;
 
 final class PathPrefixUrlGenerator implements UrlGeneratorInterface
 {
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
-        private BuildConfig $buildConfig
+        private BuildConfig $buildConfig,
     ) {
     }
 
@@ -35,6 +35,6 @@ final class PathPrefixUrlGenerator implements UrlGeneratorInterface
 
     public function generateInternalUrl(RenderContext $renderContext, string $canonicalUrl): string
     {
-        return sprintf('%s/%s', rtrim($this->buildConfig->assetsBaseUri, '/'), ltrim($canonicalUrl, '/'));
+        return \sprintf('%s/%s', rtrim($this->buildConfig->assetsBaseUri, '/'), ltrim($canonicalUrl, '/'));
     }
 }

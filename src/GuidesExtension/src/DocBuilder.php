@@ -12,8 +12,6 @@
 namespace SymfonyTools\DocsBuilder\GuidesExtension;
 
 use League\Tactician\CommandBus;
-use SymfonyTools\DocsBuilder\GuidesExtension\Build\BuildResult;
-use SymfonyTools\DocsBuilder\GuidesExtension\Logger\TraceHandler;
 use phpDocumentor\Guides\Compiler\CompilerContext;
 use phpDocumentor\Guides\Handlers\CompileDocumentsCommand;
 use phpDocumentor\Guides\Handlers\ParseDirectoryCommand;
@@ -23,7 +21,9 @@ use phpDocumentor\Guides\Renderer\TypeRendererFactory;
 use phpDocumentor\Guides\Twig\Theme\ThemeManager;
 use SymfonyTools\DocsBuilder\GuidesExtension\Build\BuildConfig;
 use SymfonyTools\DocsBuilder\GuidesExtension\Build\BuildEnvironment;
+use SymfonyTools\DocsBuilder\GuidesExtension\Build\BuildResult;
 use SymfonyTools\DocsBuilder\GuidesExtension\Build\StringBuildEnvironment;
+use SymfonyTools\DocsBuilder\GuidesExtension\Logger\TraceHandler;
 
 final class DocBuilder
 {
@@ -47,7 +47,7 @@ final class DocBuilder
         $documents = $this->commandBus->handle(new ParseDirectoryCommand($buildEnvironment->getSourceFilesystem(), '/', 'rst', $projectNode));
 
         $documents = $this->commandBus->handle(new CompileDocumentsCommand($documents, new CompilerContext($projectNode)));
-        
+
         $this->rendererFactory->getRenderSet($this->buildConfig->outputFormat)->render(
             new RenderCommand(
                 $this->buildConfig->format,

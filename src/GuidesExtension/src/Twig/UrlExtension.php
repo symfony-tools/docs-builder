@@ -22,8 +22,8 @@ final class UrlExtension extends AbstractExtension
 {
     public function __construct(
         private BuildConfig $buildConfig,
-    )
-    {}
+    ) {
+    }
 
     #[\Override]
     public function getTests(): array
@@ -43,7 +43,7 @@ final class UrlExtension extends AbstractExtension
 
     private function replaceSymfonyVersion(string $url): string
     {
-        return u($url)->replace('{version}', $this->buildConfig->symfonyVersion)->toString();;
+        return u($url)->replace('{version}', $this->buildConfig->symfonyVersion)->toString();
     }
 
     /*

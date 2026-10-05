@@ -63,7 +63,7 @@ final class JsonRenderer implements TypeRenderer
                     'toc' => $toc,
                     'toc_options' => [
                         'maxDepth' => 2,
-                        'numVisibleItems' => array_sum(array_map(fn ($t) => 1 + count($t['children']), $toc)),
+                        'numVisibleItems' => array_sum(array_map(static fn ($t) => 1 + \count($t['children']), $toc)),
                     ],
                     'prev' => $this->getDocumentData($context, $prevDocument),
                     'next' => $this->getDocumentData($context, $nextDocument),

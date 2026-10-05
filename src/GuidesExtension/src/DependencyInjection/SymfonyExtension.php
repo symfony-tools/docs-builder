@@ -12,7 +12,6 @@
 namespace SymfonyTools\DocsBuilder\GuidesExtension\DependencyInjection;
 
 use Monolog\Logger;
-use SymfonyTools\DocsBuilder\GuidesExtension\Logger\TraceHandler;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -20,6 +19,7 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
+use SymfonyTools\DocsBuilder\GuidesExtension\Logger\TraceHandler;
 
 final class SymfonyExtension extends Extension implements PrependExtensionInterface, CompilerPassInterface
 {
