@@ -12,6 +12,8 @@
 namespace SymfonyTools\DocsBuilder\GuidesExtension;
 
 use Monolog\Logger;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 use phpDocumentor\Guides\Cli\DependencyInjection\ContainerFactory;
 use phpDocumentor\Guides\Code\DependencyInjection\CodeExtension;
 use phpDocumentor\Guides\DependencyInjection\GuidesExtension;
@@ -47,6 +49,9 @@ final class DocsKernel
         $containerFactory->loadExtensionConfig(GuidesExtension::class, [
             'default_code_language' => 'php',
             'links_are_relative' => true,
+            'raw_node' => [
+                'sanitizer_name' => 'svg',
+            ],
         ]);
 
         $containerFactory->loadExtensionConfig(ReStructuredTextExtension::class, [
@@ -115,7 +120,7 @@ final class DocsKernel
 
     private static function createDefaultExtension(): ExtensionInterface
     {
-        return new class extends Extension {
+        return new class extends Extension implements CompilerPassInterface {
             public function load(array $configs, ContainerBuilder $container): void
             {
                 $container->register(Logger::class)->setArgument('$name', 'docs-builder');
@@ -123,6 +128,16 @@ final class DocsKernel
 
                 $container->register(EventDispatcher::class);
                 $container->setAlias(EventDispatcherInterface::class, new Alias(EventDispatcher::class));
+            }
+
+            public function process(ContainerBuilder $container): void
+            {
+                $sanitizerConfig = $container->register('phpdoc.guides.raw_node.sanitizer.svg', HtmlSanitizerConfig::class);
+                $sanitizerConfig->addMethodCall('allowElement', [
+                    'object',
+                    ['data', 'type', 'alt'],
+                ], true);
+                $sanitizerConfig->addMethodCall('allowRelativeMedias', [], true);
             }
 
             public function getAlias(): string
