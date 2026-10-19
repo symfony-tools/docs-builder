@@ -22,3 +22,11 @@ And RST figures use a different syntax to define their custom CSS classes:
     :alt: /
     :align: center
     :figclass: with-browser foo
+
+Finally, SVG images are using a raw directive to render the correct HTML:
+
+.. raw:: html
+
+    <object data="images/http-server.svg" type="image/svg+xml"
+        alt="The full sequence diagram with the server sending the page's HTML back to the browser."
+    ></object>

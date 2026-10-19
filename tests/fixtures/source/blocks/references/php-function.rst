@@ -1,2 +1,0 @@
-
-:phpfunction:`trigger_error`

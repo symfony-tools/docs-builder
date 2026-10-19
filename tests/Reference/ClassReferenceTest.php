@@ -11,21 +11,20 @@ namespace SymfonyDocsBuilder\Tests\Reference;
 
 use Doctrine\RST\Configuration;
 use Doctrine\RST\Environment;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use SymfonyDocsBuilder\BuildConfig;
 use SymfonyDocsBuilder\Reference\ClassReference;
 
 class ClassReferenceTest extends TestCase
 {
-    /**
-     * @dataProvider getDefaultVersionTests
-     */
+    #[DataProvider('getDefaultVersionTests')]
     public function testResolveWithTheDefaultVersions(string $className, string $expectedUrl)
     {
         $this->assertSame($expectedUrl, $this->resolve(new BuildConfig(), $className));
     }
 
-    public function getDefaultVersionTests()
+    public static function getDefaultVersionTests()
     {
         yield 'symfony_ai' => [
             'Symfony\AI\Agent\Memory\StaticMemoryProvider',
@@ -37,9 +36,7 @@ class ClassReferenceTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getConfiguredVersionTests
-     */
+    #[DataProvider('getConfiguredVersionTests')]
     public function testResolveWithTheConfiguredVersions(string $className, string $expectedUrl)
     {
         $buildConfig = (new BuildConfig())
@@ -50,7 +47,7 @@ class ClassReferenceTest extends TestCase
         $this->assertSame($expectedUrl, $this->resolve($buildConfig, $className));
     }
 
-    public function getConfiguredVersionTests()
+    public static function getConfiguredVersionTests()
     {
         yield 'symfony' => [
             'Symfony\Component\HttpKernel\Kernel',
