@@ -54,3 +54,11 @@
         private string $username
     ) {
     }
+
+.. code-block:: php
+
+    public function __construct(
+        private readonly string $username,
+        public readonly ?int $age = null,
+    ) {
+    }

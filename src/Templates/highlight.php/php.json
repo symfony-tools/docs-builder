@@ -250,7 +250,7 @@
                     "className": "params",
                     "begin": "\\(",
                     "end": "\\)",
-                    "keywords": "array bool boolean callable float int integer iterable mixed never numeric object private protected public real string resource self static false FALSE null NULL true TRUE",
+                    "keywords": "array bool boolean callable float int integer iterable mixed never numeric object private protected public readonly real string resource self static false FALSE null NULL true TRUE",
                     "contains": [
                         "self",
                         {
